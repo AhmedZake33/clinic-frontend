@@ -1,7 +1,6 @@
 <template>
-    <!-- v-if="canViewVerticalNavMenuGroup(item)" -->
-
   <li
+    v-if="canViewVerticalNavMenuGroup(item)"
     class="nav-item has-sub"
     :class="{
       'open': isOpen,
@@ -19,7 +18,7 @@
         v-if="item.tag"
         pill
         :variant="item.tagVariant || 'primary'"
-        class="mr-1 ml-auto"
+        :class="$store.getters['language/isRTL'] ? 'ml-1 mr-auto' : 'mr-1 ml-auto'"
       >
         {{ item.tag }}
       </b-badge>

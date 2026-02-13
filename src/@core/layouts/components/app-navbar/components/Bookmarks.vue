@@ -62,7 +62,7 @@
             <span class="align-middle">{{ suggestion.title }}</span>
             <feather-icon
               icon="StarIcon"
-              class="ml-auto"
+              class="me-auto"
               size="16"
               :class="{'text-warning': suggestion.isBookmarked}"
               @click.stop.prevent="toggleBookmarked(suggestion)"

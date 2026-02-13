@@ -1,0 +1,1377 @@
+// RTL (Right-to-Left) and LTR (Left-to-Right) styles for bilingual support
+// Using CSS Logical Properties for better maintainability
+
+// Tell postcss-rtl to NOT process this file (prevent double-flipping)
+/*! rtl:begin:ignore */
+
+// ============================================
+// BASE DIRECTION STYLES
+// ============================================
+
+// Apply direction to html and body
+html[dir="rtl"],
+body.rtl,
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+  
+  // Arabic-friendly font stack
+  font-family: 'Segoe UI', 'Arial', 'Tahoma', 'Noto Sans Arabic', sans-serif;
+}
+
+html[dir="ltr"],
+body.ltr,
+[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+// ============================================
+// CSS LOGICAL PROPERTIES UTILITIES
+// These work automatically based on direction
+// ============================================
+
+.margin-inline-start-1 { margin-inline-start: 0.25rem !important; }
+.margin-inline-start-2 { margin-inline-start: 0.5rem !important; }
+.margin-inline-start-3 { margin-inline-start: 1rem !important; }
+.margin-inline-start-4 { margin-inline-start: 1.5rem !important; }
+.margin-inline-start-5 { margin-inline-start: 3rem !important; }
+
+.margin-inline-end-1 { margin-inline-end: 0.25rem !important; }
+.margin-inline-end-2 { margin-inline-end: 0.5rem !important; }
+.margin-inline-end-3 { margin-inline-end: 1rem !important; }
+.margin-inline-end-4 { margin-inline-end: 1.5rem !important; }
+.margin-inline-end-5 { margin-inline-end: 3rem !important; }
+
+.padding-inline-start-1 { padding-inline-start: 0.25rem !important; }
+.padding-inline-start-2 { padding-inline-start: 0.5rem !important; }
+.padding-inline-start-3 { padding-inline-start: 1rem !important; }
+.padding-inline-start-4 { padding-inline-start: 1.5rem !important; }
+.padding-inline-start-5 { padding-inline-start: 3rem !important; }
+
+.padding-inline-end-1 { padding-inline-end: 0.25rem !important; }
+.padding-inline-end-2 { padding-inline-end: 0.5rem !important; }
+.padding-inline-end-3 { padding-inline-end: 1rem !important; }
+.padding-inline-end-4 { padding-inline-end: 1.5rem !important; }
+.padding-inline-end-5 { padding-inline-end: 3rem !important; }
+
+.text-start { text-align: start !important; }
+.text-end { text-align: end !important; }
+
+.float-start { float: inline-start !important; }
+.float-end { float: inline-end !important; }
+
+// ============================================
+// DIRECTIONAL ICON FLIPPING
+// ============================================
+
+[dir="rtl"] {
+  // Flip directional icons using CSS transform
+  .flip-rtl,
+  .icon-flip-rtl {
+    transform: scaleX(-1);
+  }
+  
+  // Icons that should flip in RTL
+  .feather-chevron-left,
+  .feather-chevron-right,
+  .feather-chevrons-left,
+  .feather-chevrons-right,
+  .feather-arrow-left,
+  .feather-arrow-right,
+  .feather-corner-down-left,
+  .feather-corner-down-right,
+  .feather-corner-up-left,
+  .feather-corner-up-right {
+    transform: scaleX(-1);
+  }
+  
+  // Menu collapse/expand arrow
+  .nav-item.has-sub > a::after {
+    transform: rotate(180deg);
+  }
+  
+  .nav-item.has-sub.open > a::after {
+    transform: rotate(90deg);
+  }
+}
+
+// ============================================
+// NAVBAR STYLES
+// ============================================
+
+[dir="rtl"] {
+  .navbar {
+    .navbar-brand {
+      margin-inline-end: 1rem;
+      margin-inline-start: 0;
+    }
+    
+    .navbar-nav {
+      .nav-item {
+        .nav-link {
+          text-align: end;
+        }
+      }
+    }
+  }
+  
+  // Header navbar - move language & user to left in RTL
+  .header-navbar {
+    .navbar-container {
+      flex-direction: row-reverse;
+      
+      > .navbar-nav {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+      }
+      
+      .nav {
+        .dropdown-menu {
+          inset-inline-start: 0;
+          inset-inline-end: auto;
+        }
+      }
+    }
+  }
+}
+
+// ============================================
+// SIDEBAR / MAIN MENU STYLES
+// ============================================
+
+[dir="rtl"] {
+  .main-menu {
+    right: 0;
+    left: auto;
+    
+    .navbar-header {
+      .navbar-brand {
+        flex-direction: row-reverse;
+        
+        .brand-logo {
+          margin-left: 0;
+          margin-right: 0;
+        }
+        
+        .brand-text {
+          padding-inline-start: 0;
+          padding-inline-end: 0;
+          margin-right: 0.5rem;
+          margin-left: 0;
+        }
+      }
+      
+      .nav-toggle {
+        order: -1;
+      }
+    }
+    
+    .navigation {
+      .navigation-header {
+        text-align: right;
+        padding-left: 0;
+        padding-right: 2.2rem;
+      }
+      
+      // Float icons to the right (matching Vuexy custom-rtl.scss)
+      li > a > svg,
+      li > a > i,
+      > li > a > svg,
+      > li > a > i {
+        float: right;
+        margin-left: 1.1rem;
+        margin-right: 0;
+      }
+      
+      // Sub-menu icon alignment
+      .menu-content > li > a > svg,
+      .menu-content > li > a > i {
+        margin-left: 1.45rem;
+        margin-right: 0;
+      }
+      
+      > li ul li > a {
+        display: flex;
+        align-items: center;
+      }
+      
+      .nav-item {
+        a {
+          text-align: right;
+          
+          .menu-title {
+            text-align: right;
+          }
+          
+          .badge {
+            margin-left: 0;
+            margin-right: auto;
+          }
+        }
+        
+        // Submenu arrow
+        &.has-sub > a::after {
+          left: 1rem;
+          right: auto;
+          transform: rotate(180deg);
+        }
+        
+        &.has-sub.open:not(.menu-item-closing) > a::after {
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
+  
+  // Vertical layout specific - sidebar on right
+  // Use full specificity chain matching Vuexy's vertical-menu.scss
+  .vertical-layout .main-menu {
+    left: auto !important;
+    right: 0 !important;
+  }
+  
+  .vertical-layout.vertical-menu-modern .main-menu {
+    .navigation {
+      > li > a > svg,
+      > li > a > i {
+        margin-left: 1.1rem !important;
+        margin-right: 0 !important;
+      }
+      .menu-content {
+        > li > a > svg,
+        > li > a > i {
+          margin-left: 1.45rem !important;
+          margin-right: 0 !important;
+        }
+      }
+    }
+  }
+  
+  // Content margin - push content from the right side
+  .vertical-layout.vertical-menu-modern .content.app-content {
+    margin-left: 0 !important;
+    margin-right: 260px !important;
+  }
+  
+  .vertical-layout.vertical-menu-modern.menu-collapsed .content.app-content {
+    margin-left: 0 !important;
+    margin-right: 80px !important;
+  }
+  
+  // Overlay menu (mobile)
+  .vertical-layout.vertical-overlay-menu .content.app-content {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  .vertical-layout.vertical-overlay-menu .main-menu {
+    transform: translate3d(100%, 0, 0);
+    left: auto !important;
+    right: 0 !important;
+    
+    &.menu-open {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  
+  // Header navbar content margin
+  .vertical-layout .header-navbar.floating-nav {
+    margin-left: 0;
+    margin-right: calc(260px + 2.2rem);
+  }
+  
+  .vertical-layout.menu-collapsed .header-navbar.floating-nav {
+    margin-left: 0;
+    margin-right: calc(80px + 2.2rem);
+  }
+  
+  .vertical-layout.vertical-overlay-menu .header-navbar.floating-nav {
+    margin-right: 2.2rem;
+  }
+  
+  // Footer margin
+  .vertical-layout .footer {
+    margin-left: 0;
+    margin-right: 260px;
+  }
+  
+  .vertical-layout.menu-collapsed .footer {
+    margin-left: 0;
+    margin-right: 80px;
+  }
+  
+  .vertical-layout.vertical-overlay-menu .footer {
+    margin-right: 0;
+  }
+  
+  // Menu collapse toggle icon
+  .main-menu .navbar-header .nav-toggle .nav-link {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+[dir="ltr"] {
+  .main-menu {
+    left: 0;
+    right: auto;
+    
+    .navigation {
+      .navigation-header {
+        text-align: left;
+        padding-left: 2.2rem;
+        padding-right: 0;
+      }
+      
+      li > a > svg,
+      li > a > i {
+        float: left;
+        margin-right: 1.1rem;
+        margin-left: 0;
+      }
+      
+      .nav-item {
+        a {
+          text-align: left;
+        }
+      }
+    }
+  }
+  
+  .vertical-layout .main-menu {
+    left: 0 !important;
+    right: auto !important;
+  }
+  
+  .vertical-layout.vertical-menu-modern .content.app-content {
+    margin-left: 260px;
+    margin-right: 0;
+  }
+  
+  .vertical-layout.vertical-menu-modern.menu-collapsed .content.app-content {
+    margin-left: 80px;
+    margin-right: 0;
+  }
+}
+
+// ============================================
+// RESPONSIVE SIDEBAR RTL
+// ============================================
+
+// Below lg: sidebar is overlay, no margin needed
+@media (max-width: 1199.98px) {
+  [dir="rtl"] {
+    .vertical-layout.vertical-menu-modern .content.app-content,
+    .vertical-layout.vertical-menu-modern.menu-collapsed .content.app-content {
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+    .vertical-layout .header-navbar.floating-nav,
+    .vertical-layout.menu-collapsed .header-navbar.floating-nav {
+      margin-right: 2.2rem !important;
+      margin-left: 2.2rem !important;
+    }
+    .vertical-layout .footer,
+    .vertical-layout.menu-collapsed .footer {
+      margin-right: 0 !important;
+    }
+  }
+  [dir="ltr"] {
+    .vertical-layout.vertical-menu-modern .content.app-content,
+    .vertical-layout.vertical-menu-modern.menu-collapsed .content.app-content {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+// ============================================
+// COLLAPSED MENU RTL
+// ============================================
+
+[dir="rtl"] {
+  .vertical-layout.vertical-menu-modern.menu-collapsed {
+    .main-menu:not(.expanded) {
+      .navigation-header {
+        margin-left: 0;
+        margin-right: 2.2rem;
+      }
+    }
+    .main-menu.expanded .navigation li.has-sub > a::after {
+      transform: rotate(180deg);
+    }
+    .main-menu.expanded .navigation li.has-sub.open:not(.menu-item-closing) > a::after {
+      transform: rotate(90deg);
+    }
+    // Fixed top navbar for collapsed menu
+    .navbar.fixed-top {
+      left: auto;
+      right: 80px;
+    }
+
+    .header-navbar {
+      &.floating-nav {
+        width: calc(100vw - (100vw - 100%) - 4.4rem - 74px);
+      }
+      &.navbar-static-top {
+        width: calc(100vw - (100vw - 100%) - 74px);
+        left: auto;
+        right: 74px;
+      }
+    }
+  }
+}
+
+// ============================================
+// DROPDOWN POSITIONING (from Vuexy custom-rtl)
+// ============================================
+
+[dir="rtl"] {
+  // Header navbar dropdown positioning
+  .header-navbar .navbar-container ul.nav li.dropdown {
+    .dropdown-menu {
+      top: 41px !important;
+      &::before {
+        top: 1px;
+      }
+    }
+  }
+  
+  .header-navbar {
+    .dropdown,
+    .dropup {
+      .dropdown-menu.dropdown-menu-right::before {
+        right: auto;
+        left: 0.5rem;
+      }
+    }
+  }
+  
+  .dropdown,
+  .dropup,
+  .btn-group {
+    .dropdown-menu {
+      right: auto !important;
+      left: auto !important;
+
+      &.dropdown-menu-right {
+        left: 0 !important;
+
+        &::before {
+          right: 0.6rem;
+          left: auto;
+        }
+      }
+    }
+  }
+
+  .dropleft {
+    .dropdown-menu {
+      left: 0 !important;
+      margin-left: 0;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .dropright {
+    .dropdown-menu {
+      left: 0 !important;
+      margin-right: 0;
+      margin-left: 0.5rem;
+    }
+  }
+
+  // Input Group dropdown
+  .input-group {
+    .dropdown-menu.show {
+      top: 0 !important;
+      right: auto !important;
+      left: 0px !important;
+    }
+  }
+}
+
+// ============================================
+// AVATAR GROUP RTL (from Vuexy custom-rtl)
+// ============================================
+
+[dir="rtl"] {
+  .avatar-group {
+    .avatar {
+      margin-right: -0.785rem;
+      margin-left: 0;
+    }
+    .avatar-sm {
+      margin-right: -0.65rem;
+    }
+    .avatar-lg {
+      margin-right: -1.5rem;
+    }
+    .avatar-xl {
+      margin-right: -1.85rem;
+    }
+  }
+}
+
+// ============================================
+// PERFECT SCROLLBAR RTL
+// ============================================
+
+[dir="rtl"] {
+  body .ps__rail-y {
+    right: auto !important;
+    left: 1px !important;
+  }
+}
+
+// ============================================
+// FORMS
+// ============================================
+
+[dir="rtl"] {
+  .form-group {
+    .form-label {
+      text-align: right;
+    }
+    
+    .form-control {
+      text-align: right;
+    }
+    
+    // Input group: direction:rtl already reverses flex items visually.
+    // Only fix border-radius for the visually swapped ends.
+    .input-group {
+      .input-group-prepend {
+        .input-group-text {
+          border-radius: 0 0.357rem 0.357rem 0;
+        }
+      }
+      
+      .input-group-append {
+        .input-group-text {
+          border-radius: 0.357rem 0 0 0.357rem;
+        }
+      }
+    }
+  }
+  
+  // Custom select dropdown arrow
+  .custom-select {
+    background-position: left 0.75rem center;
+    padding-inline-start: 1.75rem;
+    padding-inline-end: 0.75rem;
+  }
+  
+  // Custom checkbox/radio
+  .custom-control {
+    padding-inline-start: 0;
+    padding-inline-end: 1.5rem;
+    
+    .custom-control-label::before,
+    .custom-control-label::after {
+      inset-inline-start: auto;
+      inset-inline-end: -1.5rem;
+    }
+  }
+}
+
+// ============================================
+// BUTTONS
+// ============================================
+
+[dir="rtl"] {
+  .btn {
+    svg, .feather {
+      margin-inline-start: 0.25rem;
+      margin-inline-end: 0;
+    }
+    
+    &.btn-icon-start {
+      svg, .feather {
+        margin-inline-start: 0;
+        margin-inline-end: 0.25rem;
+      }
+    }
+  }
+}
+
+// ============================================
+// TABLES
+// ============================================
+
+[dir="rtl"] {
+  .table {
+    th, td {
+      text-align: end;
+      
+      &:first-child {
+        padding-inline-start: 1.5rem;
+        padding-inline-end: 0.75rem;
+      }
+      
+      &:last-child {
+        padding-inline-start: 0.75rem;
+        padding-inline-end: 1.5rem;
+      }
+    }
+  }
+}
+
+// ============================================
+// CARDS
+// ============================================
+
+[dir="rtl"] {
+  .card {
+    .card-header {
+      .card-title {
+        text-align: end;
+      }
+    }
+    
+    .card-body {
+      text-align: end;
+    }
+  }
+}
+
+// ============================================
+// DROPDOWNS (text alignment & items)
+// ============================================
+
+[dir="rtl"] {
+  .dropdown-menu {
+    text-align: right;
+    
+    .dropdown-item {
+      text-align: right;
+      
+      svg, .feather {
+        margin-left: 0.5rem;
+        margin-right: 0;
+      }
+    }
+  }
+  
+  // Dropdown toggle caret
+  .dropdown-toggle::after {
+    margin-left: 0;
+    margin-right: 0.255em;
+  }
+  
+  // Locale dropdown specific
+  .dropdown-language {
+    .dropdown-menu {
+      left: 0 !important;
+      right: auto !important;
+      text-align: right;
+    }
+    
+    .dropdown-toggle {
+      .locale-flag {
+        margin-left: 0.5rem;
+        margin-right: 0;
+      }
+    }
+  }
+  
+  // User dropdown specific
+  .dropdown-user {
+    .dropdown-menu {
+      left: 0 !important;
+      right: auto !important;
+      text-align: right;
+    }
+    
+    .dropdown-user-link {
+      .user-nav {
+        text-align: right;
+        margin-left: 0.8rem;
+        margin-right: 0;
+        align-items: flex-start !important;
+      }
+    }
+    
+    .dropdown-item {
+      svg, .feather {
+        margin-left: 0.5rem;
+        margin-right: 0;
+      }
+    }
+  }
+  
+  // Navbar dropdown positioning
+  .header-navbar .navbar-container ul.nav li.dropdown {
+    .dropdown-menu {
+      &.dropdown-menu-left {
+        left: 0 !important;
+        right: auto !important;
+      }
+      
+      &.dropdown-menu-right {
+        right: 0 !important;
+        left: auto !important;
+      }
+    }
+  }
+}
+
+// ============================================
+// MODALS
+// ============================================
+
+[dir="rtl"] {
+  .modal {
+    .modal-header {
+      .modal-title {
+        text-align: right;
+      }
+      
+      .close {
+        margin-left: -1rem;
+        margin-right: auto;
+        float: left;
+      }
+    }
+    
+    .modal-body {
+      text-align: right;
+    }
+    
+    .modal-footer {
+      .btn + .btn {
+        margin-left: 0.25rem;
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+// ============================================
+// PAGINATION (with Vuexy custom-rtl rules)
+// ============================================
+
+[dir="rtl"] {
+  .pagination {
+    .page-item {
+      &.prev-item,
+      &.prev,
+      &.previous {
+        .page-link {
+          svg {
+            transform: rotate(180deg);
+          }
+          &:before {
+            transform: rotate(180deg);
+          }
+        }
+      }
+      &.next-item,
+      &.next {
+        .page-link {
+          svg {
+            transform: rotate(180deg);
+          }
+          &:after {
+            transform: rotate(180deg);
+          }
+        }
+      }
+      .page-link svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
+// ============================================
+// BOOTSTRAP UTILITIES OVERRIDE FOR RTL
+// ============================================
+
+[dir="rtl"] {
+  // Text alignment (Bootstrap 4 & 5 classes)
+  .text-left { text-align: right !important; }
+  .text-right { text-align: left !important; }
+  .text-end { text-align: left !important; }
+  .text-start { text-align: right !important; }
+  
+  // Float
+  .float-left { float: right !important; }
+  .float-right { float: left !important; }
+  .float-end { float: left !important; }
+  .float-start { float: right !important; }
+  
+  // For items that should NOT reverse in RTL
+  .flex-row-keep { flex-direction: row !important; }
+  .flex-row-reverse-keep { flex-direction: row-reverse !important; }
+  
+  // Margin utilities swap (all sizes including .5rem variants)
+  .ml-25 { margin-left: 0 !important; margin-right: 0.15rem !important; }
+  .ml-50 { margin-left: 0 !important; margin-right: 0.25rem !important; }
+  .ml-75 { margin-left: 0 !important; margin-right: 0.5rem !important; }
+  .ml-1 { margin-left: 0 !important; margin-right: 0.25rem !important; }
+  .ml-2 { margin-left: 0 !important; margin-right: 0.5rem !important; }
+  .ml-3 { margin-left: 0 !important; margin-right: 1rem !important; }
+  .ml-4 { margin-left: 0 !important; margin-right: 1.5rem !important; }
+  .ml-5 { margin-left: 0 !important; margin-right: 3rem !important; }
+  .ml-auto { margin-left: 0 !important; margin-right: auto !important; }
+  
+  .mr-25 { margin-right: 0 !important; margin-left: 0.15rem !important; }
+  .mr-50 { margin-right: 0 !important; margin-left: 0.25rem !important; }
+  .mr-75 { margin-right: 0 !important; margin-left: 0.5rem !important; }
+  .mr-1 { margin-right: 0 !important; margin-left: 0.25rem !important; }
+  .mr-2 { margin-right: 0 !important; margin-left: 0.5rem !important; }
+  .mr-3 { margin-right: 0 !important; margin-left: 1rem !important; }
+  .mr-4 { margin-right: 0 !important; margin-left: 1.5rem !important; }
+  .mr-5 { margin-right: 0 !important; margin-left: 3rem !important; }
+  .mr-auto { margin-right: 0 !important; margin-left: auto !important; }
+  
+  // Padding utilities swap (all sizes)
+  .pl-25 { padding-left: 0 !important; padding-right: 0.15rem !important; }
+  .pl-50 { padding-left: 0 !important; padding-right: 0.25rem !important; }
+  .pl-75 { padding-left: 0 !important; padding-right: 0.5rem !important; }
+  .pl-1 { padding-left: 0 !important; padding-right: 0.25rem !important; }
+  .pl-2 { padding-left: 0 !important; padding-right: 0.5rem !important; }
+  .pl-3 { padding-left: 0 !important; padding-right: 1rem !important; }
+  .pl-4 { padding-left: 0 !important; padding-right: 1.5rem !important; }
+  .pl-5 { padding-left: 0 !important; padding-right: 3rem !important; }
+  
+  .pr-25 { padding-right: 0 !important; padding-left: 0.15rem !important; }
+  .pr-50 { padding-right: 0 !important; padding-left: 0.25rem !important; }
+  .pr-75 { padding-right: 0 !important; padding-left: 0.5rem !important; }
+  .pr-1 { padding-right: 0 !important; padding-left: 0.25rem !important; }
+  .pr-2 { padding-right: 0 !important; padding-left: 0.5rem !important; }
+  .pr-3 { padding-right: 0 !important; padding-left: 1rem !important; }
+  .pr-4 { padding-right: 0 !important; padding-left: 1.5rem !important; }
+  .pr-5 { padding-right: 0 !important; padding-left: 3rem !important; }
+
+  // Border radius swap
+  .rounded-left { border-radius: 0 0.25rem 0.25rem 0 !important; }
+  .rounded-right { border-radius: 0.25rem 0 0 0.25rem !important; }
+
+  // Border swap
+  .border-left { border-left: 0 !important; border-right: 1px solid #ebe9f1 !important; }
+  .border-right { border-right: 0 !important; border-left: 1px solid #ebe9f1 !important; }
+}
+
+// ============================================
+// LISTS
+// ============================================
+
+[dir="rtl"] {
+  ul, ol {
+    padding-inline-start: 2rem;
+    padding-inline-end: 0;
+  }
+}
+
+// ============================================
+// BREADCRUMBS (with chevron rotation from Vuexy custom-rtl)
+// ============================================
+
+[dir="rtl"] {
+  .breadcrumb {
+    .breadcrumb-item + .breadcrumb-item::before {
+      float: right;
+      padding-left: 0.5rem;
+      padding-right: 0;
+    }
+  }
+  
+  // Breadcrumb chevron/separator rotation
+  .breadcrumb:not([class*='breadcrumb-']),
+  .breadcrumb.breadcrumb-chevron {
+    .breadcrumb-item + .breadcrumb-item {
+      &:before {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
+// ============================================
+// ALERTS
+// ============================================
+
+[dir="rtl"] {
+  .alert {
+    text-align: right;
+    
+    .alert-heading {
+      text-align: right;
+    }
+    
+    .close {
+      left: 0;
+      right: auto;
+    }
+  }
+}
+
+// ============================================
+// BADGES
+// ============================================
+
+[dir="rtl"] {
+  .badge {
+    margin-left: 0;
+    margin-right: 0.25rem;
+  }
+}
+
+// ============================================
+// CLOSE BUTTON
+// ============================================
+
+[dir="rtl"] {
+  .close {
+    float: left;
+  }
+}
+
+// ============================================
+// LANGUAGE SWITCHER COMPONENT
+// ============================================
+
+.language-switcher {
+  position: fixed;
+  top: 1rem;
+  z-index: 1050;
+  left: 1rem;
+  right: auto;
+  
+  .btn {
+    min-width: 40px;
+    border-radius: 50%;
+    
+    &.active {
+      background-color: #7367f0;
+      border-color: #7367f0;
+      color: white;
+    }
+  }
+}
+
+[dir="rtl"] .language-switcher {
+  left: auto;
+  right: 1rem;
+}
+
+// ============================================
+// TOASTS / NOTIFICATIONS
+// ============================================
+
+[dir="rtl"] {
+  .toast,
+  .Vue-Toastification__toast {
+    text-align: end;
+    direction: rtl;
+  }
+}
+
+// ============================================
+// TOOLTIPS
+// ============================================
+
+[dir="rtl"] {
+  .tooltip {
+    text-align: end;
+  }
+}
+
+// ============================================
+// POPOVERS
+// ============================================
+
+[dir="rtl"] {
+  .popover {
+    text-align: end;
+    
+    .popover-header {
+      text-align: end;
+    }
+    
+    .popover-body {
+      text-align: end;
+    }
+  }
+}
+
+// ============================================
+// HELPER CLASSES
+// ============================================
+
+// Use these classes for items that should NOT be affected by RTL
+.no-flip {
+  direction: ltr !important;
+}
+
+.keep-ltr {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+.keep-rtl {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+// Flex utilities that respect direction
+.d-flex-rtl-aware {
+  display: flex;
+}
+
+[dir="rtl"] .d-flex-rtl-aware {
+  flex-direction: row-reverse;
+}
+
+// Icon container that flips in RTL
+.icon-directional {
+  display: inline-block;
+}
+
+[dir="rtl"] .icon-directional {
+  transform: scaleX(-1);
+}
+
+// ============================================
+// VUE-SELECT (v-select) RTL SUPPORT
+// ============================================
+
+[dir="rtl"] {
+  .v-select {
+    direction: rtl;
+    text-align: right;
+    
+    .vs__search {
+      text-align: right;
+    }
+    
+    .vs__actions {
+      padding: 0 7px 0 3px;
+    }
+    
+    .vs__selected {
+      margin-left: 2px;
+      margin-right: 0;
+    }
+    
+    .vs__deselect {
+      margin-left: 0;
+      margin-right: 4px;
+    }
+    
+    .vs__dropdown-menu {
+      text-align: right;
+    }
+  }
+}
+
+// ============================================
+// SWEET ALERT RTL SUPPORT
+// ============================================
+
+[dir="rtl"] {
+  .swal2-popup {
+    direction: rtl;
+    text-align: right;
+    
+    .swal2-actions {
+      direction: rtl;
+    }
+  }
+}
+
+// ============================================
+// VUE-FLATPICKR / DATE INPUTS RTL
+// ============================================
+
+[dir="rtl"] {
+  .flatpickr-calendar {
+    direction: rtl;
+    
+    .flatpickr-months {
+      .flatpickr-prev-month {
+        right: auto;
+        left: 0;
+      }
+      
+      .flatpickr-next-month {
+        left: auto;
+        right: 0;
+      }
+    }
+  }
+}
+
+// ============================================
+// CONTENT HEADER / BREADCRUMB RTL
+// ============================================
+
+[dir="rtl"] {
+  .content-header {
+    .content-header-title {
+      float: right !important;
+      padding-left: 1rem !important;
+      padding-right: 0 !important;
+      border-left: 1px solid #d6dce1;
+      border-right: 0;
+    }
+    
+    .content-header-right {
+      text-align: left !important;
+    }
+    
+    .breadcrumb-wrapper {
+      .breadcrumb {
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+[dir="ltr"] {
+  .content-header {
+    .content-header-title {
+      float: left !important;
+      padding-right: 1rem !important;
+      padding-left: 0 !important;
+      border-right: 1px solid #d6dce1;
+      border-left: 0;
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE DIRECTIONAL UTILITIES
+// ============================================
+
+[dir="rtl"] {
+  // Responsive text alignment
+  @media (min-width: 768px) {
+    .text-md-left { text-align: right !important; }
+    .text-md-right { text-align: left !important; }
+  }
+  
+  @media (min-width: 992px) {
+    .text-lg-left { text-align: right !important; }
+    .text-lg-right { text-align: left !important; }
+  }
+}
+
+// ============================================
+// FEATHER ICONS IN BUTTONS/LINKS RTL
+// ============================================
+
+[dir="rtl"] {
+  // Ensure icons in buttons have proper spacing
+  .btn {
+    svg, .feather {
+      &:first-child:not(:last-child) {
+        margin-left: 0.25rem;
+        margin-right: 0;
+      }
+      
+      &:last-child:not(:first-child) {
+        margin-right: 0.25rem;
+        margin-left: 0;
+      }
+    }
+  }
+  
+  // Spinner in buttons
+  .btn .spinner-border,
+  .btn .spinner-grow {
+    margin-left: 0.25rem;
+    margin-right: 0;
+  }
+}
+
+// ============================================
+// AUTHENTICATION PAGES RTL
+// ============================================
+
+[dir="rtl"] {
+  .auth-wrapper {
+    .brand-logo {
+      text-align: right;
+    }
+    
+    .auth-login-form,
+    .auth-register-form {
+      text-align: right;
+      
+      label {
+        text-align: right;
+      }
+    }
+  }
+}
+
+// ============================================
+// CAROUSEL RTL (from Vuexy custom-rtl)
+// ============================================
+
+[dir="rtl"] {
+  .carousel-control-next {
+    left: auto;
+    right: 0;
+  }
+  .carousel-control-prev {
+    left: 0;
+    right: auto;
+  }
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    transform: rotate(180deg);
+  }
+}
+
+// ============================================
+// TOOLTIP & POPOVER RTL (from Vuexy custom-rtl)
+// ============================================
+
+[dir="rtl"] {
+  .bs-tooltip-left .arrow::before,
+  .bs-tooltip-auto[x-placement^='left'] .arrow::before {
+    border-width: 0.4rem 0 0.4rem 0.4rem;
+  }
+
+  .bs-tooltip-left .arrow,
+  .bs-tooltip-auto[x-placement^='left'] .arrow {
+    right: 0;
+    left: auto;
+  }
+
+  .bs-tooltip-right .arrow::before,
+  .bs-tooltip-auto[x-placement^='right'] .arrow::before {
+    border-width: 0.4rem 0.4rem 0.4rem 0;
+  }
+
+  .bs-tooltip-right .arrow,
+  .bs-tooltip-auto[x-placement^='right'] .arrow {
+    left: 0;
+    right: auto;
+  }
+
+  .popover {
+    right: auto !important;
+  }
+}
+
+// ============================================
+// CODE BLOCKS / PRE - KEEP LTR
+// ============================================
+
+[dir="rtl"] {
+  code[class*='language-'],
+  pre[class*='language-'] {
+    direction: ltr;
+    text-align: left;
+  }
+}
+
+// ============================================
+// DATATABLE RTL (from Vuexy custom-rtl)
+// ============================================
+
+[dir="rtl"] {
+  div.dataTables_wrapper div.dataTables_filter {
+    text-align: left !important;
+  }
+  table.dataTable thead .sorting:before,
+  table.dataTable thead .sorting_asc:before,
+  table.dataTable thead .sorting_desc:before {
+    right: 0.45rem;
+  }
+}
+
+// ============================================
+// SELECT2 RTL (from Vuexy custom-rtl)
+// ============================================
+
+[dir="rtl"] {
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    left: 1px;
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    float: right;
+  }
+  .select2-search__field {
+    direction: rtl;
+  }
+}
+
+// ============================================
+// PROGRESS BAR RTL
+// ============================================
+
+[dir="rtl"] {
+  .progress-bar-animated {
+    animation: progress-bar-stripes 40s linear infinite;
+  }
+}
+
+// ============================================
+// TOAST RTL (from Vuexy custom-rtl)
+// ============================================
+
+[dir="rtl"] {
+  .toast {
+    right: 1rem;
+  }
+}
+
+// ============================================
+// CUSTOM NAVBAR RTL STYLES
+// ============================================
+
+[dir="rtl"] {
+  // Navbar styling - inherits from LTR, no changes needed for gradient
+  .header-navbar {
+    border-radius: 0 0 12px 12px;
+    
+    .navbar-container {
+      .dropdown-menu {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+      }
+    }
+  }
+
+  // Enhanced spacing for RTL layout
+  .vertical-layout {
+    // Sidebar left border for RTL
+    .main-menu {
+      border-left: 1px solid rgba(115, 103, 240, 0.1);
+      border-right: none;
+      box-shadow: -2px 0 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .content.app-content {
+      margin-left: 0 !important;
+      margin-right: 280px !important;
+      padding-right: 1.5rem;
+      padding-left: 0;
+    }
+
+    &.menu-collapsed .content.app-content {
+      margin-right: 100px !important;
+    }
+    
+    // Navbar positioning for RTL
+    .header-navbar.navbar-static-top {
+      left: 0 !important;
+      right: 280px !important;
+      width: calc(100vw - 280px) !important;
+    }
+    
+    &.menu-collapsed .header-navbar.navbar-static-top {
+      right: 100px !important;
+      width: calc(100vw - 100px) !important;
+    }
+  }
+}
+
+/*! rtl:end:ignore */

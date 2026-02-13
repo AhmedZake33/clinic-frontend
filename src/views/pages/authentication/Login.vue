@@ -1,12 +1,13 @@
 <template>
   <div class="auth-wrapper auth-v2">
+    <LanguageSwitcher />
     <b-row class="auth-inner m-0">
 
       <!-- Brand logo-->
       <b-link class="brand-logo">
         <vuexy-logo />
         <h2 class="brand-text text-primary ml-1">
-          Vuexy
+          {{ $t('clinic.name') }}
         </h2>
       </b-link>
       <!-- /Brand logo-->
@@ -41,10 +42,10 @@
             class="mb-1 font-weight-bold"
             title-tag="h2"
           >
-            Welcome to SmartEdu 👋
+            {{ $t('clinic.welcome') }} 👋
           </b-card-title>
           <b-card-text class="mb-2">
-            Please sign-in to your account and start the adventure
+            {{ $t('clinic.signIn') }}
           </b-card-text>
 
           <b-alert
@@ -79,7 +80,7 @@
             >
               <!-- email -->
               <b-form-group
-                label="Email"
+                :label="$t('clinic.email')"
                 label-for="login-email"
               >
                 <validation-provider
@@ -93,7 +94,7 @@
                     v-model="userEmail"
                     :state="errors.length > 0 ? false:null"
                     name="login-email"
-                    placeholder="john@example.com"
+                    :placeholder="$t('clinic.email')"
                   />
                   <small class="text-danger">{{ errors[0] }}</small>
                 </validation-provider>
@@ -102,7 +103,7 @@
               <!-- forgot password -->
               <b-form-group>
                 <div class="d-flex justify-content-between">
-                  <label for="login-password">Password</label>
+                  <label for="login-password">{{ $t('clinic.password') }}</label>
                   <!-- <b-link :to="{name:'auth-forgot-password'}">
                     <small>Forgot Password?</small>
                   </b-link> -->
@@ -124,7 +125,7 @@
                       class="form-control-merge"
                       :type="passwordFieldType"
                       name="login-password"
-                      placeholder="Password"
+                      :placeholder="$t('clinic.password')"
                     />
                     <b-input-group-append is-text>
                       <feather-icon
@@ -156,7 +157,7 @@
                 block
                 :disabled="invalid"
               >
-                Sign in
+                {{ $t('clinic.login') }}
               </b-button>
             </b-form>
           </validation-observer>
@@ -283,22 +284,29 @@ export default {
           email: this.userEmail,
           password: this.password,
         });
+        console.log("res");
+        console.log(res);
 
-        console.log(res.data.data);
-        try{
-          await store.dispatch('auth/login', { response:res })
-        }catch(err){
-          console.log(err);
+        const token = res.data.token
+        const user = res.data.user
+
+        // store state + localStorage
+        this.$store.commit('auth/SET_TOKEN', token)
+        this.$store.commit('auth/SET_USER', user)
+        
+        // Redirect based on role
+        const role = user.role;
+        if (role === 'doctor') {
+          this.$router.push({ name: 'doctor-dashboard' });
+        } else if (role === 'assistant') {
+          this.$router.push({ name: 'assistant-dashboard' });
+        } else {
+          this.$router.push({ name: 'dashboard' });
         }
 
-        // save token + user
-        localStorage.setItem("token", res.data.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.data.user));
-        this.$router.replace({name : "welcome"});
-        // this.$router.replace(getHomeRouteForLoggedInUser(res.data.data.user.type.name))
-
       } catch (err) {
-        this.$bvToast.toast("Invalid credentials", {
+        console.error(err);
+        this.$bvToast.toast(err.response?.data?.message || "Invalid credentials", {
           title: "Error",
           variant: "danger",
           solid: true,

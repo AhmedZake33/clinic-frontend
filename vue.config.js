@@ -44,5 +44,5 @@ module.exports = {
         return options
       })
   },
-  transpileDependencies: ['vue-echarts', 'resize-detector'],
+  transpileDependencies: ['vue-echarts', 'resize-detector', 'laravel-echo', 'pusher-js'],
 }

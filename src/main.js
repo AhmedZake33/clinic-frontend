@@ -19,6 +19,10 @@ import App from './App.vue'
 // Global Components
 import './global-components'
 
+// Register Language Switcher globally
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+Vue.component('LanguageSwitcher', LanguageSwitcher)
+
 // 3rd party plugins
 import '@axios'
 import '@/libs/acl'
@@ -28,6 +32,13 @@ import '@/libs/toastification'
 import '@/libs/sweet-alerts'
 import '@/libs/vue-select'
 import '@/libs/tour'
+
+// Laravel Echo / Reverb WebSocket
+import '@/libs/echo'
+
+// Global real-time broadcast notifications
+import GlobalBroadcast from '@/plugins/globalBroadcast'
+Vue.use(GlobalBroadcast)
 
 // Axios Mock Adapter
 import '@/@fake-db/db'
@@ -49,11 +60,19 @@ require('@core/scss/core.scss')
 // import assets styles
 require('@/assets/scss/style.scss')
 
+// RTL CSS for Arabic support - MUST come AFTER core.scss and style.scss
+// so manual RTL overrides take precedence over postcss-rtl auto-generated rules
+import '@/assets/scss/rtl.scss'
+
 Vue.config.productionTip = false
 
 new Vue({
   router,
   store,
   i18n,
+  created() {
+    // Initialize language store with current i18n locale without reloading
+    this.$store.dispatch('language/initializeLocale', this.$i18n.locale)
+  },
   render: h => h(App),
 }).$mount('#app')

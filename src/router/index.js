@@ -9,6 +9,7 @@ import welcome from './routes/welcome'
 import admin from './routes/admin'
 import teacher from './routes/teacher'
 import student from './routes/student'
+import clinic from './routes/clinic'
 import uiElements from './routes/ui-elements/index'
 import pages from './routes/pages'
 import chartsMaps from './routes/charts-maps'
@@ -25,12 +26,13 @@ const router = new VueRouter({
     return { x: 0, y: 0 }
   },
   routes: [
-    { path: '/', redirect: { name: 'dashboard' } },
+    { path: '/', redirect: { name: 'login' } },
     ...apps,
     ...welcome,
     ...admin,
     ...teacher,
     ...student,
+    ...clinic,
     ...pages,
     ...chartsMaps,
     ...formsTable,
@@ -48,23 +50,36 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
-  const user = JSON.parse(localStorage.getItem('user'))
+  const user = JSON.parse(localStorage.getItem('user') || 'null')
 
-  // console.log('roles'+to);
-  // console.log('to object:', JSON.stringify(to, null, 2))
+  // Redirect to login if not authenticated and route requires auth
+  if (!token && to.meta.requiresAuth) {
+    return next({ name: 'login' })
+  }
 
-  if (!token && to.name !== 'auth-login') {
-    if(to.meta.requiresAuth){
-      return next({ name: 'auth-login' })
-    }else{
-      return next();
+  // Redirect to role-specific dashboard if already logged in and trying to access login
+  if (token && to.name === 'login') {
+    if (user && user.role === 'doctor') {
+      return next({ name: 'doctor-dashboard' })
+    } else if (user && user.role === 'assistant') {
+      return next({ name: 'assistant-dashboard' })
+    } else {
+      return next({ name: 'dashboard' })
     }
   }
 
+  // Check role-based access for clinic routes
   if (to.meta.roles && user) {
-    const hasAccess = to.meta.roles.includes(user.type.name)
+    const hasAccess = to.meta.roles.includes(user.role)
     if (!hasAccess) {
-      return next({ name: 'error-404' }) // 🚫 redirect to 404
+      // Redirect to appropriate dashboard instead of 404
+      if (user.role === 'doctor') {
+        return next({ name: 'doctor-dashboard' })
+      } else if (user.role === 'assistant') {
+        return next({ name: 'assistant-dashboard' })
+      } else {
+        return next({ name: 'dashboard' })
+      }
     }
   }
 

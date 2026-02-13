@@ -7,6 +7,12 @@ const api = axios.create({ baseURL: 'http://localhost:8000/api' })
 api.interceptors.request.use(cfg => {
   const token = localStorage.getItem('token')
   if (token) cfg.headers.Authorization = `Bearer ${token}`
+
+  // Send socket ID so Laravel can exclude the current user from broadcasts
+  if (window.Echo && window.Echo.socketId()) {
+    cfg.headers['X-Socket-ID'] = window.Echo.socketId()
+  }
+
   return cfg
 })
 

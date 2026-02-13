@@ -18,7 +18,12 @@ export default function usAppConfig() {
   const isRTL = computed({
     get: () => store.state.appConfig.layout.isRTL,
     set: val => {
-      store.commit('appConfig/TOGGLE_RTL', val)
+      store.commit('appConfig/SET_RTL', val)
+      // Also sync language store direction
+      const locale = val ? 'ar' : 'en'
+      if (store.getters['language/currentLocale'] !== locale) {
+        store.dispatch('language/changeLocale', locale)
+      }
     },
   })
 

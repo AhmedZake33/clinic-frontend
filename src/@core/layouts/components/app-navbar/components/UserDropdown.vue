@@ -1,43 +1,46 @@
 <template>
   <b-nav-item-dropdown
-    right
+    :right="isRTL"
     toggle-class="d-flex align-items-center dropdown-user-link"
     class="dropdown-user"
+    :menu-class="isRTL ? 'dropdown-menu-left' : 'dropdown-menu-right'"
   >
     <template v-if="userData" #button-content>
-      <div class="d-sm-flex d-none user-nav">
-        <p class="user-name font-weight-bolder mb-0">
-          {{ userData.name || userData.name }}
-        </p>
-        <span class="user-status">{{ userData.type.name }}</span>
+      <div class="d-flex align-items-center" :class="isRTL ? 'flex-row-reverse' : ''">
+        <div class="d-sm-flex d-none user-nav" :class="isRTL ? 'ml-1 text-right' : 'mr-1 text-left'">
+          <p class="user-name font-weight-bolder mb-0">
+            {{ userData.name }}
+          </p>
+          <span class="user-status">{{ userData.role }}</span>
+        </div>
+        <b-avatar
+          size="40"
+          :src="userData.avatar"
+          variant="light-primary"
+          badge
+          class="badge-minimal"
+          badge-variant="success"
+        >
+          <feather-icon
+            v-if="!userData.avatar"
+            icon="UserIcon"
+            size="22"
+          />
+        </b-avatar>
       </div>
-      <b-avatar
-        size="40"
-        :src="userData.avatar"
-        variant="light-primary"
-        badge
-        class="badge-minimal"
-        badge-variant="success"
-      >
-        <feather-icon
-          v-if="!userData.fullName"
-          icon="UserIcon"
-          size="22"
-        />
-      </b-avatar>
     </template>
 
    
     <b-dropdown-item
-      link-class="d-flex align-items-center"
+      :link-class="['d-flex', 'align-items-center', isRTL ? 'flex-row-reverse' : '']"
       @click="logout"
     >
       <feather-icon
         size="16"
         icon="LogOutIcon"
-        class="mr-50"
+        :class="isRTL ? 'ml-50' : 'mr-50'"
       />
-      <span>Logout</span>
+      <span>{{ $t('actions.logout') || 'Logout' }}</span>
     </b-dropdown-item></b-nav-item-dropdown>
 </template>
 
@@ -62,23 +65,19 @@ export default {
       avatarText,
     }
   },
+  computed: {
+    isRTL() {
+      return this.$store.getters['language/isRTL']
+    },
+  },
   methods: {
     logout() {
-      // Remove userData from localStorage
-      // ? You just removed token from localStorage. If you like, you can also make API call to backend to blacklist used token
-      // localStorage.removeItem(useJwt.jwtConfig.storageTokenKeyName)
-      // localStorage.removeItem(useJwt.jwtConfig.storageRefreshTokenKeyName)
-
-      // Remove userData from localStorage
+      // Remove userData and token from localStorage
       localStorage.removeItem('user')
-
       localStorage.removeItem('token')
 
-      // Reset ability
-      // this.$ability.update(initialAbility)
-
       // Redirect to login page
-      this.$router.push({ name: 'auth-login' })
+      this.$router.push({ name: 'login' })
     },
   },
 }

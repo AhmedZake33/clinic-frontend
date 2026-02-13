@@ -12,8 +12,10 @@
     >
       <b-row class="breadcrumbs-top">
         <b-col cols="12">
-          <h2 class="content-header-title float-left pr-1 mb-0">
-            {{ $route.meta.pageTitle }}
+          <h2 class="content-header-title mb-0"
+            :class="isRTL ? 'float-right pl-1' : 'float-left pr-1'"
+          >
+            {{ pageTitle }}
           </h2>
           <div class="breadcrumb-wrapper">
             <b-breadcrumb>
@@ -25,7 +27,7 @@
                 />
               </b-breadcrumb-item>
               <b-breadcrumb-item
-                v-for="item in $route.meta.breadcrumb"
+                v-for="item in breadcrumbItems"
                 :key="item.text"
                 :active="item.active"
                 :to="item.to"
@@ -39,61 +41,6 @@
     </b-col>
 
     <!-- Content Right -->
-    <b-col
-      class="content-header-right text-md-right d-md-block d-none mb-1"
-      md="3"
-      cols="12"
-    >
-      <b-dropdown
-        variant="link"
-        no-caret
-        toggle-class="p-0"
-        right
-      >
-
-        <template #button-content>
-          <b-button
-            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-            variant="primary"
-            class="btn-icon"
-          >
-            <feather-icon icon="SettingsIcon" />
-          </b-button>
-        </template>
-
-        <b-dropdown-item :to="{ name: 'apps-todo' }">
-          <feather-icon
-            icon="CheckSquareIcon"
-            size="16"
-          />
-          <span class="align-middle ml-50">Todo</span>
-        </b-dropdown-item>
-
-        <b-dropdown-item :to="{ name: 'apps-chat' }">
-          <feather-icon
-            icon="MessageSquareIcon"
-            size="16"
-          />
-          <span class="align-middle ml-50">Chat</span>
-        </b-dropdown-item>
-
-        <b-dropdown-item :to="{ name: 'apps-email' }">
-          <feather-icon
-            icon="MailIcon"
-            size="16"
-          />
-          <span class="align-middle ml-50">Email</span>
-        </b-dropdown-item>
-
-        <b-dropdown-item :to="{ name: 'apps-calendar' }">
-          <feather-icon
-            icon="CalendarIcon"
-            size="16"
-          />
-          <span class="align-middle ml-50">Calendar</span>
-        </b-dropdown-item>
-      </b-dropdown>
-    </b-col>
   </b-row>
 </template>
 
@@ -115,6 +62,30 @@ export default {
     BDropdown,
     BDropdownItem,
     BButton,
+  },
+  computed: {
+    isRTL() {
+      return this.$store.getters['language/isRTL']
+    },
+    pageTitle() {
+      const { pageTitle, pageI18n } = this.$route.meta
+      return pageI18n ? this.$t(pageTitle) : pageTitle
+    },
+    breadcrumbItems() {
+      if (!this.$route.meta.breadcrumb) return []
+      return this.$route.meta.breadcrumb.map(item => ({
+        ...item,
+        text: item.i18n ? this.$t(item.text) : item.text,
+      }))
+    },
+  },
+  watch: {
+    '$i18n.locale': {
+      handler() {
+        // Force re-render when locale changes
+        this.$forceUpdate()
+      },
+    },
   },
 }
 </script>

@@ -1,5 +1,7 @@
 import Vue from 'vue'
-import { abilitiesPlugin } from '@casl/vue'
-import ability from './ability'
+import Permission from './ability'
 
-Vue.use(abilitiesPlugin, ability)
+// Register a global method to check permissions
+Vue.prototype.$can = function(action, resource) {
+  return Permission(resource)
+}

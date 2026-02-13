@@ -3,35 +3,32 @@
     id="dropdown-grouped"
     variant="link"
     class="dropdown-language"
-    right
+    :right="isRTL"
+    :menu-class="isRTL ? 'dropdown-menu-left' : 'dropdown-menu-right'"
   >
     <template #button-content>
-      <b-img
-        :src="currentLocale.img"
-        height="14px"
-        width="22px"
-        :alt="currentLocale.locale"
-      />
-      <span class="ml-50 text-body">{{ currentLocale.name }}</span>
+      <div class="d-flex align-items-center" :class="isRTL ? 'flex-row-reverse' : ''">
+        <span class="locale-flag">{{ currentLocaleObj.flag }}</span>
+        <span class="text-body" :class="isRTL ? 'mr-50' : 'ml-50'">{{ currentLocaleObj.name }}</span>
+      </div>
     </template>
     <b-dropdown-item
       v-for="localeObj in locales"
       :key="localeObj.locale"
-      @click="$i18n.locale = localeObj.locale"
+      :class="{ 'active': localeObj.locale === currentLocale }"
+      @click="changeLanguage(localeObj.locale)"
     >
-      <b-img
-        :src="localeObj.img"
-        height="14px"
-        width="22px"
-        :alt="localeObj.locale"
-      />
-      <span class="ml-50">{{ localeObj.name }}</span>
+      <div class="d-flex align-items-center" :class="isRTL ? 'flex-row-reverse' : ''">
+        <span class="locale-flag">{{ localeObj.flag }}</span>
+        <span :class="isRTL ? 'mr-50' : 'ml-50'">{{ localeObj.name }}</span>
+      </div>
     </b-dropdown-item>
   </b-nav-item-dropdown>
 </template>
 
 <script>
 import { BNavItemDropdown, BDropdownItem, BImg } from 'bootstrap-vue'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
@@ -39,37 +36,36 @@ export default {
     BDropdownItem,
     BImg,
   },
-  // ! Need to move this computed property to comp function once we get to Vue 3
   computed: {
-    currentLocale() {
-      return this.locales.find(l => l.locale === this.$i18n.locale)
+    ...mapGetters('language', ['currentLocale']),
+    isRTL() {
+      return this.$store.getters['language/isRTL']
+    },
+    currentLocaleObj() {
+      return this.locales.find(l => l.locale === this.currentLocale)
     },
   },
+  methods: {
+    ...mapActions('language', ['changeLocale']),
+    changeLanguage(locale) {
+      if (this.currentLocale !== locale) {
+        this.changeLocale(locale)
+      }
+    }
+  },
   setup() {
-    /* eslint-disable global-require */
     const locales = [
       {
         locale: 'en',
-        img: require('@/assets/images/flags/en.png'),
+        flag: '🇺🇸',
         name: 'English',
       },
       {
-        locale: 'fr',
-        img: require('@/assets/images/flags/fr.png'),
-        name: 'French',
-      },
-      {
-        locale: 'de',
-        img: require('@/assets/images/flags/de.png'),
-        name: 'German',
-      },
-      {
-        locale: 'pt',
-        img: require('@/assets/images/flags/pt.png'),
-        name: 'Portuguese',
+        locale: 'ar',
+        flag: '🇸🇦',
+        name: 'العربية',
       },
     ]
-    /* eslint-disable global-require */
 
     return {
       locales,
@@ -78,6 +74,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.locale-flag {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+</style><style>
 
 </style>

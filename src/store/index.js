@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import auth from './modules/auth'
+import broadcast from './modules/broadcast'
 
 
 // Modules
@@ -8,6 +9,7 @@ import ecommerceStoreModule from '@/views/apps/e-commerce/eCommerceStoreModule'
 import app from './app'
 import appConfig from './app-config'
 import verticalMenu from './vertical-menu'
+import language from './language'
 
 Vue.use(Vuex)
 
@@ -27,8 +29,10 @@ export default new Vuex.Store({
     app,
     appConfig,
     verticalMenu,
+    language,
     'app-ecommerce': ecommerceStoreModule,
     auth,
+    broadcast,
   },
   strict: process.env.DEV,
 })

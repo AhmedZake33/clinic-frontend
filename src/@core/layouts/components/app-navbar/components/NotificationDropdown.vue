@@ -17,7 +17,7 @@
     <!-- Header -->
     <li class="dropdown-menu-header">
       <div class="dropdown-header d-flex">
-        <h4 class="notification-title mb-0 mr-auto">
+        <h4 class="notification-title mb-0 me-auto">
           Notifications
         </h4>
         <b-badge
@@ -61,7 +61,7 @@
 
       <!-- System Notification Toggler -->
       <div class="media d-flex align-items-center">
-        <h6 class="font-weight-bolder mr-auto mb-0">
+        <h6 class="font-weight-bolder me-auto mb-0">
           System Notifications
         </h6>
         <b-form-checkbox

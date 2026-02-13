@@ -1,4 +1,6 @@
 // src/store/modules/auth.js
+import { updateEchoAuth, leaveAllChannels } from '@/libs/echo'
+
 export default {
   namespaced: true,
   state: {
@@ -7,7 +9,16 @@ export default {
   },
   getters: {
     isLoggedIn: state => !!state.token,
-    userRole: state => state.user?.type?.name || 'admin',
+    userRole: state => {
+      // prefer Vuex state, fallback to localStorage
+      if (state.user && state.user.role) return state.user.role
+      try {
+        const u = JSON.parse(localStorage.getItem('user') || 'null')
+        return u?.role || ''
+      } catch (e) {
+        return ''
+      }
+    },
   },
   mutations: {
     SET_TOKEN(state, token) {
@@ -26,14 +37,15 @@ export default {
     },
   },
   actions: {
-    // Fake login example (replace with real API call)
-    login({ commit }, { response }) {
-
-      console.log('response' + response);
-      commit('SET_TOKEN', response.data.data.token)
-      commit('SET_USER', response.data.data.user)
+    login({ commit }, { token, user }) {
+      commit('SET_TOKEN', token)
+      commit('SET_USER', user)
+      // Update Echo auth headers so WebSocket channels can authenticate
+      updateEchoAuth()
     },
     logout({ commit }) {
+      // Disconnect all WebSocket channels before clearing credentials
+      leaveAllChannels()
       commit('LOGOUT')
     },
   },

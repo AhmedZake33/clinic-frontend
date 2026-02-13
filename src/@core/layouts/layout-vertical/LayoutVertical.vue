@@ -8,7 +8,7 @@
     <b-navbar
       :toggleable="false"
       :variant="navbarBackgroundColor"
-      class="header-navbar navbar navbar-shadow align-items-center"
+      class="header-navbar navbar navbar-shadow align-items-center mb-2"
       :class="[navbarTypeClass]"
     >
       <slot
@@ -69,8 +69,6 @@
       </slot>
     </footer>
     <!-- /Footer -->
-
-    <slot name="customizer" />
   </div>
 </template>
 
@@ -111,7 +109,7 @@ export default {
     isLoggedIn() {
       return this.$store.getters['auth/isLoggedIn']
     },
-  filteredNavItems() {
+    filteredNavItems() {
     const role = this.$store.getters['auth/userRole']
     console.log('Current role:', role)
 
@@ -124,10 +122,10 @@ export default {
             children = filterByRole(item.children)
           }
 
-          // Check role restriction
+          // Check role restriction - use resource property instead of meta.role
           const allowed =
-            !item.meta?.role ||
-            item.meta.role.map(r => r.toLowerCase()).includes(role.toLowerCase())
+            !item.resource ||
+            item.resource.toLowerCase() === role.toLowerCase()
 
           // Keep this item only if:
           //  - user is allowed
@@ -147,7 +145,20 @@ export default {
     console.log('Filtered nav items:', filtered)
     return filtered
   },
-
+  },
+  watch: {
+    isLoggedIn: {
+      handler(newVal) {
+        if (newVal) {
+          // Ensure sidebar is visible when user logs in
+          this.$nextTick(() => {
+            // Force window width update to trigger sidebar visibility
+            this.$store.commit('app/UPDATE_WINDOW_WIDTH', window.innerWidth)
+          })
+        }
+      },
+      immediate: true
+    }
   },
   setup() {
     const {

@@ -19,28 +19,11 @@
         :toggleCollapsed="toggleCollapsed"
         :collapseTogglerIcon="collapseTogglerIcon"
       >
-        <ul class="nav navbar-nav flex-row">
-
-          <!-- Logo & Text -->
-          <li class="nav-item mr-auto">
-            <b-link
-              class="navbar-brand"
-              to="welcome"
-            >
-              <span class="brand-logo">
-                <b-img
-                  :src="appLogoImage"
-                  alt="logo"
-                />
-              </span>
-              <h2 class="brand-text">
-                {{ appName }}
-              </h2>
-            </b-link>
-          </li>
-
+        <ul class="nav navbar-nav flex-row w-100 align-items-center"
+            :class="{ 'sidebar-header-rtl': $store.getters['language/isRTL'] }"
+        >
           <!-- Toggler Button -->
-          <li class="nav-item nav-toggle">
+          <li class="nav-item nav-toggle" :class="$store.getters['language/isRTL'] ? 'order-1' : 'order-3'">
             <b-link class="nav-link modern-nav-toggle">
               <feather-icon
                 icon="XIcon"
@@ -54,6 +37,33 @@
                 class="d-none d-xl-block collapse-toggle-icon"
                 @click="toggleCollapsed"
               />
+            </b-link>
+          </li>
+
+          <!-- App Name (center) -->
+          <li class="nav-item order-2 flex-grow-1 text-center">
+            <b-link
+              class="navbar-brand d-flex align-items-center justify-content-center mb-0"
+              to="welcome"
+            >
+              <h2 class="brand-text mb-0">
+                {{ $t('clinic.appName') || appName }}
+              </h2>
+            </b-link>
+          </li>
+
+          <!-- Logo -->
+          <li class="nav-item" :class="$store.getters['language/isRTL'] ? 'order-3' : 'order-1'">
+            <b-link
+              class="navbar-brand d-flex align-items-center mb-0"
+              to="welcome"
+            >
+              <span class="brand-logo">
+                <b-img
+                  :src="appLogoImage"
+                  alt="logo"
+                />
+              </span>
             </b-link>
           </li>
         </ul>
@@ -169,4 +179,8 @@ export default {
 
 <style lang="scss">
 @import "~@core/scss/base/core/menu/menu-types/vertical-menu.scss";
+
+.sidebar-header-rtl {
+  direction: ltr; // force left-to-right ordering so toggle is on the left
+}
 </style>

@@ -3,7 +3,7 @@ import { $themeBreakpoints } from '@themeConfig'
 export default {
   namespaced: true,
   state: {
-    windowWidth: 0,
+    windowWidth: 0, // Start with 0 to force update on mount
     shallShowOverlay: false,
   },
   getters: {
