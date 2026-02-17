@@ -1,6 +1,12 @@
 <template>
   <div>
-    <b-card :title="$t('menu.schedule')">
+    <div v-if="pageLoading" class="text-center py-5">
+      <b-spinner variant="primary" class="mb-1" />
+      <div class="text-muted">{{ $t('messages.loading') }}</div>
+    </div>
+
+    <template v-else>
+      <b-card :title="$t('menu.schedule')">
       <b-form @submit.prevent="saveAvailability">
         <b-form-group :label="$t('reservation.appointmentDuration')" class="mb-2">
           <b-form-select v-model="appointmentDuration" :options="durationOptions" />
@@ -31,7 +37,7 @@
               <b-form-input type="time" v-model="slot.end_time" required />
             </b-col>
             <b-col cols="2" md="2">
-              <b-button type="button" size="sm" variant="outline-danger" @click="removeSlot(day.index, idx)">
+              <b-button type="button" size="sm" variant="outline-danger" v-b-tooltip.hover :title="$t('actions.remove')" @click="removeSlot(day.index, idx)">
                 <feather-icon icon="TrashIcon" size="14" />
               </b-button>
             </b-col>
@@ -45,9 +51,9 @@
           </b-button>
         </div>
       </b-form>
-    </b-card>
+      </b-card>
 
-    <b-card class="mt-2" :title="$t('reservation.holidays')">
+      <b-card class="mt-2" :title="$t('reservation.holidays')">
       <b-form @submit.prevent="addHoliday">
         <b-row>
           <b-col md="3">
@@ -76,7 +82,7 @@
           {{ holidayDisplay(data.item) }}
         </template>
         <template #cell(actions)="data">
-          <b-button size="sm" variant="danger" @click="removeHoliday(data.item)">
+          <b-button size="sm" variant="danger" v-b-tooltip.hover :title="$t('actions.delete')" @click="removeHoliday(data.item)">
             <feather-icon icon="TrashIcon" />
           </b-button>
         </template>
@@ -93,18 +99,22 @@
       <div class="text-center text-muted small mt-1" v-if="holidaysPagination.total">
         {{ paginationCountText(holidaysPagination) }}
       </div>
-    </b-card>
+      </b-card>
+    </template>
   </div>
 </template>
 
 <script>
-import { BCard, BForm, BTable, BPagination, BButton, BRow, BCol, BFormInput, BSpinner, BFormGroup, BFormSelect } from 'bootstrap-vue'
+import { BCard, BForm, BTable, BPagination, BButton, BRow, BCol, BFormInput, BSpinner, BFormGroup, BFormSelect, VBTooltip } from 'bootstrap-vue'
 import scheduleService from '@/services/schedule'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 let slotKeyCounter = 0
 
 export default {
+  directives: {
+    'b-tooltip': VBTooltip,
+  },
   components: { BCard, BForm, BTable, BPagination, BButton, BRow, BCol, BFormInput, BSpinner, BFormGroup, BFormSelect },
   data() {
     return {
@@ -134,15 +144,19 @@ export default {
       ],
       saving: false,
       addingHoliday: false,
+      pageLoading: true,
       newHoliday: { type: 'date', date: '', recurring_day_of_week: null, reason: '' },
     }
   },
-  mounted() {
+  async mounted() {
     this.user = JSON.parse(localStorage.getItem('user') || 'null')
     if (this.user) {
-      this.fetchAvailability()
-      this.fetchHolidays()
+      await Promise.all([
+        this.fetchAvailability(),
+        this.fetchHolidays(),
+      ])
     }
+    this.pageLoading = false
   },
   methods: {
     dayName(idx) {

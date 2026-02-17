@@ -20,6 +20,10 @@ export default {
   completeReservation(id, data) {
     return apiClient.post(`/reservations/${id}/complete`, data)
   },
+
+  confirmReservation(id) {
+    return apiClient.post(`/reservations/${id}/confirm`)
+  },
   
   generatePrescription(id) {
     return apiClient.get(`/reservations/${id}/prescription`, {

@@ -104,13 +104,15 @@
           >
             <template #cell(status)="data">
               <b-badge :variant="getStatusVariant(data.value)">
-                {{ data.value }}
+                {{ $t('reservation.' + data.value) }}
               </b-badge>
             </template>
 
             <template #cell(actions)="data">
               <b-button
                 v-if="data.item.status !== 'completed'"
+                v-b-tooltip.hover
+                :title="$t('reservation.completeReservation')"
                 variant="success"
                 size="sm"
                 :to="{ name: 'doctor-reservations' }"
@@ -162,10 +164,14 @@ import {
   BTable,
   BBadge,
   BSpinner,
+  VBTooltip,
 } from 'bootstrap-vue'
 import reservationsService from '@/services/reservations'
 
 export default {
+  directives: {
+    'b-tooltip': VBTooltip,
+  },
   components: {
     BCard,
     BRow,
@@ -274,11 +280,15 @@ export default {
     },
     formatDateTime(value) {
       if (!value) return 'N/A'
-      return new Date(value).toLocaleString()
+      // Parse as local time since backend returns Y-m-d H:i:s format
+      const date = new Date(value + (value.includes(' ') ? '' : ''))
+      return date.toLocaleString()
     },
     formatTime(value) {
       if (!value) return 'N/A'
-      return new Date(value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      // Parse as local time since backend returns Y-m-d H:i:s format
+      const date = new Date(value + (value.includes(' ') ? '' : ''))
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     },
   },
 }

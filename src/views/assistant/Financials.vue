@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div v-if="pageLoading" class="text-center py-5">
+      <b-spinner variant="primary" class="mb-1" />
+      <div class="text-muted">{{ $t('messages.loading') }}</div>
+    </div>
+
+    <div v-else>
     <!-- Summary Cards -->
     <b-row class="mb-2">
       <b-col md="3">
@@ -118,13 +124,13 @@
           {{ $t('financial.' + data.value) }}
         </template>
         <template #cell(actions)="data">
-          <b-button variant="info" size="sm" class="mr-1" @click="viewFinancial(data.item)">
+          <b-button v-b-tooltip.hover :title="$t('actions.view')" variant="info" size="sm" class="mr-1" @click="viewFinancial(data.item)">
             <feather-icon icon="EyeIcon" />
           </b-button>
-          <b-button variant="warning" size="sm" class="mr-1" @click="showEditModal(data.item)">
+          <b-button v-b-tooltip.hover :title="$t('actions.edit')" variant="warning" size="sm" class="mr-1" @click="showEditModal(data.item)">
             <feather-icon icon="EditIcon" />
           </b-button>
-          <b-button variant="danger" size="sm" @click="deleteFinancial(data.item)">
+          <b-button v-b-tooltip.hover :title="$t('actions.delete')" variant="danger" size="sm" @click="deleteFinancial(data.item)">
             <feather-icon icon="TrashIcon" />
           </b-button>
         </template>
@@ -269,6 +275,7 @@
         <p><strong>{{ $t('reservation.created') }}:</strong> {{ formatDateTime(selectedFinancial.created_at) }}</p>
       </div>
     </b-modal>
+    </div>
   </div>
 </template>
 
@@ -290,6 +297,7 @@ import {
   BFormTextarea,
   BSpinner,
   BBadge,
+  VBTooltip,
 } from 'bootstrap-vue'
 import financialsService from '@/services/financials'
 import reservationsService from '@/services/reservations'
@@ -314,6 +322,9 @@ export default {
     BSpinner,
     BBadge,
   },
+  directives: {
+    'b-tooltip': VBTooltip,
+  },
   data() {
     return {
       financials: [],
@@ -331,6 +342,7 @@ export default {
         total_remaining: 0,
         total_records: 0,
       },
+      pageLoading: true,
       loading: false,
       modalShow: false,
       viewModalShow: false,
@@ -359,11 +371,17 @@ export default {
       this.fetchSummary()
     },
   },
-  mounted() {
-    this.fetchFinancials()
-    this.fetchSummary()
-    this.fetchReservations()
-    this.fetchDoctors()
+  async mounted() {
+    try {
+      await Promise.all([
+        this.fetchFinancials(),
+        this.fetchSummary(),
+        this.fetchReservations(),
+        this.fetchDoctors(),
+      ])
+    } finally {
+      this.pageLoading = false
+    }
   },
   computed: {
     fields() {
@@ -406,7 +424,7 @@ export default {
     reservationOptions() {
       return this.reservations.map(r => ({
         value: r.id,
-        text: `#${r.id} - ${r.client?.name || ''} - ${r.appointment_date ? new Date(r.appointment_date).toLocaleDateString() : ''}`,
+        text: `#${r.id} - ${r.client?.name || ''} - ${r.appointment_date ? new Date(r.appointment_date + (r.appointment_date.includes(' ') ? '' : '')).toLocaleDateString() : ''}`,
       }))
     },
     doctorSelectOptions() {
@@ -574,7 +592,9 @@ export default {
     },
     formatDateTime(value) {
       if (!value) return ''
-      return new Date(value).toLocaleString()
+      // Parse as local time since backend returns Y-m-d H:i:s format
+      const date = new Date(value + (value.includes(' ') ? '' : ''))
+      return date.toLocaleString()
     },
     formatCurrency(value) {
       return parseFloat(value || 0).toFixed(2)

@@ -52,12 +52,28 @@
       >
         <template #cell(status)="data">
           <b-badge :variant="getStatusVariant(data.value)">
-            {{ data.value }}
+            {{ $t('reservation.' + data.value) }}
           </b-badge>
+        </template>
+
+        <template #cell(requirements)="data">
+          <span v-if="!data.item.requires_xray && !data.item.requires_lab" class="text-muted">—</span>
+          <span v-else>
+            <b-badge v-if="data.item.requires_xray" variant="warning" class="mr-50">
+              <feather-icon icon="ImageIcon" size="12" class="mr-25" />
+              {{ $t('reservation.xray') }}
+            </b-badge>
+            <b-badge v-if="data.item.requires_lab" variant="info">
+              <feather-icon icon="ActivityIcon" size="12" class="mr-25" />
+              {{ $t('reservation.lab') }}
+            </b-badge>
+          </span>
         </template>
 
         <template #cell(actions)="data">
           <b-button
+            v-b-tooltip.hover
+            :title="$t('actions.view')"
             variant="info"
             size="sm"
             class="mr-1"
@@ -66,7 +82,20 @@
             <feather-icon icon="EyeIcon" />
           </b-button>
           <b-button
+            v-if="data.item.status === 'pending'"
+            v-b-tooltip.hover
+            :title="$t('actions.confirm')"
+            variant="success"
+            size="sm"
+            class="mr-1"
+            @click="confirmReservation(data.item)"
+          >
+            <feather-icon icon="CheckCircleIcon" />
+          </b-button>
+          <b-button
             v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
+            v-b-tooltip.hover
+            :title="$t('actions.edit')"
             variant="warning"
             size="sm"
             class="mr-1"
@@ -76,6 +105,8 @@
           </b-button>
           <b-button
             v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
+            v-b-tooltip.hover
+            :title="$t('actions.cancel')"
             variant="danger"
             size="sm"
             @click="cancelReservation(data.item)"
@@ -252,7 +283,7 @@
             <p v-if="selectedReservation.doctor"><strong>{{ $t('table.doctor') }}:</strong> {{ selectedReservation.doctor.name }}</p>
             <p><strong>{{ $t('table.status') }}:</strong> 
               <b-badge :variant="getStatusVariant(selectedReservation.status)">
-                {{ selectedReservation.status }}
+                {{ $t('reservation.' + selectedReservation.status) }}
               </b-badge>
             </p>
           </b-col>
@@ -274,6 +305,25 @@
         <div v-if="selectedReservation.treatment">
           <p><strong>{{ $t('reservation.treatment') }}:</strong></p>
           <p>{{ selectedReservation.treatment }}</p>
+        </div>
+
+        <div v-if="selectedReservation.requires_xray || selectedReservation.requires_lab">
+          <hr>
+          <h6>{{ $t('reservation.additionalRequirements') }}</h6>
+          <div v-if="selectedReservation.requires_xray" class="mb-1">
+            <b-badge variant="warning" class="mr-1">
+              <feather-icon icon="ImageIcon" size="12" class="mr-25" />
+              {{ $t('reservation.requiresXray') }}
+            </b-badge>
+            <p v-if="selectedReservation.xray_notes" class="mt-50 text-muted small">{{ selectedReservation.xray_notes }}</p>
+          </div>
+          <div v-if="selectedReservation.requires_lab">
+            <b-badge variant="info" class="mr-1">
+              <feather-icon icon="ActivityIcon" size="12" class="mr-25" />
+              {{ $t('reservation.requiresLab') }}
+            </b-badge>
+            <p v-if="selectedReservation.lab_notes" class="mt-50 text-muted small">{{ selectedReservation.lab_notes }}</p>
+          </div>
         </div>
       </div>
     </b-modal>
@@ -317,7 +367,7 @@
           <b-form-select
             id="edit-status"
             v-model="editForm.status"
-            :options="statusOptions"
+            :options="editStatusOptions"
             required
           />
         </b-form-group>
@@ -363,6 +413,7 @@ import {
   BSpinner,
   BBadge,
   BAlert,
+  VBTooltip,
 } from 'bootstrap-vue'
 import reservationsService from '@/services/reservations'
 import clientsService from '@/services/clients'
@@ -387,6 +438,9 @@ export default {
     BSpinner,
     BBadge,
     BAlert,
+  },
+  directives: {
+    'b-tooltip': VBTooltip,
   },
   data() {
     return {
@@ -440,6 +494,7 @@ export default {
         { key: 'doctor.name', label: 'table.doctor', sortable: true },
         { key: 'appointment_date', label: 'table.appointment', formatter: this.formatDateTime, sortable: true },
         { key: 'status', label: 'table.status', sortable: true },
+        { key: 'requirements', label: 'reservation.requirements' },
         { key: 'actions', label: 'table.actions' },
       ],
     }
@@ -491,6 +546,17 @@ export default {
         { value: 'completed', text: this.$t('reservation.completed') },
         { value: 'cancelled', text: this.$t('reservation.cancelled') },
       ]
+    },
+    editStatusOptions() {
+      const current = this.editForm.status
+      const transitions = {
+        pending: ['pending', 'confirmed', 'cancelled'],
+        confirmed: ['confirmed', 'cancelled'],
+        completed: ['completed'],
+        cancelled: ['cancelled'],
+      }
+      const allowed = transitions[current] || [current]
+      return allowed.map(s => ({ value: s, text: this.$t('reservation.' + s) }))
     },
     paymentMethodOptions() {
       return [
@@ -722,6 +788,44 @@ export default {
         this.saving = false
       }
     },
+    async confirmReservation(reservation) {
+      const result = await this.$swal({
+        title: this.$t('messages.confirmReservationTitle'),
+        text: this.$t('messages.confirmReservationText', { client: reservation.client?.name || '' }),
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: this.$t('actions.confirm'),
+        cancelButtonText: this.$t('actions.cancel'),
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-outline-secondary ml-1',
+        },
+        buttonsStyling: false,
+      })
+      if (!result.isConfirmed) return
+
+      try {
+        await reservationsService.confirmReservation(reservation.id)
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.success'),
+            text: this.$t('messages.reservationConfirmed'),
+            variant: 'success',
+          },
+        })
+        this.fetchReservations()
+      } catch (error) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: error.response?.data?.message || error.response?.data?.error || this.$t('messages.confirmReservationError'),
+            variant: 'danger',
+          },
+        })
+      }
+    },
     async cancelReservation(reservation) {
       const result = await this.$swal({
         title: this.$t('messages.cancelReservationConfirm'),
@@ -778,7 +882,9 @@ export default {
     },
     formatDateTime(value) {
       if (!value) return 'N/A'
-      return new Date(value).toLocaleString()
+      // Parse as local time since backend returns Y-m-d H:i:s format
+      const date = new Date(value + (value.includes(' ') ? '' : ''))
+      return date.toLocaleString()
     },
     paginationCountText(paginationState) {
       if (!paginationState?.total) return '0 / 0'

@@ -122,7 +122,7 @@
           >
             <template #cell(status)="data">
               <b-badge :variant="getStatusVariant(data.value)">
-                {{ data.value }}
+                {{ $t('reservation.' + data.value) }}
               </b-badge>
             </template>
 
@@ -132,7 +132,7 @@
                 size="sm"
                 :to="{ name: 'assistant-reservations' }"
               >
-                View
+                {{ $t('actions.view') }}
               </b-button>
             </template>
 
@@ -261,7 +261,9 @@ export default {
     },
     formatDateTime(value) {
       if (!value) return 'N/A'
-      return new Date(value).toLocaleString()
+      // Parse as local time since backend returns Y-m-d H:i:s format
+      const date = new Date(value + (value.includes(' ') ? '' : ''))
+      return date.toLocaleString()
     },
   },
 }

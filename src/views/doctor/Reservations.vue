@@ -43,12 +43,14 @@
       >
         <template #cell(status)="data">
           <b-badge :variant="getStatusVariant(data.value)">
-            {{ data.value }}
+            {{ $t('reservation.' + data.value) }}
           </b-badge>
         </template>
 
         <template #cell(actions)="data">
           <b-button
+            v-b-tooltip.hover
+            :title="$t('actions.view')"
             variant="info"
             size="sm"
             class="mr-1"
@@ -130,6 +132,49 @@
           />
         </b-form-group>
 
+        <hr>
+        <h6>{{ $t('reservation.additionalRequirements') }}</h6>
+
+        <b-form-checkbox
+          v-model="completeForm.requires_xray"
+          switch
+          class="mb-1"
+        >
+          {{ $t('reservation.requiresXray') }}
+        </b-form-checkbox>
+        <b-form-group
+          v-if="completeForm.requires_xray"
+          :label="$t('reservation.xrayNotes')"
+          label-for="xray-notes"
+        >
+          <b-form-textarea
+            id="xray-notes"
+            v-model="completeForm.xray_notes"
+            rows="2"
+            :placeholder="$t('reservation.enterXrayNotes')"
+          />
+        </b-form-group>
+
+        <b-form-checkbox
+          v-model="completeForm.requires_lab"
+          switch
+          class="mb-1"
+        >
+          {{ $t('reservation.requiresLab') }}
+        </b-form-checkbox>
+        <b-form-group
+          v-if="completeForm.requires_lab"
+          :label="$t('reservation.labNotes')"
+          label-for="lab-notes"
+        >
+          <b-form-textarea
+            id="lab-notes"
+            v-model="completeForm.lab_notes"
+            rows="2"
+            :placeholder="$t('reservation.enterLabNotes')"
+          />
+        </b-form-group>
+
         <div class="text-right">
           <b-button variant="secondary" class="mr-1" @click="completeModalShow = false">
             {{ $t('actions.cancel') }}
@@ -189,6 +234,25 @@
           <p><strong>{{ $t('reservation.treatment') }}:</strong></p>
           <p>{{ selectedReservation.treatment }}</p>
         </div>
+
+        <div v-if="selectedReservation.requires_xray || selectedReservation.requires_lab">
+          <hr>
+          <h6>{{ $t('reservation.additionalRequirements') }}</h6>
+          <div v-if="selectedReservation.requires_xray" class="mb-1">
+            <b-badge variant="warning" class="mr-1">
+              <feather-icon icon="ImageIcon" size="12" class="mr-25" />
+              {{ $t('reservation.requiresXray') }}
+            </b-badge>
+            <p v-if="selectedReservation.xray_notes" class="mt-50 text-muted small">{{ selectedReservation.xray_notes }}</p>
+          </div>
+          <div v-if="selectedReservation.requires_lab">
+            <b-badge variant="info" class="mr-1">
+              <feather-icon icon="ActivityIcon" size="12" class="mr-25" />
+              {{ $t('reservation.requiresLab') }}
+            </b-badge>
+            <p v-if="selectedReservation.lab_notes" class="mt-50 text-muted small">{{ selectedReservation.lab_notes }}</p>
+          </div>
+        </div>
       </div>
     </b-modal>
   </div>
@@ -208,13 +272,18 @@ import {
   BFormInput,
   BFormSelect,
   BFormTextarea,
+  BFormCheckbox,
   BSpinner,
   BBadge,
   BAlert,
+  VBTooltip,
 } from 'bootstrap-vue'
 import reservationsService from '@/services/reservations'
 
 export default {
+  directives: {
+    'b-tooltip': VBTooltip,
+  },
   components: {
     BCard,
     BRow,
@@ -228,6 +297,7 @@ export default {
     BFormInput,
     BFormSelect,
     BFormTextarea,
+    BFormCheckbox,
     BSpinner,
     BBadge,
     BAlert,
@@ -249,6 +319,10 @@ export default {
       completeForm: {
         diagnosis: '',
         treatment: '',
+        requires_xray: false,
+        xray_notes: '',
+        requires_lab: false,
+        lab_notes: '',
       },
       filters: {
         search: '',
@@ -339,6 +413,10 @@ export default {
       this.completeForm = {
         diagnosis: '',
         treatment: '',
+        requires_xray: false,
+        xray_notes: '',
+        requires_lab: false,
+        lab_notes: '',
       }
       this.completeModalShow = true
     },
@@ -421,7 +499,9 @@ export default {
     },
     formatDateTime(value) {
       if (!value) return 'N/A'
-      return new Date(value).toLocaleString()
+      // Parse as local time since backend returns Y-m-d H:i:s format
+      const date = new Date(value + (value.includes(' ') ? '' : ''))
+      return date.toLocaleString()
     },
     getTodayDate() {
       const d = new Date()

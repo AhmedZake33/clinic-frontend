@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div v-if="pageLoading" class="text-center py-5">
+      <b-spinner variant="primary" class="mb-1" />
+      <div class="text-muted">{{ $t('messages.loading') }}</div>
+    </div>
+
+    <div v-else>
     <!-- Summary Cards -->
     <b-row class="mb-2">
       <b-col md="3">
@@ -112,7 +118,7 @@
           {{ $t('financial.' + data.value) }}
         </template>
         <template #cell(actions)="data">
-          <b-button variant="info" size="sm" @click="viewFinancial(data.item)">
+          <b-button v-b-tooltip.hover :title="$t('actions.view')" variant="info" size="sm" @click="viewFinancial(data.item)">
             <feather-icon icon="EyeIcon" />
           </b-button>
         </template>
@@ -181,6 +187,7 @@
         <p><strong>{{ $t('reservation.created') }}:</strong> {{ formatDateTime(selectedFinancial.created_at) }}</p>
       </div>
     </b-modal>
+    </div>
   </div>
 </template>
 
@@ -199,10 +206,14 @@ import {
   BFormSelect,
   BSpinner,
   BBadge,
+  VBTooltip,
 } from 'bootstrap-vue'
 import financialsService from '@/services/financials'
 
 export default {
+  directives: {
+    'b-tooltip': VBTooltip,
+  },
   components: {
     BCard,
     BCardText,
@@ -233,6 +244,7 @@ export default {
         total_remaining: 0,
         total_records: 0,
       },
+      pageLoading: true,
       loading: false,
       viewModalShow: false,
       selectedFinancial: null,
@@ -250,9 +262,15 @@ export default {
       this.fetchSummary()
     },
   },
-  mounted() {
-    this.fetchFinancials()
-    this.fetchSummary()
+  async mounted() {
+    try {
+      await Promise.all([
+        this.fetchFinancials(),
+        this.fetchSummary(),
+      ])
+    } finally {
+      this.pageLoading = false
+    }
   },
   computed: {
     fields() {
@@ -352,7 +370,9 @@ export default {
     },
     formatDateTime(value) {
       if (!value) return ''
-      return new Date(value).toLocaleString()
+      // Parse as local time since backend returns Y-m-d H:i:s format
+      const date = new Date(value + (value.includes(' ') ? '' : ''))
+      return date.toLocaleString()
     },
     formatCurrency(value) {
       return parseFloat(value || 0).toFixed(2)
