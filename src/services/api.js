@@ -11,9 +11,12 @@ const apiClient = axios.create({
 // Add auth token and socket ID to requests
 apiClient.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
+  const locale = localStorage.getItem('locale') || 'en'
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+
+  config.headers['Accept-Language'] = locale
 
   // Send socket ID so Laravel can exclude the current user from broadcasts
   if (window.Echo && window.Echo.socketId()) {

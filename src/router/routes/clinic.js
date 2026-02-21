@@ -121,6 +121,24 @@ export default [
     },
   },
   {
+    path: '/assistant/reports',
+    name: 'assistant-reports',
+    component: () => import('@/views/shared/Reports.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: ['assistant'],
+      pageTitle: 'menu.reports',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.reports',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/doctor/dashboard',
     name: 'doctor-dashboard',
     component: () => import('@/views/doctor/Dashboard.vue'),
@@ -186,6 +204,24 @@ export default [
       breadcrumb: [
         {
           text: 'menu.financials',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/doctor/reports',
+    name: 'doctor-reports',
+    component: () => import('@/views/shared/Reports.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: ['doctor'],
+      pageTitle: 'menu.reports',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.reports',
           active: true,
           i18n: true,
         },

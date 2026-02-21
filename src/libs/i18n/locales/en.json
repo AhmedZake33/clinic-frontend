@@ -178,7 +178,9 @@
     "cancelReservationWarning": "The appointment for {client} will be cancelled. This action cannot be undone.",
     "scheduleSaved": "Schedule saved successfully",
     "scheduleSaveError": "Failed to save schedule",
-    "addHolidayError": "Failed to add holiday"
+    "addHolidayError": "Failed to add holiday",
+    "reportsLoadError": "Failed to load reports",
+    "reportsExportError": "Failed to export report PDF"
   },
   "validation": {
     "required": "This field is required",
@@ -401,7 +403,15 @@
     "reservations": "Reservations",
     "myReservations": "My Reservations",
     "schedule": "Schedule",
-    "financials": "Financials"
+    "financials": "Financials",
+    "reports": "Reports"
+  },
+  "reports": {
+    "title": "Reports",
+    "exportPdf": "Export PDF",
+    "reservationsSummary": "Reservations Summary",
+    "financialSummary": "Financial Summary",
+    "totalReservations": "Total Reservations"
   },
   "financial": {
     "financial": "Financial",

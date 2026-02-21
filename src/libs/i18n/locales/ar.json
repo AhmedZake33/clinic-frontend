@@ -178,7 +178,9 @@
     "cancelReservationWarning": "سيتم إلغاء موعد {client}. لا يمكن التراجع عن هذا الإجراء.",
     "scheduleSaved": "تم حفظ الجدول بنجاح",
     "scheduleSaveError": "فشل في حفظ الجدول",
-    "addHolidayError": "فشل في إضافة الإجازة"
+    "addHolidayError": "فشل في إضافة الإجازة",
+    "reportsLoadError": "فشل في تحميل التقارير",
+    "reportsExportError": "فشل في تصدير ملف التقرير"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
@@ -224,7 +226,15 @@
     "reservations": "الحجوزات",
     "myReservations": "حجوزاتي",
     "schedule": "الجدول",
-    "financials": "المالية"
+    "financials": "المالية",
+    "reports": "التقارير"
+  },
+  "reports": {
+    "title": "التقارير",
+    "exportPdf": "تصدير PDF",
+    "reservationsSummary": "ملخص الحجوزات",
+    "financialSummary": "الملخص المالي",
+    "totalReservations": "إجمالي الحجوزات"
   },
   "financial": {
     "financialsList": "السجلات المالية",
