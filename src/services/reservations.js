@@ -37,5 +37,22 @@ export default {
   
   getDoctors() {
     return apiClient.get('/doctors')
+  },
+
+  // Check-in & Waiting Queue
+  checkIn(id) {
+    return apiClient.post(`/reservations/${id}/check-in`)
+  },
+
+  undoCheckIn(id) {
+    return apiClient.post(`/reservations/${id}/undo-check-in`)
+  },
+
+  getWaitingQueue(params = {}) {
+    return apiClient.get('/waiting-queue', { params })
+  },
+
+  getQueueSummary(params = {}) {
+    return apiClient.get('/waiting-queue/summary', { params })
   }
 }

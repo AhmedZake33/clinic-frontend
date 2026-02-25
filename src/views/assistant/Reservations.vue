@@ -54,6 +54,10 @@
           <b-badge :variant="getStatusVariant(data.value)">
             {{ $t('reservation.' + data.value) }}
           </b-badge>
+          <b-badge v-if="data.item.checked_in_at" variant="success" pill class="ml-50">
+            <feather-icon icon="LogInIcon" size="12" class="mr-25" />
+            #{{ data.item.waiting_number }}
+          </b-badge>
         </template>
 
         <template #cell(requirements)="data">
@@ -80,6 +84,17 @@
             @click="viewReservation(data.item)"
           >
             <feather-icon icon="EyeIcon" />
+          </b-button>
+          <b-button
+            v-if="!data.item.checked_in_at && (data.item.status === 'pending' || data.item.status === 'confirmed')"
+            v-b-tooltip.hover
+            :title="$t('queue.checkIn')"
+            variant="primary"
+            size="sm"
+            class="mr-1"
+            @click="checkInPatient(data.item)"
+          >
+            <feather-icon icon="LogInIcon" />
           </b-button>
           <b-button
             v-if="data.item.status === 'pending'"
@@ -292,6 +307,12 @@
             <p><strong>{{ $t('table.created') }}:</strong> {{ formatDateTime(selectedReservation.created_at) }}</p>
             <p v-if="selectedReservation.completed_at">
               <strong>{{ $t('table.completed') }}:</strong> {{ formatDateTime(selectedReservation.completed_at) }}
+            </p>
+            <p v-if="selectedReservation.checked_in_at">
+              <strong>{{ $t('queue.checkedInAt') }}:</strong> {{ formatDateTime(selectedReservation.checked_in_at) }}
+              <b-badge variant="success" pill class="ml-50">
+                {{ $t('queue.waitingNumber') }}: #{{ selectedReservation.waiting_number }}
+              </b-badge>
             </p>
           </b-col>
         </b-row>
@@ -786,6 +807,45 @@ export default {
         })
       } finally {
         this.saving = false
+      }
+    },
+    async checkInPatient(reservation) {
+      const result = await this.$swal({
+        title: this.$t('queue.checkInConfirm', { name: reservation.client?.name || '' }),
+        text: this.$t('queue.checkInConfirmText'),
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: this.$t('queue.checkIn'),
+        cancelButtonText: this.$t('actions.cancel'),
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-secondary ml-1',
+        },
+        buttonsStyling: false,
+      })
+      if (!result.isConfirmed) return
+
+      try {
+        const response = await reservationsService.checkIn(reservation.id)
+        const waitingNumber = response.data.waiting_number
+        this.$swal({
+          icon: 'success',
+          title: this.$t('queue.checkInSuccess'),
+          html: `<div style="font-size:1.5em; margin:10px 0"><strong>${this.$t('queue.waitingNumber')}: <span class="text-primary">#${waitingNumber}</span></strong></div>`,
+          confirmButtonText: this.$t('actions.ok'),
+          customClass: { confirmButton: 'btn btn-success' },
+          buttonsStyling: false,
+        })
+        this.fetchReservations()
+      } catch (error) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: error.response?.data?.error || this.$t('queue.checkInError'),
+            variant: 'danger',
+          },
+        })
       }
     },
     async confirmReservation(reservation) {

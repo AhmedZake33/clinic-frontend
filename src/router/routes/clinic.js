@@ -139,6 +139,24 @@ export default [
     },
   },
   {
+    path: '/assistant/waiting-queue',
+    name: 'assistant-waiting-queue',
+    component: () => import('@/views/shared/WaitingQueue.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: ['assistant'],
+      pageTitle: 'menu.waitingQueue',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.waitingQueue',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/doctor/dashboard',
     name: 'doctor-dashboard',
     component: () => import('@/views/doctor/Dashboard.vue'),
@@ -222,6 +240,24 @@ export default [
       breadcrumb: [
         {
           text: 'menu.reports',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/doctor/waiting-queue',
+    name: 'doctor-waiting-queue',
+    component: () => import('@/views/shared/WaitingQueue.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: ['doctor'],
+      pageTitle: 'menu.waitingQueue',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.waitingQueue',
           active: true,
           i18n: true,
         },

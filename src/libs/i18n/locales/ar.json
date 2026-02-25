@@ -228,7 +228,8 @@
     "myReservations": "حجوزاتي",
     "schedule": "الجدول",
     "financials": "المالية",
-    "reports": "التقارير"
+    "reports": "التقارير",
+    "waitingQueue": "قائمة الانتظار"
   },
   "reports": {
     "title": "التقارير",
@@ -295,5 +296,34 @@
     "contraindications": "موانع الاستعمال",
     "addToTreatment": "إضافة للعلاج",
     "drugAdded": "تمت إضافة {name} لخطة العلاج"
+  },
+  "queue": {
+    "title": "قائمة الانتظار",
+    "checkedIn": "تم التسجيل",
+    "waiting": "في الانتظار",
+    "completed": "مكتمل",
+    "serving": "يتم خدمته الآن",
+    "current": "الحالي",
+    "nowServing": "يُخدم الآن #",
+    "noPatients": "لا يوجد مرضى مسجلين بعد",
+    "refresh": "تحديث",
+    "allDoctors": "جميع الأطباء",
+    "autoRefresh": "يتم التحديث تلقائياً كل 30 ثانية",
+    "minutes": "دقيقة انتظار",
+    "checkedInAt": "تسجيل الدخول",
+    "checkIn": "تسجيل وصول",
+    "checkInSuccess": "تم تسجيل وصول المريض بنجاح",
+    "checkInError": "فشل في تسجيل وصول المريض",
+    "alreadyCheckedIn": "المريض مسجل بالفعل",
+    "undoCheckIn": "التراجع عن التسجيل",
+    "undoCheckInConfirm": "التراجع عن تسجيل الوصول؟",
+    "undoCheckInText": "إزالة {name} من قائمة الانتظار؟",
+    "checkInUndone": "تم التراجع عن تسجيل الوصول بنجاح",
+    "undoError": "فشل في التراجع عن تسجيل الوصول",
+    "loadError": "فشل في تحميل قائمة الانتظار",
+    "waitingNumber": "رقم الانتظار",
+    "estimatedWait": "الانتظار المتوقع",
+    "checkInConfirm": "تسجيل وصول {name}؟",
+    "checkInConfirmText": "سيتم إضافة المريض إلى قائمة الانتظار"
   }
 }

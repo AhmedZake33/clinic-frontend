@@ -405,7 +405,8 @@
     "myReservations": "My Reservations",
     "schedule": "Schedule",
     "financials": "Financials",
-    "reports": "Reports"
+    "reports": "Reports",
+    "waitingQueue": "Waiting Queue"
   },
   "reports": {
     "title": "Reports",
@@ -473,5 +474,34 @@
     "contraindications": "Contraindications",
     "addToTreatment": "Add to Treatment",
     "drugAdded": "{name} added to treatment plan"
+  },
+  "queue": {
+    "title": "Waiting Queue",
+    "checkedIn": "Checked In",
+    "waiting": "Waiting",
+    "completed": "Completed",
+    "serving": "Now Serving",
+    "current": "Current",
+    "nowServing": "Now Serving #",
+    "noPatients": "No patients checked in yet",
+    "refresh": "Refresh",
+    "allDoctors": "All Doctors",
+    "autoRefresh": "Auto-refreshes every 30 seconds",
+    "minutes": "min wait",
+    "checkedInAt": "Checked in",
+    "checkIn": "Check In",
+    "checkInSuccess": "Patient checked in successfully",
+    "checkInError": "Failed to check in patient",
+    "alreadyCheckedIn": "Patient is already checked in",
+    "undoCheckIn": "Undo Check-in",
+    "undoCheckInConfirm": "Undo Check-in?",
+    "undoCheckInText": "Remove {name} from the waiting queue?",
+    "checkInUndone": "Check-in undone successfully",
+    "undoError": "Failed to undo check-in",
+    "loadError": "Failed to load waiting queue",
+    "waitingNumber": "Waiting #",
+    "estimatedWait": "Est. Wait",
+    "checkInConfirm": "Check in {name}?",
+    "checkInConfirmText": "Patient will be added to the waiting queue"
   }
 }
