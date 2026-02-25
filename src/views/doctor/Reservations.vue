@@ -132,6 +132,228 @@
           />
         </b-form-group>
 
+        <!-- Drug Search with Tabs -->
+        <b-card class="mb-2">
+          <b-tabs v-model="drugTabIndex" content-class="mt-1" fill>
+            <!-- Egypt Drugs Tab -->
+            <b-tab :title="$t('openfda.egyptDrugs')" active>
+              <b-row class="mb-1">
+                <b-col cols="12" md="5">
+                  <b-form-input
+                    v-model="egyptDrugQuery"
+                    :placeholder="$t('openfda.egyptSearchPlaceholder')"
+                    @keyup.enter="searchEgyptDrugs"
+                    :disabled="egyptSearching"
+                    size="sm"
+                  />
+                </b-col>
+                <b-col cols="6" md="3">
+                  <b-form-select
+                    v-model="egyptCategoryFilter"
+                    :options="egyptCategoryOptions"
+                    size="sm"
+                  />
+                </b-col>
+                <b-col cols="6" md="3">
+                  <b-form-select
+                    v-model="egyptFormFilter"
+                    :options="egyptFormOptions"
+                    size="sm"
+                  />
+                </b-col>
+                <b-col cols="12" md="1">
+                  <b-button variant="primary" size="sm" block @click="searchEgyptDrugs" :disabled="egyptSearching || !egyptDrugQuery">
+                    <b-spinner v-if="egyptSearching" small />
+                    <feather-icon v-else icon="SearchIcon" />
+                  </b-button>
+                </b-col>
+              </b-row>
+
+              <div v-if="egyptResults.length > 0">
+                <small class="text-muted d-block mb-1">{{ $t('openfda.resultsFound', { count: egyptResultsTotal }) }}</small>
+                <div class="drug-results-scroll">
+                  <div
+                    v-for="(drug, index) in egyptResults"
+                    :key="'eg-' + index"
+                    class="border rounded p-1 mb-1"
+                    style="cursor: pointer;"
+                    :class="{ 'border-success bg-light': selectedEgyptDrug === drug }"
+                    @click="selectedEgyptDrug = selectedEgyptDrug === drug ? null : drug"
+                  >
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong>{{ drug.name }}</strong>
+                        <div class="d-flex flex-wrap mt-25">
+                          <b-badge v-if="drug.form" variant="light-info" class="mr-50 mb-25">{{ drug.form }}</b-badge>
+                          <b-badge v-if="drug.category" variant="light-primary" class="mr-50 mb-25">{{ drug.category }}</b-badge>
+                        </div>
+                        <small v-if="drug.company" class="text-muted d-block">{{ drug.company }}</small>
+                      </div>
+                      <b-button
+                        size="sm"
+                        variant="outline-success"
+                        @click.stop="appendEgyptDrugToTreatment(drug)"
+                      >
+                        <feather-icon icon="PlusIcon" size="14" />
+                      </b-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <b-alert v-if="egyptSearched && egyptResults.length === 0" variant="warning" show class="mb-0 mt-1">
+                {{ $t('openfda.noResults') }}
+              </b-alert>
+            </b-tab>
+
+            <!-- OpenFDA International Tab -->
+            <b-tab :title="$t('openfda.fdaDrugs')">
+              <b-input-group class="mb-1">
+                <b-form-input
+                  v-model="drugSearchQuery"
+                  :placeholder="$t('openfda.searchPlaceholder')"
+                  @keyup.enter="searchDrugs"
+                  :disabled="drugSearching"
+                  size="sm"
+                />
+                <b-input-group-append>
+                  <b-button variant="outline-primary" size="sm" @click="searchDrugs" :disabled="drugSearching || !drugSearchQuery">
+                    <b-spinner v-if="drugSearching" small />
+                    <feather-icon v-else icon="SearchIcon" />
+                  </b-button>
+                </b-input-group-append>
+              </b-input-group>
+
+              <div v-if="drugResults.length > 0">
+                <small class="text-muted d-block mb-1">{{ $t('openfda.resultsFound', { count: drugResultsTotal }) }}</small>
+                <div class="drug-results-scroll">
+                  <div
+                    v-for="(drug, index) in drugResults"
+                    :key="'fda-' + index"
+                    class="border rounded p-1 mb-1"
+                    :class="{ 'border-primary bg-light': selectedDrug === drug }"
+                    @click="selectDrug(drug)"
+                    style="cursor: pointer;"
+                  >
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <strong>{{ drug.brand_name || drug.generic_name }}</strong>
+                        <small v-if="drug.generic_name && drug.brand_name" class="text-muted d-block">
+                          {{ $t('openfda.genericName') }}: {{ drug.generic_name }}
+                        </small>
+                        <small v-if="drug.manufacturer" class="text-muted d-block">
+                          {{ $t('openfda.manufacturer') }}: {{ drug.manufacturer }}
+                        </small>
+                        <small v-if="drug.dosage_form" class="text-muted d-block">
+                          {{ $t('openfda.dosageForm') }}: {{ drug.dosage_form }}
+                        </small>
+                        <small v-if="drug.route" class="text-muted d-block">
+                          {{ $t('openfda.route') }}: {{ drug.route }}
+                        </small>
+                      </div>
+                      <div>
+                        <b-button
+                          size="sm"
+                          variant="outline-info"
+                          class="mr-50"
+                          @click.stop="showDrugDetails(drug)"
+                        >
+                          <feather-icon icon="InfoIcon" size="14" />
+                        </b-button>
+                        <b-button
+                          size="sm"
+                          variant="outline-success"
+                          @click.stop="appendDrugToTreatment(drug)"
+                        >
+                          <feather-icon icon="PlusIcon" size="14" />
+                        </b-button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <b-alert v-if="drugSearched && drugResults.length === 0" variant="warning" show class="mb-0">
+                {{ $t('openfda.noResults') }}
+              </b-alert>
+            </b-tab>
+          </b-tabs>
+        </b-card>
+
+        <!-- Drug Details Modal -->
+        <b-modal
+          v-model="drugDetailModalShow"
+          :title="drugDetailData ? (drugDetailData.brand_name || drugDetailData.generic_name) : ''"
+          ok-only
+          size="lg"
+          scrollable
+        >
+          <div v-if="drugDetailLoading" class="text-center my-3">
+            <b-spinner />
+          </div>
+          <div v-else-if="drugDetailData">
+            <b-row>
+              <b-col md="6">
+                <p v-if="drugDetailData.brand_name"><strong>{{ $t('openfda.brandName') }}:</strong> {{ drugDetailData.brand_name }}</p>
+                <p v-if="drugDetailData.generic_name"><strong>{{ $t('openfda.genericName') }}:</strong> {{ drugDetailData.generic_name }}</p>
+                <p v-if="drugDetailData.manufacturer"><strong>{{ $t('openfda.manufacturer') }}:</strong> {{ drugDetailData.manufacturer }}</p>
+                <p v-if="drugDetailData.dosage_form"><strong>{{ $t('openfda.dosageForm') }}:</strong> {{ drugDetailData.dosage_form }}</p>
+              </b-col>
+              <b-col md="6">
+                <p v-if="drugDetailData.route"><strong>{{ $t('openfda.route') }}:</strong> {{ drugDetailData.route }}</p>
+                <p v-if="drugDetailData.substance_name"><strong>{{ $t('openfda.substanceName') }}:</strong> {{ drugDetailData.substance_name }}</p>
+                <p v-if="drugDetailData.product_type"><strong>{{ $t('openfda.productType') }}:</strong> {{ drugDetailData.product_type }}</p>
+              </b-col>
+            </b-row>
+
+            <div v-if="drugDetailData.indications">
+              <hr>
+              <h6>{{ $t('openfda.indications') }}</h6>
+              <p class="small">{{ truncateText(drugDetailData.indications, 800) }}</p>
+            </div>
+
+            <div v-if="drugDetailData.dosage">
+              <hr>
+              <h6>{{ $t('openfda.dosage') }}</h6>
+              <p class="small">{{ truncateText(drugDetailData.dosage, 800) }}</p>
+            </div>
+
+            <div v-if="drugDetailData.warnings">
+              <hr>
+              <h6 class="text-danger">{{ $t('openfda.warnings') }}</h6>
+              <p class="small text-danger">{{ truncateText(drugDetailData.warnings, 800) }}</p>
+            </div>
+
+            <div v-if="drugDetailData.adverse_reactions">
+              <hr>
+              <h6 class="text-warning">{{ $t('openfda.adverseReactions') }}</h6>
+              <p class="small">{{ truncateText(drugDetailData.adverse_reactions, 600) }}</p>
+            </div>
+
+            <div v-if="drugDetailData.drug_interactions">
+              <hr>
+              <h6>{{ $t('openfda.drugInteractions') }}</h6>
+              <p class="small">{{ truncateText(drugDetailData.drug_interactions, 600) }}</p>
+            </div>
+
+            <div v-if="drugDetailData.contraindications">
+              <hr>
+              <h6 class="text-danger">{{ $t('openfda.contraindications') }}</h6>
+              <p class="small">{{ truncateText(drugDetailData.contraindications, 600) }}</p>
+            </div>
+          </div>
+
+          <template #modal-footer="{ ok }">
+            <b-button variant="success" class="mr-1" @click="appendDrugToTreatment(drugDetailData); ok()">
+              <feather-icon icon="PlusIcon" size="14" class="mr-50" />
+              {{ $t('openfda.addToTreatment') }}
+            </b-button>
+            <b-button variant="secondary" @click="ok()">
+              {{ $t('actions.close') }}
+            </b-button>
+          </template>
+        </b-modal>
+
         <hr>
         <h6>{{ $t('reservation.additionalRequirements') }}</h6>
 
@@ -276,9 +498,14 @@ import {
   BSpinner,
   BBadge,
   BAlert,
+  BInputGroup,
+  BInputGroupAppend,
+  BTabs,
+  BTab,
   VBTooltip,
 } from 'bootstrap-vue'
 import reservationsService from '@/services/reservations'
+import openfdaService from '@/services/openfda'
 
 export default {
   directives: {
@@ -301,6 +528,10 @@ export default {
     BSpinner,
     BBadge,
     BAlert,
+    BInputGroup,
+    BInputGroupAppend,
+    BTabs,
+    BTab,
   },
   data() {
     return {
@@ -324,6 +555,28 @@ export default {
         requires_lab: false,
         lab_notes: '',
       },
+      // OpenFDA drug search
+      drugTabIndex: 0,
+      drugSearchQuery: '',
+      drugResults: [],
+      drugResultsTotal: 0,
+      drugSearching: false,
+      drugSearched: false,
+      selectedDrug: null,
+      drugDetailModalShow: false,
+      drugDetailData: null,
+      drugDetailLoading: false,
+      // Egypt drug search
+      egyptDrugQuery: '',
+      egyptResults: [],
+      egyptResultsTotal: 0,
+      egyptSearching: false,
+      egyptSearched: false,
+      selectedEgyptDrug: null,
+      egyptCategoryFilter: '',
+      egyptFormFilter: '',
+      egyptCategories: [],
+      egyptForms: [],
       filters: {
         search: '',
         status: '',
@@ -337,6 +590,7 @@ export default {
     this.filters.date_from = today
     this.filters.date_to = today
     this.fetchReservations()
+    this.fetchEgyptDrugFilters()
   },
   watch: {
     '$store.state.broadcast.eventCounter'() {
@@ -359,6 +613,18 @@ export default {
         { value: 'confirmed', text: this.$t('reservation.confirmed') },
         { value: 'completed', text: this.$t('reservation.completed') },
         { value: 'cancelled', text: this.$t('reservation.cancelled') },
+      ]
+    },
+    egyptCategoryOptions() {
+      return [
+        { value: '', text: this.$t('openfda.allCategories') },
+        ...this.egyptCategories.map(c => ({ value: c, text: c })),
+      ]
+    },
+    egyptFormOptions() {
+      return [
+        { value: '', text: this.$t('openfda.allForms') },
+        ...this.egyptForms.map(f => ({ value: f, text: f })),
       ]
     },
   },
@@ -418,6 +684,21 @@ export default {
         requires_lab: false,
         lab_notes: '',
       }
+      // Reset drug search state
+      this.drugSearchQuery = ''
+      this.drugResults = []
+      this.drugResultsTotal = 0
+      this.drugSearched = false
+      this.selectedDrug = null
+      // Reset Egypt drug search state
+      this.egyptDrugQuery = ''
+      this.egyptResults = []
+      this.egyptResultsTotal = 0
+      this.egyptSearched = false
+      this.selectedEgyptDrug = null
+      this.egyptCategoryFilter = ''
+      this.egyptFormFilter = ''
+      this.drugTabIndex = 0
       this.completeModalShow = true
     },
     viewReservation(reservation) {
@@ -488,6 +769,133 @@ export default {
         })
       }
     },
+    async fetchEgyptDrugFilters() {
+      try {
+        const response = await openfdaService.getEgyptDrugFilters()
+        this.egyptCategories = response.data.categories || []
+        this.egyptForms = response.data.forms || []
+      } catch (error) {
+        // Silently fail — filters are optional
+      }
+    },
+    async searchEgyptDrugs() {
+      if (!this.egyptDrugQuery || this.egyptDrugQuery.length < 1) return
+      this.egyptSearching = true
+      this.egyptSearched = false
+      try {
+        const response = await openfdaService.searchEgyptDrugs(this.egyptDrugQuery, {
+          category: this.egyptCategoryFilter || undefined,
+          form: this.egyptFormFilter || undefined,
+        })
+        this.egyptResults = response.data.results || []
+        this.egyptResultsTotal = response.data.total || 0
+      } catch (error) {
+        this.egyptResults = []
+        this.egyptResultsTotal = 0
+        this.$toast({
+          component: 'ToastificationContent',
+          props: {
+            title: this.$t('messages.error'),
+            text: this.$t('openfda.searchError'),
+            variant: 'danger',
+          },
+        })
+      } finally {
+        this.egyptSearching = false
+        this.egyptSearched = true
+      }
+    },
+    appendEgyptDrugToTreatment(drug) {
+      if (!drug) return
+      const name = drug.name
+      const form = drug.form ? ` - ${drug.form}` : ''
+      const price = drug.price ? ` (${drug.price} EGP)` : ''
+      const entry = `${name}${form}${price}`
+
+      if (this.completeForm.treatment) {
+        this.completeForm.treatment += '\n' + entry
+      } else {
+        this.completeForm.treatment = entry
+      }
+
+      this.$toast({
+        component: 'ToastificationContent',
+        props: {
+          title: this.$t('messages.success'),
+          text: this.$t('openfda.drugAdded', { name }),
+          variant: 'success',
+        },
+      })
+    },
+    async searchDrugs() {
+      if (!this.drugSearchQuery || this.drugSearchQuery.length < 2) return
+      this.drugSearching = true
+      this.drugSearched = false
+      try {
+        const response = await openfdaService.searchDrugs(this.drugSearchQuery)
+        this.drugResults = response.data.results || []
+        this.drugResultsTotal = response.data.total || 0
+      } catch (error) {
+        this.drugResults = []
+        this.drugResultsTotal = 0
+        this.$toast({
+          component: 'ToastificationContent',
+          props: {
+            title: this.$t('messages.error'),
+            text: this.$t('openfda.searchError'),
+            variant: 'danger',
+          },
+        })
+      } finally {
+        this.drugSearching = false
+        this.drugSearched = true
+      }
+    },
+    selectDrug(drug) {
+      this.selectedDrug = this.selectedDrug === drug ? null : drug
+    },
+    appendDrugToTreatment(drug) {
+      if (!drug) return
+      const name = drug.brand_name || drug.generic_name
+      const generic = drug.generic_name && drug.brand_name ? ` (${drug.generic_name})` : ''
+      const form = drug.dosage_form ? ` - ${drug.dosage_form}` : ''
+      const route = drug.route ? ` [${drug.route}]` : ''
+      const entry = `${name}${generic}${form}${route}`
+
+      if (this.completeForm.treatment) {
+        this.completeForm.treatment += '\n' + entry
+      } else {
+        this.completeForm.treatment = entry
+      }
+
+      this.$toast({
+        component: 'ToastificationContent',
+        props: {
+          title: this.$t('messages.success'),
+          text: this.$t('openfda.drugAdded', { name }),
+          variant: 'success',
+        },
+      })
+    },
+    async showDrugDetails(drug) {
+      const name = drug.brand_name || drug.generic_name
+      if (!name) return
+      this.drugDetailModalShow = true
+      this.drugDetailLoading = true
+      this.drugDetailData = null
+      try {
+        const response = await openfdaService.getDrugDetails(name)
+        this.drugDetailData = response.data
+      } catch (error) {
+        this.drugDetailData = drug // fallback to search result data
+      } finally {
+        this.drugDetailLoading = false
+      }
+    },
+    truncateText(text, maxLength) {
+      if (!text) return ''
+      return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
+    },
     getStatusVariant(status) {
       const variants = {
         pending: 'warning',
@@ -519,3 +927,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.drug-results-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+}
+</style>

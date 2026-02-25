@@ -136,7 +136,8 @@
     "createReservation": "إنشاء حجز",
     "actions": "الإجراءات",
     "confirm": "تأكيد",
-    "ok": "حسناً"
+    "ok": "حسناً",
+    "close": "إغلاق"
   },
   "messages": {
     "success": "تم بنجاح",
@@ -266,5 +267,33 @@
     "paidCount": "سجلات مدفوعة",
     "partialCount": "سجلات مدفوعة جزئياً",
     "unpaidCount": "سجلات غير مدفوعة"
+  },
+  "openfda": {
+    "egyptDrugs": "الأدوية المصرية",
+    "fdaDrugs": "أدوية FDA الدولية",
+    "egyptSearchPlaceholder": "ابحث عن الأدوية المصرية بالاسم...",
+    "allCategories": "جميع الفئات",
+    "allForms": "جميع الأشكال",
+    "egp": "جنيه",
+    "searchDrugs": "البحث في قاعدة بيانات الأدوية FDA",
+    "searchPlaceholder": "ابحث عن دواء بالاسم (مثل Aspirin, Ibuprofen)",
+    "resultsFound": "تم العثور على {count} نتيجة",
+    "noResults": "لم يتم العثور على أدوية. جرّب كلمة بحث مختلفة.",
+    "searchError": "فشل في البحث عن الأدوية. يرجى المحاولة مرة أخرى.",
+    "brandName": "الاسم التجاري",
+    "genericName": "الاسم العلمي",
+    "manufacturer": "الشركة المصنعة",
+    "dosageForm": "شكل الجرعة",
+    "route": "طريقة الاستخدام",
+    "substanceName": "المادة الفعالة",
+    "productType": "نوع المنتج",
+    "indications": "دواعي الاستعمال",
+    "dosage": "الجرعة والإعطاء",
+    "warnings": "تحذيرات",
+    "adverseReactions": "الأعراض الجانبية",
+    "drugInteractions": "التفاعلات الدوائية",
+    "contraindications": "موانع الاستعمال",
+    "addToTreatment": "إضافة للعلاج",
+    "drugAdded": "تمت إضافة {name} لخطة العلاج"
   }
 }
