@@ -19,6 +19,39 @@ export default {
         return ''
       }
     },
+    // Resolve the doctor_id for the current user (multi-tenant)
+    // Doctor → own id, Assistant → doctor_id field
+    doctorId: state => {
+      if (!state.user) return null
+      if (state.user.role === 'doctor') return state.user.id
+      if (state.user.role === 'assistant') return state.user.doctor_id
+      return null
+    },
+    doctorName: state => {
+      if (!state.user) return ''
+      if (state.user.role === 'doctor') return state.user.name
+      if (state.user.role === 'assistant' && state.user.doctor) return state.user.doctor.name
+      return ''
+    },
+    isAdmin: state => {
+      const role = state.user?.role || JSON.parse(localStorage.getItem('user') || 'null')?.role
+      return role === 'admin'
+    },
+    isDoctor: state => {
+      const role = state.user?.role || JSON.parse(localStorage.getItem('user') || 'null')?.role
+      return role === 'doctor'
+    },
+    isAssistant: state => {
+      const role = state.user?.role || JSON.parse(localStorage.getItem('user') || 'null')?.role
+      return role === 'assistant'
+    },
+    isClient: state => {
+      const role = state.user?.role || JSON.parse(localStorage.getItem('user') || 'null')?.role
+      return role === 'client'
+    },
+    subscriptionStatus: state => {
+      return state.user?.subscription_status || 'unknown'
+    },
   },
   mutations: {
     SET_TOKEN(state, token) {

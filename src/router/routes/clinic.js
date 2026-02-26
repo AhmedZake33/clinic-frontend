@@ -229,6 +229,24 @@ export default [
     },
   },
   {
+    path: '/doctor/assistants',
+    name: 'doctor-assistants',
+    component: () => import('@/views/doctor/Assistants.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: ['doctor'],
+      pageTitle: 'menu.assistants',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.assistants',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/doctor/reports',
     name: 'doctor-reports',
     component: () => import('@/views/shared/Reports.vue'),
@@ -263,5 +281,22 @@ export default [
         },
       ],
     },
-  },
-]
+  },  // Admin routes
+  {
+    path: '/admin/dashboard',
+    name: 'admin-dashboard',
+    component: () => import('@/views/admin/dashboard.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: ['admin'],
+      pageTitle: 'menu.dashboard',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.dashboard',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },]

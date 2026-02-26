@@ -13,11 +13,6 @@
               <b-form-input v-model="filters.date_to" type="date" />
             </b-form-group>
           </b-col>
-          <b-col md="3" v-if="isAssistant">
-            <b-form-group :label="$t('reservation.doctor')">
-              <b-form-select v-model="filters.doctor_id" :options="doctorOptions" />
-            </b-form-group>
-          </b-col>
           <b-col md="3" class="d-flex align-items-end">
             <b-button variant="primary" class="mr-1" type="submit" :disabled="loading">
               <b-spinner v-if="loading" small class="mr-50" />
@@ -84,7 +79,6 @@ import {
   BSpinner,
 } from 'bootstrap-vue'
 import reportsService from '@/services/reports'
-import reservationsService from '@/services/reservations'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
@@ -104,11 +98,9 @@ export default {
       pageLoading: true,
       loading: false,
       exportingPdf: false,
-      doctors: [],
       filters: {
         date_from: '',
         date_to: '',
-        doctor_id: '',
       },
       summary: {
         reservations: {
@@ -136,12 +128,6 @@ export default {
     isAssistant() {
       return this.currentUser?.role === 'assistant'
     },
-    doctorOptions() {
-      return [
-        { value: '', text: this.$t('filters.all') },
-        ...this.doctors.map(doctor => ({ value: doctor.id, text: doctor.name })),
-      ]
-    },
   },
   async mounted() {
     const today = this.getTodayDate()
@@ -149,28 +135,18 @@ export default {
     this.filters.date_to = today
 
     try {
-      if (this.isAssistant) {
-        await this.fetchDoctors()
-      }
       await this.fetchSummary()
     } finally {
       this.pageLoading = false
     }
   },
   methods: {
-    async fetchDoctors() {
-      const response = await reservationsService.getDoctors()
-      this.doctors = response.data || []
-    },
     async fetchSummary() {
       this.loading = true
       try {
         const params = {
           date_from: this.filters.date_from,
           date_to: this.filters.date_to,
-        }
-        if (this.isAssistant && this.filters.doctor_id) {
-          params.doctor_id = this.filters.doctor_id
         }
 
         const response = await reportsService.getSummary(params)
@@ -195,9 +171,6 @@ export default {
           date_from: this.filters.date_from,
           date_to: this.filters.date_to,
           lang: this.$i18n.locale,
-        }
-        if (this.isAssistant && this.filters.doctor_id) {
-          params.doctor_id = this.filters.doctor_id
         }
 
         const response = await reportsService.exportPdf(params)
@@ -228,7 +201,6 @@ export default {
       this.filters = {
         date_from: today,
         date_to: today,
-        doctor_id: '',
       }
       this.fetchSummary()
     },

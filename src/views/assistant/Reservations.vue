@@ -22,9 +22,6 @@
             <b-form-select v-model="filters.status" :options="statusOptions" />
           </b-col>
           <b-col cols="6" md="3" class="mb-1 mb-md-0">
-            <b-form-select v-model="filters.doctor_id" :options="doctorSelectOptions" />
-          </b-col>
-          <b-col cols="6" md="2" class="mb-1 mb-md-0">
             <b-form-input v-model="filters.date_from" type="date" :placeholder="$t('reservation.from')" />
           </b-col>
           <b-col cols="6" md="2" class="mb-1 mb-md-0">
@@ -488,7 +485,6 @@ export default {
       filters: {
         search: '',
         status: '',
-        doctor_id: '',
         date_from: '',
         date_to: '',
       },
@@ -543,15 +539,6 @@ export default {
         value: client.id,
         text: client.name,
       }))
-    },
-    doctorSelectOptions() {
-      return [
-        { value: '', text: this.$t('filters.all') + ' ' + this.$t('table.doctor') },
-        ...this.doctors.map(doctor => ({
-          value: doctor.id,
-          text: doctor.name,
-        })),
-      ]
     },
     doctorOptions() {
       return this.doctors.map(doctor => ({
@@ -610,7 +597,6 @@ export default {
         }
         if (this.filters.search) params.search = this.filters.search
         if (this.filters.status) params.status = this.filters.status
-        if (this.filters.doctor_id) params.doctor_id = this.filters.doctor_id
         if (this.filters.date_from) params.date_from = this.filters.date_from
         if (this.filters.date_to) params.date_to = this.filters.date_to
         const response = await reservationsService.getReservations(params)
@@ -639,7 +625,7 @@ export default {
       this.fetchReservations()
     },
     resetFilters() {
-      this.filters = { search: '', status: '', doctor_id: '', date_from: '', date_to: '' }
+      this.filters = { search: '', status: '', date_from: '', date_to: '' }
       this.pagination.current_page = 1
       this.fetchReservations()
     },

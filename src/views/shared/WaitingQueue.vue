@@ -72,13 +72,6 @@
             @change="fetchQueue"
           />
         </b-col>
-        <b-col v-if="userRole === 'assistant'" cols="6" md="3">
-          <b-form-select
-            v-model="filterDoctorId"
-            :options="doctorSelectOptions"
-            @change="fetchQueue"
-          />
-        </b-col>
         <b-col cols="12" md="2" class="text-right mt-1 mt-md-0">
           <b-button variant="outline-primary" size="sm" @click="fetchQueue" :disabled="loading">
             <feather-icon icon="RefreshCwIcon" class="mr-50" />
@@ -207,10 +200,8 @@ export default {
         avg_consultation_minutes: 15,
         currently_serving: null,
       },
-      doctors: [],
       loading: false,
       filterDate: this.getTodayDate(),
-      filterDoctorId: '',
       refreshInterval: null,
     }
   },
@@ -219,15 +210,8 @@ export default {
       const userData = JSON.parse(localStorage.getItem('userData') || '{}')
       return userData.role || ''
     },
-    doctorSelectOptions() {
-      return [
-        { value: '', text: this.$t('queue.allDoctors') },
-        ...this.doctors.map(d => ({ value: d.id, text: d.name })),
-      ]
-    },
   },
   mounted() {
-    this.fetchDoctors()
     this.fetchQueue()
     // Auto-refresh every 30 seconds
     this.refreshInterval = setInterval(() => {
@@ -249,7 +233,6 @@ export default {
       this.loading = true
       try {
         const params = { date: this.filterDate }
-        if (this.filterDoctorId) params.doctor_id = this.filterDoctorId
         const response = await reservationsService.getWaitingQueue(params)
         this.queue = response.data.queue || []
         this.stats = response.data.stats || this.stats
@@ -264,14 +247,6 @@ export default {
         })
       } finally {
         this.loading = false
-      }
-    },
-    async fetchDoctors() {
-      try {
-        const response = await reservationsService.getDoctors()
-        this.doctors = response.data
-      } catch (error) {
-        // Silently fail
       }
     },
     async undoCheckIn(item) {

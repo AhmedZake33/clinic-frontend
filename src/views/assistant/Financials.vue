@@ -81,9 +81,6 @@
           <b-col cols="6" md="3" class="mb-1 mb-md-0">
             <b-form-select v-model="filters.payment_method" :options="paymentMethodOptions" />
           </b-col>
-          <b-col cols="6" md="3" class="mb-1 mb-md-0">
-            <b-form-select v-model="filters.doctor_id" :options="doctorSelectOptions" />
-          </b-col>
           <b-col cols="12" md="12" class="text-right mt-1">
             <b-button type="submit" variant="primary" class="mr-1" :disabled="loading">
               {{ $t('filters.apply') }}
@@ -329,7 +326,6 @@ export default {
     return {
       financials: [],
       reservations: [],
-      doctors: [],
       pagination: {
         current_page: 1,
         last_page: 1,
@@ -354,7 +350,6 @@ export default {
         search: '',
         payment_status: '',
         payment_method: '',
-        doctor_id: '',
       },
       form: {
         reservation_id: null,
@@ -377,7 +372,6 @@ export default {
         this.fetchFinancials(),
         this.fetchSummary(),
         this.fetchReservations(),
-        this.fetchDoctors(),
       ])
     } finally {
       this.pageLoading = false
@@ -427,12 +421,6 @@ export default {
         text: `#${r.id} - ${r.client?.name || ''} - ${r.appointment_date ? new Date(r.appointment_date + (r.appointment_date.includes(' ') ? '' : '')).toLocaleDateString() : ''}`,
       }))
     },
-    doctorSelectOptions() {
-      return [
-        { value: '', text: this.$t('filters.all') + ' ' + this.$t('table.doctor') },
-        ...this.doctors.map(d => ({ value: d.id, text: d.name })),
-      ]
-    },
   },
   methods: {
     async fetchFinancials() {
@@ -443,7 +431,6 @@ export default {
         if (this.filters.search) params.search = this.filters.search
         if (this.filters.payment_status) params.payment_status = this.filters.payment_status
         if (this.filters.payment_method) params.payment_method = this.filters.payment_method
-        if (this.filters.doctor_id) params.doctor_id = this.filters.doctor_id
         const response = await financialsService.getFinancials(params)
         this.financials = response.data.data
         this.pagination = {
@@ -465,7 +452,6 @@ export default {
       try {
         const today = this.getTodayDate()
         const params = { date_from: today, date_to: today }
-        if (this.filters.doctor_id) params.doctor_id = this.filters.doctor_id
         const response = await financialsService.getSummary(params)
         this.summary = response.data
       } catch (e) {
@@ -480,21 +466,13 @@ export default {
         this.reservations = []
       }
     },
-    async fetchDoctors() {
-      try {
-        const response = await reservationsService.getDoctors()
-        this.doctors = response.data
-      } catch (e) {
-        this.doctors = []
-      }
-    },
     applyFilters() {
       this.pagination.current_page = 1
       this.fetchFinancials()
       this.fetchSummary()
     },
     resetFilters() {
-      this.filters = { search: '', payment_status: '', payment_method: '', doctor_id: '' }
+      this.filters = { search: '', payment_status: '', payment_method: '' }
       this.pagination.current_page = 1
       this.fetchFinancials()
       this.fetchSummary()
