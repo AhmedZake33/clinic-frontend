@@ -69,10 +69,15 @@ router.beforeEach((to, from, next) => {
   }
 
   // Check role-based access for clinic routes
-  if (to.meta.roles && user) {
-    const hasAccess = to.meta.roles.includes(user.role)
-    if (!hasAccess) {
-      // Redirect to appropriate dashboard instead of 404
+  // (Removed: now using permissions only)
+
+  // Check permission-based access
+  if (to.meta.permissions && user) {
+    const userPermissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+    // Removed: Admin bypass - now admins must have explicit permissions too
+    const requiredPerms = to.meta.permissions
+    const hasPermission = requiredPerms.some(p => userPermissions.includes(p))
+    if (!hasPermission) {
       if (user.role === 'doctor') {
         return next({ name: 'doctor-dashboard' })
       } else if (user.role === 'assistant') {

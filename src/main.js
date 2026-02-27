@@ -40,6 +40,9 @@ import '@/libs/echo'
 import GlobalBroadcast from '@/plugins/globalBroadcast'
 Vue.use(GlobalBroadcast)
 
+// Permission directive
+import '@/plugins/permission'
+
 // Axios Mock Adapter
 import '@/@fake-db/db'
 
@@ -73,6 +76,12 @@ new Vue({
   created() {
     // Initialize language store with current i18n locale without reloading
     this.$store.dispatch('language/initializeLocale', this.$i18n.locale)
+
+    // On every page load / refresh, re-fetch permissions from the server
+    // so admin changes are picked up immediately
+    if (this.$store.getters['auth/isLoggedIn']) {
+      this.$store.dispatch('auth/fetchPermissions')
+    }
   },
   render: h => h(App),
 }).$mount('#app')

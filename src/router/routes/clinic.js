@@ -14,6 +14,7 @@ export default [
     component: () => import('@/views/Dashboard.vue'),
     meta: {
       requiresAuth: true,
+      permissions: ['client.view-dashboard'],
       pageTitle: 'menu.dashboard',
       pageI18n: true,
       breadcrumb: [
@@ -31,7 +32,7 @@ export default [
     component: () => import('@/views/assistant/Dashboard.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['assistant'],
+      permissions: ['assistant.view-dashboard'],
       pageTitle: 'menu.dashboard',
       pageI18n: true,
       breadcrumb: [
@@ -49,7 +50,7 @@ export default [
     component: () => import('@/views/assistant/Clients.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['assistant'],
+      permissions: ['assistant.view-clients'],
       pageTitle: 'menu.clients',
       pageI18n: true,
       breadcrumb: [
@@ -67,7 +68,7 @@ export default [
     component: () => import('@/views/assistant/ClientProfile.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['assistant'],
+      permissions: ['assistant.view-clients'],
       pageTitle: 'client.clientDetails',
       pageI18n: true,
       breadcrumb: [
@@ -90,7 +91,7 @@ export default [
     component: () => import('@/views/assistant/Reservations.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['assistant'],
+      permissions: ['assistant.view-reservations'],
       pageTitle: 'menu.reservations',
       pageI18n: true,
       breadcrumb: [
@@ -108,7 +109,7 @@ export default [
     component: () => import('@/views/assistant/Financials.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['assistant'],
+      permissions: ['assistant.view-financials'],
       pageTitle: 'menu.financials',
       pageI18n: true,
       breadcrumb: [
@@ -126,7 +127,7 @@ export default [
     component: () => import('@/views/shared/Reports.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['assistant'],
+      permissions: ['assistant.view-reports'],
       pageTitle: 'menu.reports',
       pageI18n: true,
       breadcrumb: [
@@ -144,7 +145,7 @@ export default [
     component: () => import('@/views/shared/WaitingQueue.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['assistant'],
+      permissions: ['assistant.view-waiting-queue'],
       pageTitle: 'menu.waitingQueue',
       pageI18n: true,
       breadcrumb: [
@@ -162,7 +163,7 @@ export default [
     component: () => import('@/views/doctor/Dashboard.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['doctor'],
+      permissions: ['doctor.view-dashboard'],
       pageTitle: 'menu.dashboard',
       pageI18n: true,
       breadcrumb: [
@@ -180,7 +181,7 @@ export default [
     component: () => import('@/views/doctor/Reservations.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['doctor'],
+      permissions: ['doctor.view-reservations'],
       pageTitle: 'menu.myReservations',
       pageI18n: true,
       breadcrumb: [
@@ -198,7 +199,7 @@ export default [
     component: () => import('@/views/doctor/Schedule.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['doctor'],
+      permissions: ['doctor.view-schedule'],
       pageTitle: 'menu.schedule',
       pageI18n: true,
       breadcrumb: [
@@ -216,7 +217,7 @@ export default [
     component: () => import('@/views/doctor/Financials.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['doctor'],
+      permissions: ['doctor.view-financials'],
       pageTitle: 'menu.financials',
       pageI18n: true,
       breadcrumb: [
@@ -234,7 +235,7 @@ export default [
     component: () => import('@/views/doctor/Assistants.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['doctor'],
+      permissions: ['doctor.view-assistants'],
       pageTitle: 'menu.assistants',
       pageI18n: true,
       breadcrumb: [
@@ -252,7 +253,7 @@ export default [
     component: () => import('@/views/shared/Reports.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['doctor'],
+      permissions: ['doctor.view-reports'],
       pageTitle: 'menu.reports',
       pageI18n: true,
       breadcrumb: [
@@ -270,7 +271,7 @@ export default [
     component: () => import('@/views/shared/WaitingQueue.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['doctor'],
+      permissions: ['doctor.view-waiting-queue'],
       pageTitle: 'menu.waitingQueue',
       pageI18n: true,
       breadcrumb: [
@@ -281,14 +282,15 @@ export default [
         },
       ],
     },
-  },  // Admin routes
+  },
+  // Admin routes
   {
     path: '/admin/dashboard',
     name: 'admin-dashboard',
     component: () => import('@/views/admin/dashboard.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['admin'],
+      permissions: ['admin.view-dashboard'],
       pageTitle: 'menu.dashboard',
       pageI18n: true,
       breadcrumb: [
@@ -299,4 +301,28 @@ export default [
         },
       ],
     },
-  },]
+  },
+  {
+    path: '/admin/roles',
+    name: 'admin-roles',
+    component: () => import('@/views/admin/RolesPermissions.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['admin.view-roles'],
+      pageTitle: 'menu.rolesPermissions',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.dashboard',
+          to: { name: 'admin-dashboard' },
+          i18n: true,
+        },
+        {
+          text: 'menu.rolesPermissions',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+]

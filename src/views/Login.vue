@@ -94,7 +94,9 @@ export default {
         // Store user data in Vuex store
         this.$store.dispatch('auth/login', {
           token: response.data.token,
-          user: response.data.user
+          user: response.data.user,
+          permissions: response.data.permissions || [],
+          roles: response.data.roles || [],
         })
 
         // Redirect based on role

@@ -12,7 +12,13 @@ export default function Permission(resource) {
   if (!resource || resource === 'all' || resource === 'Auth') {
     return true
   }
-  
-  // Check if user's role matches the required resource
-  return user.role === resource
+
+  // Admin has access to everything
+  if (user.role === 'admin') {
+    return true
+  }
+
+  // Check Spatie permission-based access only
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+  return permissions.includes(resource)
 }
