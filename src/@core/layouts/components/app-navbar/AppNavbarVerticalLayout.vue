@@ -17,6 +17,7 @@
     </ul>
 
     <b-navbar-nav :class="$store.getters['language/isRTL'] ? 'nav align-items-center ml-0 mr-0' : 'nav align-items-center ml-auto'">
+      <call-assistant-dropdown />
       <locale />
       <user-dropdown />
     </b-navbar-nav>
@@ -34,6 +35,7 @@ import DarkToggler from './components/DarkToggler.vue'
 import CartDropdown from './components/CartDropdown.vue'
 import NotificationDropdown from './components/NotificationDropdown.vue'
 import UserDropdown from './components/UserDropdown.vue'
+import CallAssistantDropdown from './components/CallAssistantDropdown.vue'
 
 export default {
   components: {
@@ -48,6 +50,7 @@ export default {
     CartDropdown,
     NotificationDropdown,
     UserDropdown,
+    CallAssistantDropdown,
   },
   props: {
     toggleVerticalMenuActive: {

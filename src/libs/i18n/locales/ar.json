@@ -441,5 +441,29 @@
     "subscriptionActivationError": "فشل في تفعيل الاشتراك",
     "subscriptionDeactivationError": "فشل في إلغاء تفعيل الاشتراك",
     "subscriptionExtensionError": "فشل في تمديد الاشتراك"
+  },
+  "assistantCall": {
+    "callAssistant": "استدعاء المساعد",
+    "selectAssistant": "اختر المساعد",
+    "callSent": "تم إرسال الاستدعاء بنجاح! في انتظار رد المساعد.",
+    "callFailed": "فشل إرسال الاستدعاء. يرجى المحاولة مرة أخرى.",
+    "callCompleted": "تم إنهاء الاستدعاء.",
+    "callAccepted": "تم قبول الاستدعاء بنجاح.",
+    "activeCalls": "الاستدعاءات النشطة",
+    "incomingCalls": "استدعاءات واردة",
+    "isRequestingAssistance": "يطلب المساعدة",
+    "accept": "قبول",
+    "markDone": "إنهاء",
+    "status": "الحالة",
+    "pending": "قيد الانتظار",
+    "accepted": "مقبول",
+    "done": "منتهي",
+    "acceptedBy": "تم القبول بواسطة",
+    "doctor": "الطبيب",
+    "noActiveCalls": "لا توجد استدعاءات نشطة",
+    "loadError": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+    "soundDisabled": "إشعارات الصوت معطلة. قم بتفعيلها لسماع تنبيهات الاستدعاءات الواردة.",
+    "enableSound": "تفعيل الصوت",
+    "soundEnabled": "تم تفعيل إشعارات الصوت!"
   }
 }

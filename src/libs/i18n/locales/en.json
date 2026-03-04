@@ -628,5 +628,29 @@
     "noAssistants": "No assistants found",
     "createdAt": "Created At",
     "actions": "Actions"
+  },
+  "assistantCall": {
+    "callAssistant": "Call Assistant",
+    "selectAssistant": "Select Assistant",
+    "callSent": "Call sent successfully! Waiting for assistant response.",
+    "callFailed": "Failed to send call. Please try again.",
+    "callCompleted": "Call marked as completed.",
+    "callAccepted": "Call accepted successfully.",
+    "activeCalls": "Active Calls",
+    "incomingCalls": "Incoming Calls",
+    "isRequestingAssistance": "is requesting assistance",
+    "accept": "Accept",
+    "markDone": "Mark Done",
+    "status": "Status",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "done": "Done",
+    "acceptedBy": "Accepted by",
+    "doctor": "Doctor",
+    "noActiveCalls": "No active calls",
+    "loadError": "An error occurred. Please try again.",
+    "soundDisabled": "Sound notifications are disabled. Enable them to hear incoming call alerts.",
+    "enableSound": "Enable Sound",
+    "soundEnabled": "Sound notifications enabled!"
   }
 }

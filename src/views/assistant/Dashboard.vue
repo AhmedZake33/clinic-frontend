@@ -1,5 +1,80 @@
 <template>
   <div>
+    <!-- Sound Permission Banner -->
+    <b-row v-if="!soundEnabled">
+      <b-col cols="12">
+        <b-alert show variant="warning" class="d-flex align-items-center justify-content-between mb-1">
+          <div>
+            <feather-icon icon="VolumeXIcon" class="mr-50" />
+            {{ $t('assistantCall.soundDisabled') }}
+          </div>
+          <b-button variant="warning" size="sm" @click="enableSound">
+            <feather-icon icon="Volume2Icon" class="mr-25" />
+            {{ $t('assistantCall.enableSound') }}
+          </b-button>
+        </b-alert>
+      </b-col>
+    </b-row>
+
+    <!-- Incoming Assistant Calls Alert -->
+    <b-row v-if="activeCalls.length > 0">
+      <b-col cols="12">
+        <b-card
+          class="assistant-call-alert border-danger"
+          :class="{ 'call-highlight': hasNewCall }"
+          border-variant="danger"
+        >
+          <div class="d-flex align-items-center mb-1">
+            <b-avatar variant="danger" size="40" class="mr-1">
+              <feather-icon icon="PhoneCallIcon" size="20" />
+            </b-avatar>
+            <h4 class="text-danger mb-0">
+              {{ $t('assistantCall.incomingCalls') }}
+            </h4>
+          </div>
+          <b-list-group flush>
+            <b-list-group-item
+              v-for="call in activeCalls"
+              :key="call.id"
+              class="d-flex justify-content-between align-items-center px-0"
+              :variant="call.status === 'pending' ? 'warning' : 'info'"
+            >
+              <div>
+                <feather-icon icon="AlertCircleIcon" class="text-danger mr-50" />
+                <strong>{{ call.doctor ? call.doctor.name : $t('assistantCall.doctor') }}</strong>
+                {{ $t('assistantCall.isRequestingAssistance') }}
+                <b-badge :variant="call.status === 'pending' ? 'warning' : 'info'" class="ml-50">
+                  {{ $t('assistantCall.' + call.status) }}
+                </b-badge>
+                <small v-if="call.message" class="d-block text-muted mt-25">{{ call.message }}</small>
+              </div>
+              <div>
+                <b-button
+                  v-if="call.status === 'pending'"
+                  variant="success"
+                  size="sm"
+                  class="mr-50"
+                  @click="acceptCall(call)"
+                >
+                  <feather-icon icon="CheckIcon" class="mr-25" />
+                  {{ $t('assistantCall.accept') }}
+                </b-button>
+                <b-button
+                  v-if="call.status === 'accepted' && call.assistant_id === currentUserId"
+                  variant="primary"
+                  size="sm"
+                  @click="completeCallAction(call)"
+                >
+                  <feather-icon icon="CheckCircleIcon" class="mr-25" />
+                  {{ $t('assistantCall.markDone') }}
+                </b-button>
+              </div>
+            </b-list-group-item>
+          </b-list-group>
+        </b-card>
+      </b-col>
+    </b-row>
+
     <!-- Statistics Cards -->
     <b-row class="match-height">
       <b-col lg="3" sm="6">
@@ -158,9 +233,14 @@ import {
   BTable,
   BBadge,
   BSpinner,
+  BListGroup,
+  BListGroupItem,
+  BAlert,
 } from 'bootstrap-vue'
 import clientsService from '@/services/clients'
 import reservationsService from '@/services/reservations'
+import assistantCallsService from '@/services/assistantCalls'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   components: {
@@ -172,10 +252,19 @@ export default {
     BTable,
     BBadge,
     BSpinner,
+    BListGroup,
+    BListGroupItem,
+    BAlert,
   },
   data() {
     return {
       loading: false,
+      activeCalls: [],
+      hasNewCall: false,
+      currentUserId: null,
+      soundEnabled: false,
+      audioContext: null,
+      callSoundInterval: null,
       stats: {
         totalClients: 0,
         totalReservations: 0,
@@ -208,8 +297,30 @@ export default {
     },
   },
   mounted() {
+    const user = JSON.parse(localStorage.getItem('user') || 'null')
+    this.currentUserId = user ? user.id : null
+    this.soundEnabled = localStorage.getItem('assistantCallSoundEnabled') === 'true'
+    // Try to restore AudioContext if previously enabled
+    if (this.soundEnabled) {
+      this.initAudioContext()
+    }
     this.fetchStats()
     this.fetchTodayReservations()
+    this.fetchActiveCalls()
+    this.listenForCallEvents(user)
+  },
+  beforeDestroy() {
+    this.stopCallSound()
+    if (this.audioContext) {
+      try { this.audioContext.close() } catch (e) { /* ignore */ }
+    }
+    const user = JSON.parse(localStorage.getItem('user') || 'null')
+    if (user) {
+      try { window.Echo.leave(`assistant.${user.id}`) } catch (e) { /* ignore */ }
+      if (user.doctor_id) {
+        try { window.Echo.leave(`clinic.${user.doctor_id}.assistant-calls`) } catch (e) { /* ignore */ }
+      }
+    }
   },
   methods: {
     async fetchStats() {
@@ -265,6 +376,222 @@ export default {
       const date = new Date(value + (value.includes(' ') ? '' : ''))
       return date.toLocaleString()
     },
+
+    // ── Assistant Call Methods ──
+    async fetchActiveCalls() {
+      try {
+        const response = await assistantCallsService.getActiveCalls()
+        this.activeCalls = response.data.data || response.data || []
+      } catch (error) {
+        console.error('Failed to fetch active calls', error)
+      }
+    },
+    async acceptCall(call) {
+      this.stopCallSound()
+      try {
+        await assistantCallsService.acceptCall(call.id)
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('assistantCall.callAccepted'),
+            icon: 'CheckCircleIcon',
+            variant: 'success',
+          },
+        })
+        this.fetchActiveCalls()
+      } catch (error) {
+        console.error('Failed to accept call', error)
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('assistantCall.loadError'),
+            icon: 'AlertTriangleIcon',
+            variant: 'danger',
+          },
+        })
+      }
+    },
+    async completeCallAction(call) {
+      this.stopCallSound()
+      try {
+        await assistantCallsService.completeCall(call.id)
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('assistantCall.callCompleted'),
+            icon: 'CheckCircleIcon',
+            variant: 'success',
+          },
+        })
+        this.fetchActiveCalls()
+      } catch (error) {
+        console.error('Failed to complete call', error)
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('assistantCall.loadError'),
+            icon: 'AlertTriangleIcon',
+            variant: 'danger',
+          },
+        })
+      }
+    },
+    listenForCallEvents(user) {
+      if (!user) return
+      try {
+        // Listen on the assistant's personal channel for targeted calls
+        this._callChannel = window.Echo.private(`assistant.${user.id}`)
+          .listen('.assistant.call', event => {
+            this.fetchActiveCalls()
+
+            if (event.action === 'created') {
+              this.hasNewCall = true
+              this.playCallSound()
+              this.$toast({
+                component: ToastificationContent,
+                props: {
+                  title: this.$t('assistantCall.incomingCalls'),
+                  text: `${event.call?.doctor?.name || this.$t('assistantCall.doctor')} ${this.$t('assistantCall.isRequestingAssistance')}`,
+                  icon: 'PhoneCallIcon',
+                  variant: 'danger',
+                },
+              })
+              setTimeout(() => { this.hasNewCall = false }, 5000)
+            }
+          })
+
+        // Also listen on the clinic channel for general updates
+        if (user.doctor_id) {
+          this._clinicChannel = window.Echo.private(`clinic.${user.doctor_id}.assistant-calls`)
+            .listen('.assistant.call', () => {
+              this.fetchActiveCalls()
+            })
+        }
+      } catch (error) {
+        console.error('Failed to listen for call events', error)
+      }
+    },
+    playCallSound() {
+      if (!this.soundEnabled || !this.audioContext) return
+      this.stopCallSound()
+
+      const playAlertSequence = () => {
+        try {
+          if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume()
+          }
+          const now = this.audioContext.currentTime
+          const playBeep = (startTime, freq, duration) => {
+            const osc = this.audioContext.createOscillator()
+            const gain = this.audioContext.createGain()
+            osc.connect(gain)
+            gain.connect(this.audioContext.destination)
+            osc.frequency.value = freq
+            osc.type = 'sine'
+            gain.gain.setValueAtTime(0.4, startTime)
+            gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration)
+            osc.start(startTime)
+            osc.stop(startTime + duration)
+          }
+          // Urgent three-tone alert
+          playBeep(now, 880, 0.2)
+          playBeep(now + 0.25, 1100, 0.2)
+          playBeep(now + 0.5, 1320, 0.3)
+        } catch (e) {
+          console.warn('Could not play call sound', e)
+        }
+      }
+
+      // Play immediately, then repeat every 3 seconds for 30 seconds
+      playAlertSequence()
+      let count = 0
+      this.callSoundInterval = setInterval(() => {
+        count++
+        if (count >= 10) {
+          this.stopCallSound()
+          return
+        }
+        playAlertSequence()
+      }, 3000)
+    },
+    stopCallSound() {
+      if (this.callSoundInterval) {
+        clearInterval(this.callSoundInterval)
+        this.callSoundInterval = null
+      }
+    },
+    initAudioContext() {
+      try {
+        if (!this.audioContext) {
+          this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
+        }
+        if (this.audioContext.state === 'suspended') {
+          this.audioContext.resume()
+        }
+      } catch (e) {
+        console.warn('AudioContext not available', e)
+      }
+    },
+    enableSound() {
+      this.initAudioContext()
+      this.soundEnabled = true
+      localStorage.setItem('assistantCallSoundEnabled', 'true')
+
+      // Play a short test beep so the user knows it works
+      try {
+        const now = this.audioContext.currentTime
+        const osc = this.audioContext.createOscillator()
+        const gain = this.audioContext.createGain()
+        osc.connect(gain)
+        gain.connect(this.audioContext.destination)
+        osc.frequency.value = 660
+        osc.type = 'sine'
+        gain.gain.setValueAtTime(0.2, now)
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15)
+        osc.start(now)
+        osc.stop(now + 0.15)
+      } catch (e) { /* ignore */ }
+
+      this.$toast({
+        component: ToastificationContent,
+        props: {
+          title: this.$t('assistantCall.soundEnabled'),
+          icon: 'Volume2Icon',
+          variant: 'success',
+        },
+      })
+    },
   },
 }
 </script>
+
+<style scoped>
+.assistant-call-alert {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.call-highlight {
+  animation: callPulse 0.8s ease-in-out 3;
+  box-shadow: 0 0 20px rgba(234, 84, 85, 0.5);
+}
+
+@keyframes callPulse {
+  0% {
+    box-shadow: 0 0 5px rgba(234, 84, 85, 0.3);
+    border-color: #ea5455;
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(234, 84, 85, 0.7);
+    border-color: #ff6b6b;
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(234, 84, 85, 0.3);
+    border-color: #ea5455;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>

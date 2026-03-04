@@ -167,6 +167,7 @@ import {
   VBTooltip,
 } from 'bootstrap-vue'
 import reservationsService from '@/services/reservations'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   directives: {
