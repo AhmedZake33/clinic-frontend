@@ -108,8 +108,15 @@
     >
       <b-form @submit.prevent="completeReservation">
         <b-alert variant="info" show>
-          <p v-if="selectedReservation && selectedReservation.client"><strong>{{ $t('reservation.client') }}:</strong> {{ selectedReservation.client.name }}</p>
-          <p v-if="selectedReservation"><strong>{{ $t('reservation.appointment') }}:</strong> {{ formatDateTime(selectedReservation.appointment_date) }}</p>
+          <div v-if="selectedReservation && selectedReservation.client">
+            <p class="mb-25"><strong>{{ $t('reservation.client') }}:</strong> {{ selectedReservation.client.name }}</p>
+            <p class="mb-25"><strong>{{ $t('reservation.clientPhone') }}:</strong> {{ selectedReservation.client.phone }}</p>
+            <p class="mb-25" v-if="selectedReservation.client.date_of_birth"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth }}</p>
+            <p class="mb-25" v-if="selectedReservation.client.height"><strong>{{ $t('client.height') }}:</strong> {{ selectedReservation.client.height }} cm</p>
+            <p class="mb-25" v-if="selectedReservation.client.weight"><strong>{{ $t('client.weight') }}:</strong> {{ selectedReservation.client.weight }} kg</p>
+            <p class="mb-0" v-if="selectedReservation.client.medical_history"><strong>{{ $t('client.medicalHistory') }}:</strong> {{ selectedReservation.client.medical_history }}</p>
+          </div>
+          <p v-if="selectedReservation" class="mb-0 mt-50"><strong>{{ $t('reservation.appointment') }}:</strong> {{ formatDateTime(selectedReservation.appointment_date) }}</p>
         </b-alert>
 
         <b-form-group :label="$t('reservation.diagnosis')" label-for="diagnosis">
@@ -118,7 +125,6 @@
             v-model="completeForm.diagnosis"
             rows="4"
             :placeholder="$t('reservation.enterDiagnosis')"
-            required
           />
         </b-form-group>
 
@@ -128,7 +134,6 @@
             v-model="completeForm.treatment"
             rows="4"
             :placeholder="$t('reservation.enterTreatment')"
-            required
           />
         </b-form-group>
 
@@ -417,11 +422,40 @@
       size="lg"
     >
       <div v-if="selectedReservation">
+        <!-- Client Details Card -->
+        <b-card v-if="selectedReservation.client" class="mb-2" no-body>
+          <b-card-header class="d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">{{ $t('client.clientDetails') }}</h6>
+            <b-button size="sm" variant="outline-primary" @click="openEditClientModal(selectedReservation.client)">
+              <feather-icon icon="EditIcon" size="14" class="mr-25" />
+              {{ $t('client.editClient') }}
+            </b-button>
+          </b-card-header>
+          <b-card-body>
+            <b-row>
+              <b-col md="6">
+                <p class="mb-50"><strong>{{ $t('client.name') }}:</strong> {{ selectedReservation.client.name }}</p>
+                <p class="mb-50"><strong>{{ $t('reservation.clientEmail') }}:</strong> {{ selectedReservation.client.email }}</p>
+                <p class="mb-50"><strong>{{ $t('reservation.clientPhone') }}:</strong> {{ selectedReservation.client.phone }}</p>
+                <p class="mb-50"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth || $t('reservation.na') }}</p>
+              </b-col>
+              <b-col md="6">
+                <p class="mb-50"><strong>{{ $t('client.height') }}:</strong> {{ selectedReservation.client.height ? selectedReservation.client.height + ' cm' : $t('reservation.na') }}</p>
+                <p class="mb-50"><strong>{{ $t('client.weight') }}:</strong> {{ selectedReservation.client.weight ? selectedReservation.client.weight + ' kg' : $t('reservation.na') }}</p>
+                <p class="mb-50"><strong>{{ $t('client.address') }}:</strong> {{ selectedReservation.client.address || $t('reservation.na') }}</p>
+              </b-col>
+            </b-row>
+            <div v-if="selectedReservation.client.medical_history" class="mt-50">
+              <p class="mb-25"><strong>{{ $t('client.medicalHistory') }}:</strong></p>
+              <b-alert variant="warning" show class="mb-0">
+                {{ selectedReservation.client.medical_history }}
+              </b-alert>
+            </div>
+          </b-card-body>
+        </b-card>
+
         <b-row>
           <b-col md="6">
-            <p v-if="selectedReservation.client"><strong>{{ $t('reservation.client') }}:</strong> {{ selectedReservation.client.name }}</p>
-            <p v-if="selectedReservation.client"><strong>{{ $t('reservation.clientEmail') }}:</strong> {{ selectedReservation.client.email }}</p>
-            <p v-if="selectedReservation.client"><strong>{{ $t('reservation.clientPhone') }}:</strong> {{ selectedReservation.client.phone }}</p>
             <p><strong>{{ $t('reservation.status') }}:</strong> 
               <b-badge :variant="getStatusVariant(selectedReservation.status)">
                 {{ selectedReservation.status }}
@@ -439,13 +473,6 @@
         <hr>
         <p><strong>{{ $t('reservation.notes') }}:</strong></p>
         <p>{{ selectedReservation.notes || $t('reservation.na') }}</p>
-        
-        <div v-if="selectedReservation.client && selectedReservation.client.medical_history">
-          <p><strong>{{ $t('reservation.medicalHistory') }}:</strong></p>
-          <b-alert variant="warning" show>
-            {{ selectedReservation.client.medical_history }}
-          </b-alert>
-        </div>
 
         <div v-if="selectedReservation.diagnosis">
           <hr>
@@ -477,6 +504,68 @@
         </div>
       </div>
     </b-modal>
+
+    <!-- Edit Client Modal -->
+    <b-modal
+      v-model="editClientModalShow"
+      :title="$t('client.editClient')"
+      hide-footer
+      size="lg"
+    >
+      <b-form @submit.prevent="saveClientData">
+        <b-row>
+          <b-col md="6">
+            <b-form-group :label="$t('client.name')" label-for="client-name">
+              <b-form-input id="client-name" v-model="clientForm.name" required />
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Email" label-for="client-email">
+              <b-form-input id="client-email" v-model="clientForm.email" type="email" required />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <b-form-group :label="$t('client.phone')" label-for="client-phone">
+              <b-form-input id="client-phone" v-model="clientForm.phone" required />
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group :label="$t('client.dateOfBirth')" label-for="client-dob">
+              <b-form-input id="client-dob" v-model="clientForm.date_of_birth" type="date" />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <b-form-group :label="$t('client.height')" label-for="client-height">
+              <b-form-input id="client-height" v-model="clientForm.height" type="number" step="0.01" min="0" max="300" :placeholder="$t('client.heightPlaceholder')" />
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group :label="$t('client.weight')" label-for="client-weight">
+              <b-form-input id="client-weight" v-model="clientForm.weight" type="number" step="0.01" min="0" max="500" :placeholder="$t('client.weightPlaceholder')" />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-form-group :label="$t('client.address')" label-for="client-address">
+          <b-form-textarea id="client-address" v-model="clientForm.address" rows="2" />
+        </b-form-group>
+        <b-form-group :label="$t('client.medicalHistory')" label-for="client-history">
+          <b-form-textarea id="client-history" v-model="clientForm.medical_history" rows="3" />
+        </b-form-group>
+        <div class="text-right">
+          <b-button variant="secondary" class="mr-1" @click="editClientModalShow = false">
+            {{ $t('actions.cancel') }}
+          </b-button>
+          <b-button type="submit" variant="primary" :disabled="savingClient">
+            <b-spinner v-if="savingClient" small class="mr-1" />
+            {{ $t('actions.save') }}
+          </b-button>
+        </div>
+      </b-form>
+    </b-modal>
   </div>
 </template>
 
@@ -506,6 +595,7 @@ import {
 } from 'bootstrap-vue'
 import reservationsService from '@/services/reservations'
 import openfdaService from '@/services/openfda'
+import clientsService from '@/services/clients'
 
 export default {
   directives: {
@@ -532,6 +622,8 @@ export default {
     BInputGroupAppend,
     BTabs,
     BTab,
+    BCardHeader: () => import('bootstrap-vue').then(m => m.BCardHeader),
+    BCardBody: () => import('bootstrap-vue').then(m => m.BCardBody),
   },
   data() {
     return {
@@ -582,6 +674,20 @@ export default {
         status: '',
         date_from: '',
         date_to: '',
+      },
+      // Client edit
+      editClientModalShow: false,
+      savingClient: false,
+      editingClientId: null,
+      clientForm: {
+        name: '',
+        email: '',
+        phone: '',
+        date_of_birth: '',
+        height: '',
+        weight: '',
+        address: '',
+        medical_history: '',
       },
     }
   },
@@ -923,6 +1029,50 @@ export default {
       const from = ((paginationState.current_page - 1) * paginationState.per_page) + 1
       const to = Math.min(paginationState.current_page * paginationState.per_page, paginationState.total)
       return `${from}-${to} / ${paginationState.total}`
+    },
+    openEditClientModal(client) {
+      this.editingClientId = client.id
+      this.clientForm = {
+        name: client.name || '',
+        email: client.email || '',
+        phone: client.phone || '',
+        date_of_birth: client.date_of_birth ? client.date_of_birth.substring(0, 10) : '',
+        height: client.height || '',
+        weight: client.weight || '',
+        address: client.address || '',
+        medical_history: client.medical_history || '',
+      }
+      this.editClientModalShow = true
+    },
+    async saveClientData() {
+      this.savingClient = true
+      try {
+        const { data } = await clientsService.updateClient(this.editingClientId, this.clientForm)
+        // Update client in selected reservation
+        if (this.selectedReservation && this.selectedReservation.client) {
+          Object.assign(this.selectedReservation.client, data)
+        }
+        this.editClientModalShow = false
+        this.$toast({
+          component: 'ToastificationContent',
+          props: {
+            title: this.$t('messages.success'),
+            text: this.$t('messages.updateSuccess'),
+            variant: 'success',
+          },
+        })
+      } catch (error) {
+        this.$toast({
+          component: 'ToastificationContent',
+          props: {
+            title: this.$t('messages.error'),
+            text: error.response?.data?.message || this.$t('messages.saveError'),
+            variant: 'danger',
+          },
+        })
+      } finally {
+        this.savingClient = false
+      }
     },
   },
 }

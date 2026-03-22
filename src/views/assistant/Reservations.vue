@@ -156,18 +156,31 @@
     >
       <b-form @submit.prevent="saveReservation">
         <b-form-group :label="$t('table.client')" label-for="client">
-          <b-form-select
-            id="client"
-            v-model="form.client_id"
-            :options="clientOptions"
-            required
-          >
-            <template #first>
-              <b-form-select-option :value="null" disabled>
-                {{ $t('reservation.selectClient') }}
-              </b-form-select-option>
-            </template>
-          </b-form-select>
+          <b-form-input
+            id="client-search"
+            v-model="clientSearch"
+            :placeholder="$t('client.searchPlaceholder')"
+            autocomplete="off"
+            @focus="clientDropdownOpen = true"
+            @input="clientDropdownOpen = true"
+          />
+          <div v-if="clientDropdownOpen && filteredClients.length" class="client-search-dropdown">
+            <div
+              v-for="client in filteredClients"
+              :key="client.id"
+              class="client-search-item"
+              @mousedown.prevent="selectClient(client)"
+            >
+              <strong>{{ client.name }}</strong>
+              <small class="text-muted d-block">{{ client.phone }}</small>
+            </div>
+          </div>
+          <div v-if="clientDropdownOpen && clientSearch && !filteredClients.length" class="client-search-dropdown">
+            <div class="client-search-item text-muted">{{ $t('messages.noData') }}</div>
+          </div>
+          <small v-if="form.client_id && selectedClientDisplay" class="text-success">
+            {{ $t('reservation.selected') }}: {{ selectedClientDisplay }}
+          </small>
         </b-form-group>
 
         <b-form-group :label="$t('table.doctor')" label-for="doctor">
@@ -289,9 +302,33 @@
       size="lg"
     >
       <div v-if="selectedReservation">
+        <!-- Client Details -->
+        <b-card v-if="selectedReservation.client" class="mb-2" no-body>
+          <b-card-header>
+            <h6 class="mb-0">{{ $t('client.clientDetails') }}</h6>
+          </b-card-header>
+          <b-card-body>
+            <b-row>
+              <b-col md="6">
+                <p class="mb-50"><strong>{{ $t('client.name') }}:</strong> {{ selectedReservation.client.name }}</p>
+                <p class="mb-50"><strong>{{ $t('client.phone') }}:</strong> {{ selectedReservation.client.phone }}</p>
+                <p class="mb-50"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth || $t('reservation.na') }}</p>
+              </b-col>
+              <b-col md="6">
+                <p class="mb-50"><strong>{{ $t('client.height') }}:</strong> {{ selectedReservation.client.height ? selectedReservation.client.height + ' cm' : $t('reservation.na') }}</p>
+                <p class="mb-50"><strong>{{ $t('client.weight') }}:</strong> {{ selectedReservation.client.weight ? selectedReservation.client.weight + ' kg' : $t('reservation.na') }}</p>
+                <p class="mb-50"><strong>{{ $t('client.address') }}:</strong> {{ selectedReservation.client.address || $t('reservation.na') }}</p>
+              </b-col>
+            </b-row>
+            <div v-if="selectedReservation.client.medical_history" class="mt-50">
+              <p class="mb-25"><strong>{{ $t('client.medicalHistory') }}:</strong></p>
+              <b-alert variant="warning" show class="mb-0">{{ selectedReservation.client.medical_history }}</b-alert>
+            </div>
+          </b-card-body>
+        </b-card>
+
         <b-row>
           <b-col md="6">
-            <p v-if="selectedReservation.client"><strong>{{ $t('table.client') }}:</strong> {{ selectedReservation.client.name }}</p>
             <p v-if="selectedReservation.doctor"><strong>{{ $t('table.doctor') }}:</strong> {{ selectedReservation.doctor.name }}</p>
             <p><strong>{{ $t('table.status') }}:</strong> 
               <b-badge :variant="getStatusVariant(selectedReservation.status)">
@@ -456,6 +493,8 @@ export default {
     BSpinner,
     BBadge,
     BAlert,
+    BCardHeader: () => import('bootstrap-vue').then(m => m.BCardHeader),
+    BCardBody: () => import('bootstrap-vue').then(m => m.BCardBody),
   },
   directives: {
     'b-tooltip': VBTooltip,
@@ -478,6 +517,8 @@ export default {
       saving: false,
       updating: false,
       selectedReservation: null,
+      clientSearch: '',
+      clientDropdownOpen: false,
       availabilityLoading: false,
       availableTimeSlots: [],
       timeSlotsMessage: '',
@@ -537,8 +578,19 @@ export default {
     clientOptions() {
       return this.clients.map(client => ({
         value: client.id,
-        text: client.name,
+        text: `${client.name} - ${client.phone}`,
       }))
+    },
+    filteredClients() {
+      if (!this.clientSearch) return this.clients
+      const q = this.clientSearch.toLowerCase()
+      return this.clients.filter(c =>
+        c.name.toLowerCase().includes(q) || (c.phone && c.phone.includes(q))
+      )
+    },
+    selectedClientDisplay() {
+      const c = this.clients.find(cl => cl.id === this.form.client_id)
+      return c ? `${c.name} - ${c.phone}` : ''
     },
     doctorOptions() {
       return this.doctors.map(doctor => ({
@@ -587,8 +639,18 @@ export default {
     this.fetchReservations()
     this.fetchClients()
     this.fetchDoctors()
+    document.addEventListener('click', this.handleClickOutside)
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.handleClickOutside)
   },
   methods: {
+    handleClickOutside(e) {
+      const el = document.getElementById('client-search')
+      if (el && !el.contains(e.target)) {
+        this.clientDropdownOpen = false
+      }
+    },
     async fetchReservations() {
       this.loading = true
       try {
@@ -632,6 +694,11 @@ export default {
     onPageChange(page) {
       this.pagination.current_page = page
       this.fetchReservations()
+    },
+    selectClient(client) {
+      this.form.client_id = client.id
+      this.clientSearch = `${client.name} - ${client.phone}`
+      this.clientDropdownOpen = false
     },
     async fetchClients() {
       try {
@@ -703,6 +770,8 @@ export default {
       this.availableTimeSlots = []
       this.timeSlotsMessage = ''
       this.timeSlotsMessageVariant = 'warning'
+      this.clientSearch = ''
+      this.clientDropdownOpen = false
       this.modalShow = true
     },
     showEditModal(reservation) {
@@ -941,3 +1010,25 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.client-search-dropdown {
+  position: absolute;
+  z-index: 1050;
+  width: calc(100% - 2rem);
+  max-height: 200px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #d8d6de;
+  border-radius: 0.357rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 2px;
+}
+.client-search-item {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+.client-search-item:hover {
+  background-color: #f8f8f8;
+}
+</style>

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
-    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
+    "build": "cross-env NODE_OPTIONS=\"--openssl-legacy-provider --max-old-space-size=4096\" vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -82,6 +82,10 @@
     "eslint-plugin-vue": "6.2.2",
     "sass": "1.32.*",
     "sass-loader": "^10.1.0",
+    "thread-loader": "^3.0.4",
     "vue-template-compiler": "2.x"
+  },
+  "overrides": {
+    "thread-loader": "^3.0.4"
   }
 }

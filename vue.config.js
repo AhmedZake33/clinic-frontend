@@ -2,6 +2,8 @@ const path = require('path')
 
 module.exports = {
   publicPath: '/',
+  parallel: false,
+  productionSourceMap: false,
   lintOnSave: false,
   css: {
     loaderOptions: {
@@ -21,8 +23,26 @@ module.exports = {
         '@axios': path.resolve(__dirname, 'src/libs/axios'),
       },
     },
+    optimization: {
+      minimizer: [
+        new (require('terser-webpack-plugin'))({
+          parallel: false,
+          terserOptions: {
+            compress: {
+              drop_console: true,
+            },
+          },
+        }),
+      ],
+    },
   },
   chainWebpack: config => {
+    // Remove thread-loader to avoid spawn issues on Node v22 Windows
+    const jsRule = config.module.rule('js')
+    jsRule.uses.delete('thread-loader')
+    const tsRule = config.module.rule('ts')
+    if (tsRule) tsRule.uses.delete('thread-loader')
+
     config.module
       .rule('vue')
       .use('vue-loader')

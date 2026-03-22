@@ -28,6 +28,11 @@
     "phone": "رقم الهاتف",
     "address": "العنوان",
     "medicalHistory": "التاريخ المرضي",
+    "dateOfBirth": "تاريخ الميلاد",
+    "height": "الطول (سم)",
+    "weight": "الوزن (كجم)",
+    "heightPlaceholder": "أدخل الطول بالسنتيمتر",
+    "weightPlaceholder": "أدخل الوزن بالكيلوجرام",
     "addClient": "إضافة عميل جديد",
     "editClient": "تعديل بيانات العميل",
     "deleteClient": "حذف العميل",
@@ -103,7 +108,8 @@
     "requiresLab": "يتطلب تحاليل مختبرية",
     "lab": "تحاليل",
     "labNotes": "ملاحظات التحاليل",
-    "enterLabNotes": "أدخل تفاصيل أو تعليمات التحاليل المختبرية"
+    "enterLabNotes": "أدخل تفاصيل أو تعليمات التحاليل المختبرية",
+    "selected": "تم اختيار"
   },
   "filters": {
     "all": "الكل",

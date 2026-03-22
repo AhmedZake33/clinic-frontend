@@ -124,7 +124,6 @@
             id="email"
             v-model="form.email"
             type="email"
-            required
             placeholder="Enter email"
           />
         </b-form-group>
@@ -145,6 +144,35 @@
             type="date"
           />
         </b-form-group>
+
+        <b-row>
+          <b-col cols="6">
+            <b-form-group :label="$t('client.height')" label-for="height">
+              <b-form-input
+                id="height"
+                v-model="form.height"
+                type="number"
+                step="0.01"
+                min="0"
+                max="300"
+                :placeholder="$t('client.heightPlaceholder')"
+              />
+            </b-form-group>
+          </b-col>
+          <b-col cols="6">
+            <b-form-group :label="$t('client.weight')" label-for="weight">
+              <b-form-input
+                id="weight"
+                v-model="form.weight"
+                type="number"
+                step="0.01"
+                min="0"
+                max="500"
+                :placeholder="$t('client.weightPlaceholder')"
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
 
         <b-form-group label="Address" label-for="address">
           <b-form-textarea
@@ -192,6 +220,8 @@
           </b-col>
           <b-col md="6">
             <p><strong>Date of Birth:</strong> {{ selectedClient.date_of_birth || 'N/A' }}</p>
+            <p><strong>{{ $t('client.height') }}:</strong> {{ selectedClient.height ? selectedClient.height + ' cm' : 'N/A' }}</p>
+            <p><strong>{{ $t('client.weight') }}:</strong> {{ selectedClient.weight ? selectedClient.weight + ' kg' : 'N/A' }}</p>
             <p><strong>Created:</strong> {{ formatDate(selectedClient.created_at) }}</p>
           </b-col>
         </b-row>
@@ -262,6 +292,8 @@ export default {
         email: '',
         phone: '',
         date_of_birth: '',
+        height: '',
+        weight: '',
         address: '',
         medical_history: '',
       },
@@ -331,6 +363,8 @@ export default {
         email: '',
         phone: '',
         date_of_birth: '',
+        height: '',
+        weight: '',
         address: '',
         medical_history: '',
       }

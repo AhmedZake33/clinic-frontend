@@ -39,16 +39,24 @@
     <li class="px-2 py-75">
       <div class="d-flex align-items-center">
         <b-form-select
+          v-if="assistantsList.length !== 1"
           v-model="selectedAssistantId"
           :options="assistantOptions"
           size="sm"
           class="flex-grow-1"
           :class="isRTL ? 'ml-50' : 'mr-50'"
         />
+        <div
+          v-else
+          class="flex-grow-1 small text-muted"
+          :class="isRTL ? 'ml-50' : 'mr-50'"
+        >
+          {{ assistantsList[0].name }}
+        </div>
         <b-button
           variant="danger"
           size="sm"
-          :disabled="callLoading || !selectedAssistantId"
+          :disabled="callLoading || (!selectedAssistantId && assistantsList.length !== 1)"
           class="text-nowrap"
           @click="callAssistant"
         >
@@ -128,6 +136,7 @@ import {
 } from 'bootstrap-vue'
 import assistantCallsService from '@/services/assistantCalls'
 import assistantsService from '@/services/assistants'
+import { updateEchoAuth } from '@/libs/echo'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
@@ -179,15 +188,19 @@ export default {
   },
   methods: {
     async callAssistant() {
-      if (!this.selectedAssistantId) return
+      const assistantId = this.selectedAssistantId || (this.assistantsList.length === 1 ? this.assistantsList[0].id : null)
+      if (!assistantId) return
       this.callLoading = true
       try {
-        await assistantCallsService.createCall({ assistant_id: this.selectedAssistantId })
+        const response = await assistantCallsService.createCall({ assistant_id: assistantId })
+        const newCall = response.data?.call
+        if (newCall && !this.activeCalls.find(c => c.id === newCall.id)) {
+          this.activeCalls.push(newCall)
+        }
         this.$toast({
           component: ToastificationContent,
           props: { title: this.$t('assistantCall.callSent'), variant: 'success', icon: 'PhoneCallIcon' },
         })
-        this.fetchActiveCalls()
       } catch (error) {
         this.$toast({
           component: ToastificationContent,
@@ -216,32 +229,48 @@ export default {
     async markCallDone(call) {
       try {
         await assistantCallsService.completeCall(call.id)
+        this.activeCalls = this.activeCalls.filter(c => c.id !== call.id)
         this.$toast({
           component: ToastificationContent,
           props: { title: this.$t('assistantCall.callCompleted'), variant: 'success', icon: 'CheckCircleIcon' },
         })
-        this.fetchActiveCalls()
       } catch (e) {
         console.error('Failed to complete call', e)
+      }
+    },
+    handleCallEvent(data) {
+      const call = data.call
+      if (!call) return
+
+      if (data.action === 'created') {
+        if (!this.activeCalls.find(c => c.id === call.id)) {
+          this.activeCalls.push(call)
+        }
+      } else if (data.action === 'accepted') {
+        const idx = this.activeCalls.findIndex(c => c.id === call.id)
+        if (idx !== -1) {
+          this.$set(this.activeCalls, idx, { ...this.activeCalls[idx], ...call })
+        }
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('assistantCall.callAccepted'),
+            text: call.assistant?.name || '',
+            variant: 'info',
+            icon: 'UserCheckIcon',
+          },
+        })
+      } else if (data.action === 'completed') {
+        this.activeCalls = this.activeCalls.filter(c => c.id !== call.id)
       }
     },
     listenForCallEvents() {
       if (!window.Echo || !this.user) return
       try {
+        updateEchoAuth()
         this._callChannel = window.Echo.private(`clinic.${this.user.id}.assistant-calls`)
           .listen('.assistant.call', data => {
-            this.fetchActiveCalls()
-            if (data.action === 'accepted') {
-              this.$toast({
-                component: ToastificationContent,
-                props: {
-                  title: this.$t('assistantCall.callAccepted'),
-                  text: data.call?.assistant?.name || '',
-                  variant: 'info',
-                  icon: 'UserCheckIcon',
-                },
-              })
-            }
+            this.handleCallEvent(data)
           })
       } catch (e) {
         console.error('[WS] Failed to subscribe to assistant-call channel', e)

@@ -28,6 +28,11 @@
     "phone": "Phone Number",
     "address": "Address",
     "medicalHistory": "Medical History",
+    "dateOfBirth": "Date of Birth",
+    "height": "Height (cm)",
+    "weight": "Weight (kg)",
+    "heightPlaceholder": "Enter height in cm",
+    "weightPlaceholder": "Enter weight in kg",
     "addClient": "Add New Client",
     "editClient": "Edit Client",
     "deleteClient": "Delete Client",
@@ -103,7 +108,8 @@
     "requiresLab": "Requires Lab Tests",
     "lab": "Lab",
     "labNotes": "Lab Test Notes",
-    "enterLabNotes": "Enter lab test details or instructions"
+    "enterLabNotes": "Enter lab test details or instructions",
+    "selected": "Selected"
   },
   "filters": {
     "all": "All",

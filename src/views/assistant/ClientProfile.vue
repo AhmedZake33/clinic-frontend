@@ -7,6 +7,9 @@
           <p class="mb-0"><strong>{{ $t('client.name') }}:</strong> {{ client.name }}</p>
           <p class="mb-0"><strong>{{ $t('clinic.email') }}:</strong> {{ client.email }}</p>
           <p class="mb-0"><strong>{{ $t('client.phone') }}:</strong> {{ client.phone }}</p>
+          <p class="mb-0"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ client.date_of_birth ? formatDate(client.date_of_birth) : $t('reservation.na') }}</p>
+          <p class="mb-0"><strong>{{ $t('client.height') }}:</strong> {{ client.height ? client.height + ' cm' : $t('reservation.na') }}</p>
+          <p class="mb-0"><strong>{{ $t('client.weight') }}:</strong> {{ client.weight ? client.weight + ' kg' : $t('reservation.na') }}</p>
           <p class="mb-0"><strong>{{ $t('client.address') }}:</strong> {{ client.address || $t('reservation.na') }}</p>
           <p class="mb-0"><strong>{{ $t('client.medicalHistory') }}:</strong> {{ client.medical_history || $t('reservation.na') }}</p>
         </b-col>
@@ -133,6 +136,10 @@ export default {
         return this.$t('reservation.na')
       }
       return item.doctor.name
+    },
+    formatDate(value) {
+      if (!value) return null
+      return new Date(value).toLocaleDateString()
     },
     formatDateTime(value) {
       if (!value) return null

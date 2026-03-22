@@ -240,6 +240,7 @@ import {
 import clientsService from '@/services/clients'
 import reservationsService from '@/services/reservations'
 import assistantCallsService from '@/services/assistantCalls'
+import { updateEchoAuth } from '@/libs/echo'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
@@ -265,6 +266,7 @@ export default {
       soundEnabled: false,
       audioContext: null,
       callSoundInterval: null,
+      _audioUnlockHandler: null,
       stats: {
         totalClients: 0,
         totalReservations: 0,
@@ -303,6 +305,16 @@ export default {
     // Try to restore AudioContext if previously enabled
     if (this.soundEnabled) {
       this.initAudioContext()
+      // Unlock AudioContext on first user interaction (browsers require a gesture after page reload)
+      this._audioUnlockHandler = () => {
+        if (this.audioContext && this.audioContext.state === 'suspended') {
+          this.audioContext.resume()
+        }
+        document.removeEventListener('click', this._audioUnlockHandler)
+        document.removeEventListener('keydown', this._audioUnlockHandler)
+      }
+      document.addEventListener('click', this._audioUnlockHandler, { once: false })
+      document.addEventListener('keydown', this._audioUnlockHandler, { once: false })
     }
     this.fetchStats()
     this.fetchTodayReservations()
@@ -311,6 +323,10 @@ export default {
   },
   beforeDestroy() {
     this.stopCallSound()
+    if (this._audioUnlockHandler) {
+      document.removeEventListener('click', this._audioUnlockHandler)
+      document.removeEventListener('keydown', this._audioUnlockHandler)
+    }
     if (this.audioContext) {
       try { this.audioContext.close() } catch (e) { /* ignore */ }
     }
@@ -390,6 +406,11 @@ export default {
       this.stopCallSound()
       try {
         await assistantCallsService.acceptCall(call.id)
+        // Update status in-place immediately (WebSocket event will also arrive)
+        const idx = this.activeCalls.findIndex(c => c.id === call.id)
+        if (idx !== -1) {
+          this.$set(this.activeCalls, idx, { ...this.activeCalls[idx], status: 'accepted', assistant_id: this.currentUserId })
+        }
         this.$toast({
           component: ToastificationContent,
           props: {
@@ -398,7 +419,6 @@ export default {
             variant: 'success',
           },
         })
-        this.fetchActiveCalls()
       } catch (error) {
         console.error('Failed to accept call', error)
         this.$toast({
@@ -415,6 +435,8 @@ export default {
       this.stopCallSound()
       try {
         await assistantCallsService.completeCall(call.id)
+        // Remove from list immediately (WebSocket event will also handle it)
+        this.activeCalls = this.activeCalls.filter(c => c.id !== call.id)
         this.$toast({
           component: ToastificationContent,
           props: {
@@ -423,7 +445,6 @@ export default {
             variant: 'success',
           },
         })
-        this.fetchActiveCalls()
       } catch (error) {
         console.error('Failed to complete call', error)
         this.$toast({
@@ -436,35 +457,53 @@ export default {
         })
       }
     },
+    handleCallEvent(event) {
+      const call = event.call
+      if (!call) return
+
+      if (event.action === 'created') {
+        // Add new call if not already present
+        if (!this.activeCalls.find(c => c.id === call.id)) {
+          this.activeCalls.push(call)
+        }
+        this.hasNewCall = true
+        this.playCallSound()
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('assistantCall.incomingCalls'),
+            text: `${call.doctor?.name || this.$t('assistantCall.doctor')} ${this.$t('assistantCall.isRequestingAssistance')}`,
+            icon: 'PhoneCallIcon',
+            variant: 'danger',
+          },
+        })
+        setTimeout(() => { this.hasNewCall = false }, 5000)
+      } else if (event.action === 'accepted') {
+        // Update status in-place
+        const idx = this.activeCalls.findIndex(c => c.id === call.id)
+        if (idx !== -1) {
+          this.$set(this.activeCalls, idx, { ...this.activeCalls[idx], ...call })
+        }
+      } else if (event.action === 'completed') {
+        // Remove completed call
+        this.activeCalls = this.activeCalls.filter(c => c.id !== call.id)
+      }
+    },
     listenForCallEvents(user) {
-      if (!user) return
+      if (!user || !window.Echo) return
       try {
+        updateEchoAuth()
         // Listen on the assistant's personal channel for targeted calls
         this._callChannel = window.Echo.private(`assistant.${user.id}`)
           .listen('.assistant.call', event => {
-            this.fetchActiveCalls()
-
-            if (event.action === 'created') {
-              this.hasNewCall = true
-              this.playCallSound()
-              this.$toast({
-                component: ToastificationContent,
-                props: {
-                  title: this.$t('assistantCall.incomingCalls'),
-                  text: `${event.call?.doctor?.name || this.$t('assistantCall.doctor')} ${this.$t('assistantCall.isRequestingAssistance')}`,
-                  icon: 'PhoneCallIcon',
-                  variant: 'danger',
-                },
-              })
-              setTimeout(() => { this.hasNewCall = false }, 5000)
-            }
+            this.handleCallEvent(event)
           })
 
         // Also listen on the clinic channel for general updates
         if (user.doctor_id) {
           this._clinicChannel = window.Echo.private(`clinic.${user.doctor_id}.assistant-calls`)
-            .listen('.assistant.call', () => {
-              this.fetchActiveCalls()
+            .listen('.assistant.call', event => {
+              this.handleCallEvent(event)
             })
         }
       } catch (error) {
