@@ -2,8 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 // Routes
-import { canNavigate } from '@/libs/acl/routeProtection'
-import { isUserLoggedIn, getUserData, getHomeRouteForLoggedInUser } from '@/auth/utils'
 import apps from './routes/apps'
 import welcome from './routes/welcome'
 import admin from './routes/admin'
@@ -16,12 +14,16 @@ import chartsMaps from './routes/charts-maps'
 import formsTable from './routes/forms-tables'
 import others from './routes/others'
 
-
 Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.VUE_APP_BASE_URL,
+  /**
+   * FIX: Do NOT use VUE_APP_BASE_URL here. 
+   * VUE_APP_BASE_URL is for your API (https://...).
+   * 'base' should be the subdirectory of your frontend (usually '/' or process.env.BASE_URL).
+   */
+  base: process.env.BASE_URL || '/', 
   scrollBehavior() {
     return { x: 0, y: 0 }
   },
@@ -45,9 +47,6 @@ const router = new VueRouter({
   ],
 })
 
-
-
-
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   const user = JSON.parse(localStorage.getItem('user') || 'null')
@@ -68,15 +67,12 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // Check role-based access for clinic routes
-  // (Removed: now using permissions only)
-
   // Check permission-based access
   if (to.meta.permissions && user) {
     const userPermissions = JSON.parse(localStorage.getItem('permissions') || '[]')
-    // Removed: Admin bypass - now admins must have explicit permissions too
     const requiredPerms = to.meta.permissions
     const hasPermission = requiredPerms.some(p => userPermissions.includes(p))
+    
     if (!hasPermission) {
       if (user.role === 'doctor') {
         return next({ name: 'doctor-dashboard' })
@@ -90,27 +86,9 @@ router.beforeEach((to, from, next) => {
 
   return next()
 })
-// router.afterEach((to) => {
-//   const token = localStorage.getItem('token')
 
-//   if (to.meta.requiresAuth && !token) {
-//     // needs auth but no token → send to login
-//     return next({ name: 'login' })
-//   }
-
-//   if (to.name === 'login' && token) {
-//     // already logged in → prevent opening login again
-//     return next({ name: '/' })
-//   }
-
-//   // otherwise continue
-//   // next()
-// })
-
-// ? For splash screen
-// Remove afterEach hook if you are not using splash screen
 router.afterEach(() => {
-  // Remove initial loading
+  // Remove initial loading splash screen
   const appLoading = document.getElementById('loading-bg')
   if (appLoading) {
     appLoading.style.display = 'none'
