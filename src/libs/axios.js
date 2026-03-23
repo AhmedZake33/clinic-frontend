@@ -2,7 +2,7 @@
 import axios from 'axios'
 import router from '@/router'
 
-const api = axios.create({ baseURL: 'http://localhost:8000/api' })
+const api = axios.create({ baseURL: `${process.env.BASE_URL}` })
 
 api.interceptors.request.use(cfg => {
   const token = localStorage.getItem('token')
