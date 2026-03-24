@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <b-card>
       <b-row class="mb-2">
@@ -199,7 +199,7 @@
         </b-form-group>
 
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('reservation.appointmentDate')" label-for="appointment-date">
               <b-form-input
                 id="appointment-date"
@@ -209,7 +209,7 @@
               />
             </b-form-group>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('reservation.appointmentTime')" label-for="appointment-time">
               <b-form-select
                 id="appointment-time"
@@ -247,7 +247,7 @@
         <h6 class="mb-1">{{ $t('financial.financial') }}</h6>
 
         <b-row>
-          <b-col md="4">
+          <b-col cols="12" sm="6" md="4">
             <b-form-group :label="$t('financial.amount')" label-for="amount">
               <b-form-input
                 id="amount"
@@ -259,7 +259,7 @@
               />
             </b-form-group>
           </b-col>
-          <b-col md="4">
+          <b-col cols="12" sm="6" md="4">
             <b-form-group :label="$t('financial.paid')" label-for="paid">
               <b-form-input
                 id="paid"
@@ -270,7 +270,7 @@
               />
             </b-form-group>
           </b-col>
-          <b-col md="4">
+          <b-col cols="12" sm="6" md="4">
             <b-form-group :label="$t('financial.paymentMethod')" label-for="payment_method">
               <b-form-select
                 id="payment_method"
@@ -309,12 +309,12 @@
           </b-card-header>
           <b-card-body>
             <b-row>
-              <b-col md="6">
+              <b-col cols="12" md="6">
                 <p class="mb-50"><strong>{{ $t('client.name') }}:</strong> {{ selectedReservation.client.name }}</p>
                 <p class="mb-50"><strong>{{ $t('client.phone') }}:</strong> {{ selectedReservation.client.phone }}</p>
                 <p class="mb-50"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth || $t('reservation.na') }}</p>
               </b-col>
-              <b-col md="6">
+              <b-col cols="12" md="6">
                 <p class="mb-50"><strong>{{ $t('client.height') }}:</strong> {{ selectedReservation.client.height ? selectedReservation.client.height + ' cm' : $t('reservation.na') }}</p>
                 <p class="mb-50"><strong>{{ $t('client.weight') }}:</strong> {{ selectedReservation.client.weight ? selectedReservation.client.weight + ' kg' : $t('reservation.na') }}</p>
                 <p class="mb-50"><strong>{{ $t('client.address') }}:</strong> {{ selectedReservation.client.address || $t('reservation.na') }}</p>
@@ -328,7 +328,7 @@
         </b-card>
 
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <p v-if="selectedReservation.doctor"><strong>{{ $t('table.doctor') }}:</strong> {{ selectedReservation.doctor.name }}</p>
             <p><strong>{{ $t('table.status') }}:</strong> 
               <b-badge :variant="getStatusVariant(selectedReservation.status)">
@@ -336,7 +336,7 @@
               </b-badge>
             </p>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <p><strong>{{ $t('table.appointment') }}:</strong> {{ formatDateTime(selectedReservation.appointment_date) }}</p>
             <p><strong>{{ $t('table.created') }}:</strong> {{ formatDateTime(selectedReservation.created_at) }}</p>
             <p v-if="selectedReservation.completed_at">
@@ -1032,3 +1032,5 @@ export default {
   background-color: #f8f8f8;
 }
 </style>
+
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <b-card>
       <b-row class="mb-2">
@@ -298,13 +298,13 @@
           </div>
           <div v-else-if="drugDetailData">
             <b-row>
-              <b-col md="6">
+              <b-col cols="12" md="6">
                 <p v-if="drugDetailData.brand_name"><strong>{{ $t('openfda.brandName') }}:</strong> {{ drugDetailData.brand_name }}</p>
                 <p v-if="drugDetailData.generic_name"><strong>{{ $t('openfda.genericName') }}:</strong> {{ drugDetailData.generic_name }}</p>
                 <p v-if="drugDetailData.manufacturer"><strong>{{ $t('openfda.manufacturer') }}:</strong> {{ drugDetailData.manufacturer }}</p>
                 <p v-if="drugDetailData.dosage_form"><strong>{{ $t('openfda.dosageForm') }}:</strong> {{ drugDetailData.dosage_form }}</p>
               </b-col>
-              <b-col md="6">
+              <b-col cols="12" md="6">
                 <p v-if="drugDetailData.route"><strong>{{ $t('openfda.route') }}:</strong> {{ drugDetailData.route }}</p>
                 <p v-if="drugDetailData.substance_name"><strong>{{ $t('openfda.substanceName') }}:</strong> {{ drugDetailData.substance_name }}</p>
                 <p v-if="drugDetailData.product_type"><strong>{{ $t('openfda.productType') }}:</strong> {{ drugDetailData.product_type }}</p>
@@ -433,13 +433,13 @@
           </b-card-header>
           <b-card-body>
             <b-row>
-              <b-col md="6">
+              <b-col cols="12" md="6">
                 <p class="mb-50"><strong>{{ $t('client.name') }}:</strong> {{ selectedReservation.client.name }}</p>
                 <p class="mb-50"><strong>{{ $t('reservation.clientEmail') }}:</strong> {{ selectedReservation.client.email }}</p>
                 <p class="mb-50"><strong>{{ $t('reservation.clientPhone') }}:</strong> {{ selectedReservation.client.phone }}</p>
                 <p class="mb-50"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth || $t('reservation.na') }}</p>
               </b-col>
-              <b-col md="6">
+              <b-col cols="12" md="6">
                 <p class="mb-50"><strong>{{ $t('client.height') }}:</strong> {{ selectedReservation.client.height ? selectedReservation.client.height + ' cm' : $t('reservation.na') }}</p>
                 <p class="mb-50"><strong>{{ $t('client.weight') }}:</strong> {{ selectedReservation.client.weight ? selectedReservation.client.weight + ' kg' : $t('reservation.na') }}</p>
                 <p class="mb-50"><strong>{{ $t('client.address') }}:</strong> {{ selectedReservation.client.address || $t('reservation.na') }}</p>
@@ -455,14 +455,14 @@
         </b-card>
 
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <p><strong>{{ $t('reservation.status') }}:</strong> 
               <b-badge :variant="getStatusVariant(selectedReservation.status)">
                 {{ selectedReservation.status }}
               </b-badge>
             </p>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <p><strong>{{ $t('reservation.appointment') }}:</strong> {{ formatDateTime(selectedReservation.appointment_date) }}</p>
             <p><strong>{{ $t('reservation.created') }}:</strong> {{ formatDateTime(selectedReservation.created_at) }}</p>
             <p v-if="selectedReservation.completed_at">
@@ -514,36 +514,36 @@
     >
       <b-form @submit.prevent="saveClientData">
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('client.name')" label-for="client-name">
               <b-form-input id="client-name" v-model="clientForm.name" required />
             </b-form-group>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group label="Email" label-for="client-email">
               <b-form-input id="client-email" v-model="clientForm.email" type="email" required />
             </b-form-group>
           </b-col>
         </b-row>
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('client.phone')" label-for="client-phone">
               <b-form-input id="client-phone" v-model="clientForm.phone" required />
             </b-form-group>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('client.dateOfBirth')" label-for="client-dob">
               <b-form-input id="client-dob" v-model="clientForm.date_of_birth" type="date" />
             </b-form-group>
           </b-col>
         </b-row>
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('client.height')" label-for="client-height">
               <b-form-input id="client-height" v-model="clientForm.height" type="number" step="0.01" min="0" max="300" :placeholder="$t('client.heightPlaceholder')" />
             </b-form-group>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('client.weight')" label-for="client-weight">
               <b-form-input id="client-weight" v-model="clientForm.weight" type="number" step="0.01" min="0" max="500" :placeholder="$t('client.weightPlaceholder')" />
             </b-form-group>
@@ -1084,3 +1084,5 @@ export default {
   overflow-y: auto;
 }
 </style>
+
+

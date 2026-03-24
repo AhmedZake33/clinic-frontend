@@ -1,14 +1,14 @@
-<template>
+﻿<template>
   <div>
     <b-card :title="$t('reports.title')">
       <b-form @submit.prevent="fetchSummary">
         <b-row>
-          <b-col md="3">
+          <b-col cols="12" sm="6" md="3">
             <b-form-group :label="$t('reservation.from')">
               <b-form-input v-model="filters.date_from" type="date" />
             </b-form-group>
           </b-col>
-          <b-col md="3">
+          <b-col cols="12" sm="6" md="3">
             <b-form-group :label="$t('reservation.to')">
               <b-form-input v-model="filters.date_to" type="date" />
             </b-form-group>
@@ -41,7 +41,7 @@
 
     <template v-else>
       <b-row>
-        <b-col md="6">
+        <b-col cols="12" md="6">
           <b-card :title="$t('reports.reservationsSummary')">
             <p><strong>{{ $t('reports.totalReservations') }}:</strong> {{ summary.reservations.total }}</p>
             <p><strong>{{ $t('reservation.pending') }}:</strong> {{ summary.reservations.pending }}</p>
@@ -53,7 +53,7 @@
           </b-card>
         </b-col>
 
-        <b-col md="6">
+        <b-col cols="12" md="6">
           <b-card :title="$t('reports.financialSummary')">
             <p><strong>{{ $t('financial.totalAmount') }}:</strong> {{ formatCurrency(summary.financials.total_amount) }}</p>
             <p><strong>{{ $t('financial.totalPaid') }}:</strong> {{ formatCurrency(summary.financials.total_paid) }}</p>
@@ -217,3 +217,5 @@ export default {
   },
 }
 </script>
+
+

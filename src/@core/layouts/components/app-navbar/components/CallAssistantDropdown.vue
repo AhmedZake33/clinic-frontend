@@ -282,11 +282,16 @@ export default {
 
 <style>
 .call-assistant-dropdown-menu {
-  min-width: 280px;
+  min-width: min(280px, calc(100vw - 2rem));
 }
 .badge-up {
   position: absolute;
   top: -8px;
+}
+[dir="ltr"] .badge-up {
   right: -8px;
+}
+[dir="rtl"] .badge-up {
+  left: -8px;
 }
 </style>

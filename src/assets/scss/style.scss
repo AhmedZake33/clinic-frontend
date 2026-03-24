@@ -5,10 +5,12 @@ NOTE:
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
 
+// Tell postcss-rtl to NOT process this file — RTL handled manually in rtl.scss
+/*! rtl:begin:ignore */
+
 // ============================================
-// GLOBAL RESPONSIVE FOUNDATION (Mobile-First)
+// GLOBAL FIXES
 // ============================================
-// Breakpoints: xs <576, sm >=576, md >=768, lg >=992, xl >=1200
 
 // Prevent horizontal overflow globally
 html, body {
@@ -16,12 +18,8 @@ html, body {
   width: 100%;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
 // ============================================
-// CUSTOM NAVBAR STYLING
+// CUSTOM NAVBAR STYLING (visual only)
 // ============================================
 .header-navbar {
   background: linear-gradient(135deg, #7367f0 0%, #9e95f5 100%) !important;
@@ -29,75 +27,58 @@ html, body {
   box-shadow: 0 4px 20px rgba(115, 103, 240, 0.4) !important;
   backdrop-filter: blur(10px);
   border-radius: 0 0 0.75rem 0.75rem;
-  
+
   .navbar-container {
-    padding: 0.5rem 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    
-    @media (min-width: 768px) {
-      padding: 0.5rem 1.5rem;
-    }
-    
     .nav-link {
       color: rgba(255, 255, 255, 0.95) !important;
       transition: all 0.3s ease;
-      padding: 0.4rem 0.6rem;
-      border-radius: 8px;
-      
-      @media (min-width: 576px) {
-        padding: 0.5rem 1rem;
-      }
-      
+      border-radius: 0.5rem;
+
       &:hover {
         color: #fff !important;
         background: rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
       }
-      
+
       i, svg {
         color: rgba(255, 255, 255, 0.95) !important;
       }
     }
-    
+
     // User dropdown styling
     .dropdown-user {
       .dropdown-toggle::after {
         color: white;
       }
-      
+
       .b-avatar {
         border: 2px solid rgba(255, 255, 255, 0.5);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       }
     }
-    
+
     // Dropdown menu styling
     .dropdown-menu {
       background: #fff;
       border: none;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      border-radius: 10px;
-      margin-top: 0.5rem;
+      border-radius: 0.625rem;
       overflow: hidden;
       max-width: calc(100vw - 2rem);
-      
+
       .dropdown-item {
         color: #495057;
-        padding: 0.75rem 1.25rem;
         transition: all 0.2s ease;
-        
+
         &:hover {
           background: linear-gradient(135deg, #7367f0 0%, #9e95f5 100%);
           color: white;
-          
+
           i, svg {
             color: white !important;
           }
         }
       }
-      
+
       .dropdown-divider {
         border-color: rgba(115, 103, 240, 0.1);
       }
@@ -106,52 +87,12 @@ html, body {
 }
 
 // ============================================
-// ENHANCED SPACING BETWEEN SIDEBAR AND CONTENT
-// (Mobile-first: no sidebar margin on mobile)
+// SIDEBAR VISUAL STYLING ONLY
+// Layout margins/positioning handled by Vuexy core + postcss-rtl
 // ============================================
-.vertical-layout {
-  // Sidebar right border for visual separation
-  .main-menu {
-    border-right: 1px solid rgba(115, 103, 240, 0.1);
-    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.05);
-  }
-  
-  // Mobile-first: no margin when sidebar is overlay
-  .content.app-content {
-    margin-left: 0 !important;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    transition: all 0.3s ease;
-  }
-  
-  // Collapsed menu state (mobile: no margin)
-  &.menu-collapsed .content.app-content {
-    margin-left: 0 !important;
-  }
-  
-  // Desktop: sidebar is visible, add margin
-  @media (min-width: 1200px) {
-    .content.app-content {
-      margin-left: 260px !important;
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-    
-    &.menu-collapsed .content.app-content {
-      margin-left: 80px !important;
-    }
-    
-    // Navbar positioning with sidebar gap (desktop only)
-    .header-navbar.navbar-static-top {
-      left: 260px !important;
-      width: calc(100vw - 260px) !important;
-    }
-    
-    &.menu-collapsed .header-navbar.navbar-static-top {
-      left: 80px !important;
-      width: calc(100vw - 80px) !important;
-    }
-  }
+.vertical-layout .main-menu {
+  border-inline-end: 1px solid rgba(115, 103, 240, 0.1);
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.05);
 }
 
 // ============================================
@@ -169,63 +110,16 @@ img {
   -webkit-overflow-scrolling: touch;
 }
 
-// Cards should stack properly
-.card {
-  margin-bottom: 1rem;
-  width: 100%;
-}
-
-// Ensure Bootstrap-Vue rows don't cause overflow
-.row {
-  margin-left: -0.5rem;
-  margin-right: -0.5rem;
-  
-  > [class*="col"] {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-  
-  @media (min-width: 768px) {
-    margin-left: -0.75rem;
-    margin-right: -0.75rem;
-    
-    > [class*="col"] {
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-    }
-  }
-}
-
 // Match-height utility for equal-height cards in a row
 .match-height {
   > [class*="col"] {
     display: flex;
     flex-flow: column;
-    
+
     > .card {
       flex: 1 1 auto;
     }
   }
-}
-
-// ============================================
-// RESPONSIVE TYPOGRAPHY
-// ============================================
-h1 {
-  font-size: 1.5rem;
-  @media (min-width: 576px) { font-size: 1.75rem; }
-  @media (min-width: 768px) { font-size: 2rem; }
-}
-
-h2 {
-  font-size: 1.25rem;
-  @media (min-width: 576px) { font-size: 1.5rem; }
-  @media (min-width: 768px) { font-size: 1.75rem; }
-}
-
-h3 {
-  font-size: 1.1rem;
-  @media (min-width: 576px) { font-size: 1.25rem; }
 }
 
 // ============================================
@@ -247,13 +141,12 @@ h3 {
 // ============================================
 // RESPONSIVE BUTTON GROUPS
 // ============================================
-// On mobile, stack buttons vertically when placed inline
 @media (max-width: 575.98px) {
   .btn-group-responsive {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    
+
     .btn {
       width: 100%;
     }
@@ -268,13 +161,6 @@ h3 {
   .v-card {
     max-width: 100% !important;
   }
-  
-  // Ensure Vuetify rows wrap properly on mobile
-  .v-row {
-    margin: 0 -0.5rem;
-  }
-  
-  .v-col {
-    padding: 0.5rem;
-  }
 }
+
+/*! rtl:end:ignore */

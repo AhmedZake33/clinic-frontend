@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <b-card>
       <b-row class="mb-2">
@@ -213,12 +213,12 @@
     >
       <div v-if="selectedClient">
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <p><strong>Name:</strong> {{ selectedClient.name }}</p>
             <p><strong>Email:</strong> {{ selectedClient.email }}</p>
             <p><strong>Phone:</strong> {{ selectedClient.phone }}</p>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <p><strong>Date of Birth:</strong> {{ selectedClient.date_of_birth || 'N/A' }}</p>
             <p><strong>{{ $t('client.height') }}:</strong> {{ selectedClient.height ? selectedClient.height + ' cm' : 'N/A' }}</p>
             <p><strong>{{ $t('client.weight') }}:</strong> {{ selectedClient.weight ? selectedClient.weight + ' kg' : 'N/A' }}</p>
@@ -457,3 +457,5 @@ export default {
   },
 }
 </script>
+
+

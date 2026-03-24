@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <div v-if="pageLoading" class="text-center py-5">
       <b-spinner variant="primary" class="mb-1" />
@@ -56,7 +56,7 @@
       <b-card class="mt-2" :title="$t('reservation.holidays')">
       <b-form @submit.prevent="addHoliday">
         <b-row>
-          <b-col md="3">
+          <b-col cols="12" sm="6" md="3">
             <b-form-select v-model="newHoliday.type" :options="holidayTypeOptions" />
           </b-col>
           <b-col md="3" v-if="newHoliday.type === 'date'">
@@ -65,10 +65,10 @@
           <b-col md="3" v-else>
             <b-form-select v-model="newHoliday.recurring_day_of_week" :options="dayOptions" required />
           </b-col>
-          <b-col md="4">
+          <b-col cols="12" sm="6" md="4">
             <b-form-input v-model="newHoliday.reason" :placeholder="$t('reservation.reason')" />
           </b-col>
-          <b-col md="2" class="text-end">
+          <b-col cols="6" md="2" class="text-end">
             <b-button type="submit" variant="warning" :disabled="addingHoliday">
               <b-spinner v-if="addingHoliday" small class="mr-1" />
               {{ $t('actions.add') }}
@@ -318,3 +318,4 @@ export default {
   },
 }
 </script>
+

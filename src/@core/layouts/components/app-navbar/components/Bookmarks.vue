@@ -30,7 +30,7 @@
       />
 
       <!-- Dropdown Content -->
-      <li style="min-width:300px">
+      <li style="min-width: min(300px, calc(100vw - 2rem))">
         <div class="p-1">
           <b-form-input
             id="boomark-search-input"

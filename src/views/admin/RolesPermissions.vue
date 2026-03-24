@@ -1,8 +1,8 @@
-<template>
+﻿<template>
   <div>
     <b-row>
       <!-- Roles List -->
-      <b-col lg="5">
+      <b-col cols="12" lg="5">
         <b-card>
           <b-card-header>
             <div class="d-flex justify-content-between align-items-center">
@@ -72,7 +72,7 @@
       </b-col>
 
       <!-- Permissions Matrix -->
-      <b-col lg="7">
+      <b-col cols="12" lg="7">
         <b-card v-if="selectedRole">
           <b-card-header>
             <div class="d-flex justify-content-between align-items-center">
@@ -471,3 +471,4 @@ export default {
   padding: 0.75rem;
 }
 </style>
+

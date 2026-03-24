@@ -248,36 +248,12 @@ body.ltr,
     }
   }
   
-  // Content margin - push content from the right side (desktop only)
-  .vertical-layout.vertical-menu-modern .content.app-content {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-  
-  .vertical-layout.vertical-menu-modern.menu-collapsed .content.app-content {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
+  // NOTE: Content margin (margin-left/margin-right on .content.app-content)
+  // is handled automatically by postcss-rtl converting Vuexy's core CSS.
+  // DO NOT add manual content margin overrides here — they conflict with
+  // Vuexy's responsive breakpoints (lg=992px vs our 1200px was wrong).
 
-  // Desktop: restore RTL content margin
-  @media (min-width: 1200px) {
-    .vertical-layout.vertical-menu-modern .content.app-content {
-      margin-left: 0 !important;
-      margin-right: 260px !important;
-    }
-    
-    .vertical-layout.vertical-menu-modern.menu-collapsed .content.app-content {
-      margin-left: 0 !important;
-      margin-right: 80px !important;
-    }
-  }
-  
-  // Overlay menu (mobile)
-  .vertical-layout.vertical-overlay-menu .content.app-content {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-  
+  // Overlay menu (mobile) — transform needs manual RTL handling
   .vertical-layout.vertical-overlay-menu .main-menu {
     transform: translate3d(100%, 0, 0);
     left: auto !important;
@@ -286,36 +262,6 @@ body.ltr,
     &.menu-open {
       transform: translate3d(0, 0, 0);
     }
-  }
-  
-  // Header navbar content margin
-  .vertical-layout .header-navbar.floating-nav {
-    margin-left: 0;
-    margin-right: calc(260px + 2.2rem);
-  }
-  
-  .vertical-layout.menu-collapsed .header-navbar.floating-nav {
-    margin-left: 0;
-    margin-right: calc(80px + 2.2rem);
-  }
-  
-  .vertical-layout.vertical-overlay-menu .header-navbar.floating-nav {
-    margin-right: 2.2rem;
-  }
-  
-  // Footer margin
-  .vertical-layout .footer {
-    margin-left: 0;
-    margin-right: 260px;
-  }
-  
-  .vertical-layout.menu-collapsed .footer {
-    margin-left: 0;
-    margin-right: 80px;
-  }
-  
-  .vertical-layout.vertical-overlay-menu .footer {
-    margin-right: 0;
   }
   
   // Menu collapse toggle icon
@@ -355,61 +301,6 @@ body.ltr,
   .vertical-layout .main-menu {
     left: 0 !important;
     right: auto !important;
-  }
-  
-  // Mobile-first: no margin
-  .vertical-layout.vertical-menu-modern .content.app-content {
-    margin-left: 0;
-    margin-right: 0;
-  }
-  
-  .vertical-layout.vertical-menu-modern.menu-collapsed .content.app-content {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  // Desktop: restore LTR content margin
-  @media (min-width: 1200px) {
-    .vertical-layout.vertical-menu-modern .content.app-content {
-      margin-left: 260px;
-      margin-right: 0;
-    }
-    
-    .vertical-layout.vertical-menu-modern.menu-collapsed .content.app-content {
-      margin-left: 80px;
-      margin-right: 0;
-    }
-  }
-}
-
-// ============================================
-// RESPONSIVE SIDEBAR RTL
-// ============================================
-
-// Below lg: sidebar is overlay, no margin needed
-@media (max-width: 1199.98px) {
-  [dir="rtl"] {
-    .vertical-layout.vertical-menu-modern .content.app-content,
-    .vertical-layout.vertical-menu-modern.menu-collapsed .content.app-content {
-      margin-right: 0 !important;
-      margin-left: 0 !important;
-    }
-    .vertical-layout .header-navbar.floating-nav,
-    .vertical-layout.menu-collapsed .header-navbar.floating-nav {
-      margin-right: 2.2rem !important;
-      margin-left: 2.2rem !important;
-    }
-    .vertical-layout .footer,
-    .vertical-layout.menu-collapsed .footer {
-      margin-right: 0 !important;
-    }
-  }
-  [dir="ltr"] {
-    .vertical-layout.vertical-menu-modern .content.app-content,
-    .vertical-layout.vertical-menu-modern.menu-collapsed .content.app-content {
-      margin-left: 0;
-      margin-right: 0;
-    }
   }
 }
 

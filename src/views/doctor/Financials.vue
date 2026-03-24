@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <div v-if="pageLoading" class="text-center py-5">
       <b-spinner variant="primary" class="mb-1" />
@@ -8,25 +8,25 @@
     <div v-else>
     <!-- Summary Cards -->
     <b-row class="mb-2">
-      <b-col md="3">
+      <b-col cols="12" sm="6" md="3">
         <b-card class="text-center">
           <b-card-text class="text-muted small mb-0">{{ $t('financial.totalAmount') }}</b-card-text>
           <h3 class="mb-0 text-primary">{{ formatCurrency(summary.total_amount) }}</h3>
         </b-card>
       </b-col>
-      <b-col md="3">
+      <b-col cols="12" sm="6" md="3">
         <b-card class="text-center">
           <b-card-text class="text-muted small mb-0">{{ $t('financial.totalPaid') }}</b-card-text>
           <h3 class="mb-0 text-success">{{ formatCurrency(summary.total_paid) }}</h3>
         </b-card>
       </b-col>
-      <b-col md="3">
+      <b-col cols="12" sm="6" md="3">
         <b-card class="text-center">
           <b-card-text class="text-muted small mb-0">{{ $t('financial.totalRemaining') }}</b-card-text>
           <h3 class="mb-0 text-danger">{{ formatCurrency(summary.total_remaining) }}</h3>
         </b-card>
       </b-col>
-      <b-col md="3">
+      <b-col cols="12" sm="6" md="3">
         <b-card class="text-center">
           <b-card-text class="text-muted small mb-0">{{ $t('financial.totalRecords') }}</b-card-text>
           <h3 class="mb-0 text-info">{{ summary.total_records }}</h3>
@@ -36,19 +36,19 @@
 
     <!-- Payment Status Statistics -->
     <b-row class="mb-2">
-      <b-col md="4">
+      <b-col cols="12" sm="6" md="4">
         <b-card class="text-center border-success">
           <b-card-text class="text-muted small mb-0">{{ $t('financial.paidCount') }}</b-card-text>
           <h3 class="mb-0 text-success">{{ summary.paid_count || 0 }}</h3>
         </b-card>
       </b-col>
-      <b-col md="4">
+      <b-col cols="12" sm="6" md="4">
         <b-card class="text-center border-warning">
           <b-card-text class="text-muted small mb-0">{{ $t('financial.partialCount') }}</b-card-text>
           <h3 class="mb-0 text-warning">{{ summary.partial_count || 0 }}</h3>
         </b-card>
       </b-col>
-      <b-col md="4">
+      <b-col cols="12" sm="6" md="4">
         <b-card class="text-center border-danger">
           <b-card-text class="text-muted small mb-0">{{ $t('financial.unpaidCount') }}</b-card-text>
           <h3 class="mb-0 text-danger">{{ summary.unpaid_count || 0 }}</h3>
@@ -152,7 +152,7 @@
     >
       <div v-if="selectedFinancial">
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <p v-if="selectedFinancial.client">
               <strong>{{ $t('table.client') }}:</strong> {{ selectedFinancial.client.name }}
             </p>
@@ -163,7 +163,7 @@
               <strong>{{ $t('financial.paymentMethod') }}:</strong> {{ $t('financial.' + selectedFinancial.payment_method) }}
             </p>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <p><strong>{{ $t('financial.amount') }}:</strong> {{ formatCurrency(selectedFinancial.amount) }}</p>
             <p><strong>{{ $t('financial.paid') }}:</strong> <span class="text-success">{{ formatCurrency(selectedFinancial.paid) }}</span></p>
             <p><strong>{{ $t('financial.remaining') }}:</strong>
@@ -386,3 +386,5 @@ export default {
   },
 }
 </script>
+
+

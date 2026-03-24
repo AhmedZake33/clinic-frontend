@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <b-card class="mb-2">
       <b-row>
@@ -66,12 +66,12 @@
     <b-modal v-model="reservationModal" :title="$t('reservation.reservationDetails')" ok-only size="lg">
       <div v-if="selectedReservation">
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <p><strong>{{ $t('reservation.appointment') }}:</strong> {{ formatDateTime(selectedReservation.appointment_date) }}</p>
             <p><strong>{{ $t('reservation.status') }}:</strong> {{ selectedReservation.status }}</p>
             <p><strong>{{ $t('reservation.notes') }}:</strong> {{ selectedReservation.notes || $t('reservation.na') }}</p>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <p><strong>{{ $t('reservation.diagnosis') }}:</strong> {{ selectedReservation.diagnosis || $t('reservation.na') }}</p>
             <p><strong>{{ $t('reservation.treatment') }}:</strong> {{ selectedReservation.treatment || $t('reservation.na') }}</p>
             <p><strong>{{ $t('reservation.completedAt') }}:</strong> {{ formatDateTime(selectedReservation.completed_at) || $t('reservation.na') }}</p>
@@ -167,3 +167,5 @@ export default {
   display: inline-block;
 }
 </style>
+
+
