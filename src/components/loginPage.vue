@@ -77,13 +77,15 @@ export default {
 
 <style scoped>
 .main {
-    height:400px;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 1rem;
 }
 .main .child {
-    width: 500px;
+    width: 100%;
+    max-width: 31.25rem;
 }
 
 </style>

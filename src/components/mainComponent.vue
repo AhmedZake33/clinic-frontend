@@ -2,32 +2,30 @@
     <v-app>
         <div class="main">
             <div class="heading">
-                <div style="float:right">
+                <div class="heading-title">
                     <h3>{{data.name}}</h3>
                 </div>
-                <div style="float:left">
+                <div class="heading-actions">
                     <v-btn style="color:white" color="#80afa8" @click="addSchool" v-if="$route.params.id == 2">إضافه مؤسسه تعليميه</v-btn>
                     <v-btn style="color:white" color="#80afa8" @click="addTo" v-if="$route.params.id == 3">إسناد متخصص  </v-btn>
                     
                     &nbsp;
-                    <v-btn class="btn"  style="color:white,border:2px solid #80afa8;" @click="changeType">بطاقه</v-btn>
-                    <v-btn class="btn" style="color:white,border:2px solid #80afa8;" @click="changeType">جدول</v-btn>
+                    <v-btn class="btn"  style="color:white" @click="changeType">بطاقه</v-btn>
+                    <v-btn class="btn" style="color:white" @click="changeType">جدول</v-btn>
                 </div> 
 
             </div>
 
             <div class="secondHeading" v-if="$route.params.id == 1 || $route.params.id == 5">
                     <v-row>
-                        <v-col cols="10">
+                        <v-col cols="12" lg="10">
                             <v-row>
-
-                           
-                        <v-col cols="5">
-                            <v-row>
-                                <v-col cols="3">
+                        <v-col cols="12" md="6">
+                            <v-row align="center">
+                                <v-col cols="12" sm="4">
                                     <h4>اسم الطفل :</h4>
                                 </v-col>
-                                <v-col cols="4">
+                                <v-col cols="12" sm="8">
                                     <v-text-field
                                     solo
                                     ></v-text-field>
@@ -35,12 +33,12 @@
                                 
                             </v-row>
                         </v-col>
-                         <v-col cols="5">
-                            <v-row>
-                                <v-col cols="3">
+                         <v-col cols="12" md="6">
+                            <v-row align="center">
+                                <v-col cols="12" sm="4">
                                     <h4>المدرسه  :</h4>
                                 </v-col>
-                                <v-col cols="4">
+                                <v-col cols="12" sm="8">
                                     <v-text-field
                                     solo
                                     ></v-text-field>
@@ -53,15 +51,15 @@
                         </v-col>
                     </v-row>
 
-                    <v-row>
+                    <v-row align="center">
                         <span style="font-weight:bold">عرض حسب : </span>
                         <v-row>
-                            <v-col cols="2">
+                            <v-col cols="6" sm="4" md="2">
                                 <div class="filterData customButton">
                                     <h3 style="text-align:center">الاسم</h3>
                                 </div>
                             </v-col>
-                            <v-col cols="2">
+                            <v-col cols="6" sm="4" md="2">
                                 <div class="filterData">
                                     <h3 style="text-align:center">تاريخ الميلاد</h3>
                                 </div>
@@ -72,14 +70,14 @@
 
             <div class="secondHeading" v-if="$route.params.id == 2">
                     <v-row>
-                        <v-col cols="10">
+                        <v-col cols="12" lg="10">
                         <v-row>   
-                            <v-col cols="5">
-                                <v-row>
-                                    <v-col cols="3">
+                            <v-col cols="12" md="6">
+                                <v-row align="center">
+                                    <v-col cols="12" sm="4">
                                         <h4>اسم المدرسه :</h4>
                                     </v-col>
-                                    <v-col cols="7">
+                                    <v-col cols="12" sm="8">
                                         <v-text-field
                                         solo
                                         ></v-text-field>
@@ -90,34 +88,18 @@
                         </v-row>
                         </v-col>
                     </v-row>
-
-                    <!-- <v-row>
-                        <span style="font-weight:bold">عرض حسب : </span>
-                        <v-row>
-                            <v-col cols="2">
-                                <div class="filterData customButton">
-                                    <h3 style="text-align:center">الاسم</h3>
-                                </div>
-                            </v-col>
-                            <v-col cols="2">
-                                <div class="filterData">
-                                    <h3 style="text-align:center">تاريخ الميلاد</h3>
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </v-row> -->
             </div>
 
              <div class="secondHeading" v-if="$route.params.id == 3">
                     <v-row>
-                        <v-col cols="10">
+                        <v-col cols="12" lg="10">
                         <v-row>   
-                            <v-col cols="5">
-                                <v-row>
-                                    <v-col cols="4">
+                            <v-col cols="12" md="6">
+                                <v-row align="center">
+                                    <v-col cols="12" sm="4">
                                         <h4>اسم المتخصص :</h4>
                                     </v-col>
-                                    <v-col cols="7">
+                                    <v-col cols="12" sm="8">
                                         <v-text-field
                                         solo
                                         ></v-text-field>
@@ -126,12 +108,12 @@
                                 </v-row>
                             </v-col>
 
-                             <v-col cols="5">
-                                <v-row>
-                                    <v-col cols="3">
+                             <v-col cols="12" md="6">
+                                <v-row align="center">
+                                    <v-col cols="12" sm="4">
                                         <h4>المدرسه  :</h4>
                                     </v-col>
-                                    <v-col cols="7">
+                                    <v-col cols="12" sm="8">
                                         <v-text-field
                                         solo
                                         ></v-text-field>
@@ -149,19 +131,18 @@
             <div class="mainData div" v-if="$route.params.id == 1 || $route.params.id == 5">
                 <div class="cards" v-if="type == 1">
                     <v-row>
-                    <v-col cols="3" v-for="data in allData" :key="data.id">
-                        <div style="margin-top:15px">
+                    <v-col cols="12" sm="6" md="4" lg="3" v-for="data in allData" :key="data.id">
+                        <div class="grid-item">
                         <v-card
                         @click="addData(data.id)"
-                            class="mx-auto"
-                            max-width="270"
-                            height="150"
+                            class="mx-auto data-card"
                         >
                         <div>
                             <v-img
                             :src="data.img"
                             height="70px"
                             width="70px"
+                            class="card-img"
                             ></v-img>
                             <v-card-title>
                                 
@@ -199,19 +180,18 @@
             <div class="mainData div" v-if="$route.params.id == 2">
                 <div class="cards" v-if="type == 1">
                     <v-row>
-                    <v-col cols="3" v-for="data in schools" :key="data.id">
-                        <div style="margin-top:15px">
+                    <v-col cols="12" sm="6" md="4" lg="3" v-for="data in schools" :key="data.id">
+                        <div class="grid-item">
                         <v-card
                         @click="addData(data.id)"
-                            class="mx-auto"
-                            max-width="270"
-                            height="150"
+                            class="mx-auto data-card"
                         >
                         <div>
                             <v-img
                             :src="data.img"
                             height="70px"
                             width="70px"
+                            class="card-img"
                             ></v-img>
                             <v-card-title>
                                 
@@ -249,19 +229,18 @@
             <div class="mainData div" v-if="$route.params.id == 3">
                 <div class="cards" v-if="type == 1">
                     <v-row>
-                    <v-col cols="3" v-for="data in specialists" :key="data.id">
-                        <div style="margin-top:15px">
+                    <v-col cols="12" sm="6" md="4" lg="3" v-for="data in specialists" :key="data.id">
+                        <div class="grid-item">
                         <v-card
                         @click="addData(data.id)"
-                            class="mx-auto"
-                            max-width="270"
-                            height="150"
+                            class="mx-auto data-card"
                         >
                         <div>
                             <v-img
                             :src="data.img"
                             height="70px"
                             width="70px"
+                            class="card-img"
                             ></v-img>
                             <v-card-title>
                                 
@@ -615,58 +594,88 @@ export default {
 <style scoped>
 
 .main{
-    margin-top:15px;
-    margin-left:30px;
-    margin-right: 70px;
+    margin-top: 1rem;
+    padding: 0 1rem;
     direction: rtl;
 }
 
+@media (min-width: 768px) {
+    .main {
+        padding: 0 2rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .main {
+        padding: 0 3rem;
+    }
+}
+
 .main .heading{
-    margin-top: 15px;
-    margin-bottom: 70px;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 576px) {
+    .main .heading {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.heading-title {
+    text-align: right;
+}
+
+.heading-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .main .secondHeading {
-    height: 136px;
-    padding: 20px;
+    min-height: auto;
+    padding: 1rem;
     background-color:#fbfbfb;
     border-top: 5px solid #10a29b;
 }
 
 .main .secondHeading h4{
-    margin-top: 10px;
+    margin-top: 0.5rem;
     font-weight: bold;
 }
 
 .customButton {
-    /* border-bottom-color:#10a29b; */
     border-bottom: 5px solid #10a29b;
     color:#10a29b
 }
 
 .v-card__subtitle, .v-card__text, .v-card__title{
-    margin-top:10px;
-    margin-left: 16px;
-    margin-right: 22px;;
+    margin-top: 0.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
     font-weight:bold;
 }
 
-.v-responsive{
-    right: 80px;
-    top:15px
+.grid-item {
+    margin-top: 0.75rem;
 }
 
-.v-card__subtitle[data-v-03bf1964], .v-card__text[data-v-03bf1964], .v-card__title[data-v-03bf1964]{
-    margin-right:60px ;
+.data-card {
+    width: 100%;
+    min-height: 9rem;
+}
+
+.card-img {
+    margin: 0.5rem auto 0;
 }
 
 .div{
-    margin-top: 30px;
-    margin-bottom: 10px;
-
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
 }
-
-
-
-
 </style>

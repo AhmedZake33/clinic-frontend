@@ -4,17 +4,17 @@
     <loading :visible="load" text="Processing..." />
 
     <b-row>
-      <b-col md="6">
-        <b-card style="height: 150px;">
-          <h4 style="margin-top: 50px;">Total Employees: {{ summary.totalEmployees }}</h4>
+      <b-col cols="12" md="6">
+        <b-card class="stat-card">
+          <h4 class="stat-title">Total Employees: {{ summary.totalEmployees }}</h4>
         </b-card>
-        <b-card style="height: 150px;">
-          <h4 style="margin-top: 50px;">Present Today: {{ summary.presentToday }}</h4>
+        <b-card class="stat-card">
+          <h4 class="stat-title">Present Today: {{ summary.presentToday }}</h4>
         </b-card>
       </b-col>
-      <b-col md="6">
+      <b-col cols="12" md="6">
         <b-card title="Attendance Stats">
-          <line-chart :data="chartData" :options="chartOptions"  style="height:300px;"  />
+          <line-chart :data="chartData" :options="chartOptions" class="chart-container" />
         </b-card>
       </b-col>
     </b-row>
@@ -105,3 +105,19 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.stat-card {
+  min-height: 8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stat-title {
+  margin: 0;
+}
+.chart-container {
+  height: 18.75rem;
+  width: 100%;
+}
+</style>

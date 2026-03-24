@@ -6,9 +6,9 @@
         </div>
 
 
-        <div>
+        <div class="cards-container">
             <v-row>
-                <v-col cols="4" v-for="data in allData" :key="data.id">
+                <v-col cols="12" sm="6" md="4" v-for="data in allData" :key="data.id">
                      <div class="cards">
                 <v-card
                 @click="alert(data.id)"
@@ -83,29 +83,35 @@ export default {
 <style scoped>
 .main {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 1.5rem;
+    padding: 0 1rem;
 }
 .main h1 {
     color:#10a29b;
 }
 
+.cards-container {
+    padding: 0 1rem;
+}
+
 .card {
-    height:200px;
-    width: 250px;
+    width: 100%;
+    max-width: 15rem;
+    margin: 0 auto;
     background-color: white;
 }
 
-.main img {
-    margin-left: 25px;
+.cards {
+    margin-bottom: 1rem;
 }
 
 .v-card__subtitle, .v-card__text, .v-card__title{
-    margin-left: 78px;
+    padding: 0.5rem 1rem;
     font-weight:bold;
+    text-align: center;
 }
 
 .v-responsive{
-    left: 90px;
-    top:15px
+    margin: 0.5rem auto;
 }
 </style>

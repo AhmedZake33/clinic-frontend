@@ -8,10 +8,10 @@
 
       <div class="right">
         <h1 style="color:#10a29b">منصه مركز هيلب للشرق الاوسط وشمال افريقيا</h1>
-        <div style="width:500px">
+        <div class="description-text">
           <h4>لوريم لوريم لوريم لوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم</h4>
         </div>
-        <div style="margin-top:40px">
+        <div class="action-buttons">
          <v-btn
          
           rounded
@@ -77,71 +77,84 @@ export default {
 
 <style scoped>
 
-
-
 .main .header {
-height: 116px;
+  min-height: auto;
   background-color:#fbfbfb;
-  padding: 20px;
-
+  padding: 1rem;
 }
 
 .main .header .left {
-  float:left;
-  margin-top: 16px;
+  margin-top: 1rem;
 }
 
 .main .header .left button {
   font-weight: bold;
   border-color: #10a29b;
-
-}
-
-.main .header .right {
-  float: right;
-}
-
-.main .header .right .logo {
-  float: right;
-}
-
-.main .header .right .lang {
-  float: left;
-  margin-top:34px;
-  margin-right:20px
-
 }
 
 .main .body{
-  height: 530px;
-  padding: 20px;
-  padding-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 1rem;
 }
+
+@media (min-width: 768px) {
+  .main .body {
+    flex-direction: row;
+    justify-content: center;
+    padding: 3rem 2rem;
+  }
+}
+
 .main .body .left {
-  float: left;
-  padding-left:50px
+  width: 100%;
+  max-width: 25rem;
 }
- 
- .main .body .right {
-    float:right;
-    padding-right: 50px;
-    padding-top: 40px;
- }
 
- .main .body .right button {
-    border-color:#10a29b
- }
-
- .main .footer {
+.main .body .right {
+  width: 100%;
+  max-width: 31.25rem;
   text-align: center;
- }
+}
+
+@media (min-width: 768px) {
+  .main .body .right {
+    text-align: right;
+    padding-top: 2rem;
+  }
+}
+
+.description-text {
+  width: 100%;
+}
+
+.action-buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .action-buttons {
+    justify-content: flex-start;
+  }
+}
+
+.main .body .right button {
+  border-color:#10a29b
+}
+
+.main .footer {
+  text-align: center;
+  padding: 2rem 1rem;
+}
 
 button{
   font-weight: bold;
 }
-
- 
-
-
 
 </style>

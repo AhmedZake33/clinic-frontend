@@ -6,6 +6,21 @@ PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
 
 // ============================================
+// GLOBAL RESPONSIVE FOUNDATION (Mobile-First)
+// ============================================
+// Breakpoints: xs <576, sm >=576, md >=768, lg >=992, xl >=1200
+
+// Prevent horizontal overflow globally
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+// ============================================
 // CUSTOM NAVBAR STYLING
 // ============================================
 .header-navbar {
@@ -13,16 +28,27 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
   border-bottom: 3px solid rgba(255, 255, 255, 0.2) !important;
   box-shadow: 0 4px 20px rgba(115, 103, 240, 0.4) !important;
   backdrop-filter: blur(10px);
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 0.75rem 0.75rem;
   
   .navbar-container {
-    padding: 0.5rem 1.5rem;
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    
+    @media (min-width: 768px) {
+      padding: 0.5rem 1.5rem;
+    }
     
     .nav-link {
       color: rgba(255, 255, 255, 0.95) !important;
       transition: all 0.3s ease;
-      padding: 0.5rem 1rem;
+      padding: 0.4rem 0.6rem;
       border-radius: 8px;
+      
+      @media (min-width: 576px) {
+        padding: 0.5rem 1rem;
+      }
       
       &:hover {
         color: #fff !important;
@@ -55,6 +81,7 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
       border-radius: 10px;
       margin-top: 0.5rem;
       overflow: hidden;
+      max-width: calc(100vw - 2rem);
       
       .dropdown-item {
         color: #495057;
@@ -80,6 +107,7 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 
 // ============================================
 // ENHANCED SPACING BETWEEN SIDEBAR AND CONTENT
+// (Mobile-first: no sidebar margin on mobile)
 // ============================================
 .vertical-layout {
   // Sidebar right border for visual separation
@@ -88,26 +116,165 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     box-shadow: 2px 0 15px rgba(0, 0, 0, 0.05);
   }
   
-  // Content area with increased margin
+  // Mobile-first: no margin when sidebar is overlay
   .content.app-content {
-    margin-left: 280px !important;
-    padding-left: 1.5rem;
+    margin-left: 0 !important;
+    padding-left: 1rem;
+    padding-right: 1rem;
     transition: all 0.3s ease;
   }
   
-  // Collapsed menu state
+  // Collapsed menu state (mobile: no margin)
   &.menu-collapsed .content.app-content {
-    margin-left: 100px !important;
+    margin-left: 0 !important;
   }
   
-  // Navbar positioning with sidebar gap
-  .header-navbar.navbar-static-top {
-    left: 280px !important;
-    width: calc(100vw - 280px) !important;
+  // Desktop: sidebar is visible, add margin
+  @media (min-width: 1200px) {
+    .content.app-content {
+      margin-left: 260px !important;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+    
+    &.menu-collapsed .content.app-content {
+      margin-left: 80px !important;
+    }
+    
+    // Navbar positioning with sidebar gap (desktop only)
+    .header-navbar.navbar-static-top {
+      left: 260px !important;
+      width: calc(100vw - 260px) !important;
+    }
+    
+    &.menu-collapsed .header-navbar.navbar-static-top {
+      left: 80px !important;
+      width: calc(100vw - 80px) !important;
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE CONTENT & CARD UTILITIES
+// ============================================
+
+// Ensure all images are responsive by default
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+// Responsive tables: always scrollable on small screens
+.table-responsive {
+  -webkit-overflow-scrolling: touch;
+}
+
+// Cards should stack properly
+.card {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+// Ensure Bootstrap-Vue rows don't cause overflow
+.row {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+  
+  > [class*="col"] {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
   
-  &.menu-collapsed .header-navbar.navbar-static-top {
-    left: 100px !important;
-    width: calc(100vw - 100px) !important;
+  @media (min-width: 768px) {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+    
+    > [class*="col"] {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+  }
+}
+
+// Match-height utility for equal-height cards in a row
+.match-height {
+  > [class*="col"] {
+    display: flex;
+    flex-flow: column;
+    
+    > .card {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE TYPOGRAPHY
+// ============================================
+h1 {
+  font-size: 1.5rem;
+  @media (min-width: 576px) { font-size: 1.75rem; }
+  @media (min-width: 768px) { font-size: 2rem; }
+}
+
+h2 {
+  font-size: 1.25rem;
+  @media (min-width: 576px) { font-size: 1.5rem; }
+  @media (min-width: 768px) { font-size: 1.75rem; }
+}
+
+h3 {
+  font-size: 1.1rem;
+  @media (min-width: 576px) { font-size: 1.25rem; }
+}
+
+// ============================================
+// RESPONSIVE FORM UTILITIES
+// ============================================
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.auth-inner {
+  width: 100%;
+  max-width: 26rem;
+}
+
+// ============================================
+// RESPONSIVE BUTTON GROUPS
+// ============================================
+// On mobile, stack buttons vertically when placed inline
+@media (max-width: 575.98px) {
+  .btn-group-responsive {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+// ============================================
+// VUETIFY COMPONENTS RESPONSIVE OVERRIDES
+// (for legacy Vuetify components used in some views)
+// ============================================
+.v-application {
+  .v-card {
+    max-width: 100% !important;
+  }
+  
+  // Ensure Vuetify rows wrap properly on mobile
+  .v-row {
+    margin: 0 -0.5rem;
+  }
+  
+  .v-col {
+    padding: 0.5rem;
   }
 }

@@ -5,13 +5,13 @@
       <b-col cols="12">
         <b-card>
           <b-row>
-            <b-col md="8">
+            <b-col cols="12" md="8">
               <h2>{{ $t('dashboard.welcomeBack') }}, {{ user ? user.name : $t('reservation.doctor') }}! 👨‍⚕️</h2>
               <p class="mb-2">
                 {{ $t('dashboard.doctorOverview') }}
               </p>
             </b-col>
-            <b-col md="4" class="text-right">
+            <b-col cols="12" md="4" class="text-md-right mt-1 mt-md-0">
               <b-button
                 variant="primary"
                 :to="{ name: 'doctor-reservations' }"
@@ -27,7 +27,7 @@
 
     <!-- Statistics Cards -->
     <b-row class="match-height">
-      <b-col lg="4" sm="6">
+      <b-col cols="12" sm="6" lg="4">
         <b-card class="text-center">
           <b-avatar
             variant="light-info"
@@ -47,7 +47,7 @@
         </b-card>
       </b-col>
 
-      <b-col lg="4" sm="6">
+      <b-col cols="12" sm="6" lg="4">
         <b-card class="text-center">
           <b-avatar
             variant="light-warning"
@@ -67,7 +67,7 @@
         </b-card>
       </b-col>
 
-      <b-col lg="4" sm="6">
+      <b-col cols="12" sm="6" lg="4">
         <b-card class="text-center">
           <b-avatar
             variant="light-success"

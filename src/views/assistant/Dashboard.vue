@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <!-- Sound Permission Banner -->
     <b-row v-if="!soundEnabled">
@@ -77,7 +77,7 @@
 
     <!-- Statistics Cards -->
     <b-row class="match-height">
-      <b-col lg="3" sm="6">
+      <b-col cols="12" sm="6" lg="3">
         <b-card class="text-center">
           <b-avatar
             variant="light-primary"
@@ -97,7 +97,7 @@
         </b-card>
       </b-col>
 
-      <b-col lg="3" sm="6">
+      <b-col cols="12" sm="6" lg="3">
         <b-card class="text-center">
           <b-avatar
             variant="light-info"
@@ -117,7 +117,7 @@
         </b-card>
       </b-col>
 
-      <b-col lg="3" sm="6">
+      <b-col cols="12" sm="6" lg="3">
         <b-card class="text-center">
           <b-avatar
             variant="light-warning"
@@ -137,7 +137,7 @@
         </b-card>
       </b-col>
 
-      <b-col lg="3" sm="6">
+      <b-col cols="12" sm="6" lg="3">
         <b-card class="text-center">
           <b-avatar
             variant="light-success"
@@ -162,10 +162,10 @@
     <b-row>
       <b-col cols="12">
         <b-card :title="$t('dashboard.quickActions')">
+          <div class="d-flex flex-wrap" style="gap: 0.5rem;">
           <b-button
             variant="primary"
             :to="{ name: 'assistant-clients' }"
-            class="mr-1"
           >
             <feather-icon icon="UserPlusIcon" class="mr-50" />
             {{ $t('client.addClient') }}
@@ -177,6 +177,7 @@
             <feather-icon icon="PlusIcon" class="mr-50" />
             {{ $t('actions.newReservation') }}
           </b-button>
+          </div>
         </b-card>
       </b-col>
     </b-row>
@@ -393,7 +394,7 @@ export default {
       return date.toLocaleString()
     },
 
-    // ── Assistant Call Methods ──
+    // â”€â”€ Assistant Call Methods â”€â”€
     async fetchActiveCalls() {
       try {
         const response = await assistantCallsService.getActiveCalls()

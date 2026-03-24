@@ -1,37 +1,37 @@
-<template>
+﻿<template>
     <v-app>
         <div class="main" v-if="$route.params.id == 1">
             <div class="addForm">
-                <h2>إضافه طفل جديد</h2>
+                <h2>ط¥ط¶ط§ظپظ‡ ط·ظپظ„ ط¬ط¯ظٹط¯</h2>
                 <div class="heading">
                      <div class="numberCard">1</div> 
                     <div class="text additionalText">
-                        البيانات الاوليه للحاله 
+                        ط§ظ„ط¨ظٹط§ظ†ط§طھ ط§ظ„ط§ظˆظ„ظٹظ‡ ظ„ظ„ط­ط§ظ„ظ‡ 
                     </div>
 
                     <div class="numberCard">2</div> 
                     <div class="text additionalText">
-                        البيانات التفصيليه  
+                        ط§ظ„ط¨ظٹط§ظ†ط§طھ ط§ظ„طھظپطµظٹظ„ظٹظ‡  
                     </div>
 
                     <div class="numberCard">3</div> 
                     <div class="text additionalText">
-                          تاريخ الحاله 
+                          طھط§ط±ظٹط® ط§ظ„ط­ط§ظ„ظ‡ 
                     </div>
 
                     <div class="numberCard">4</div> 
                     <div class="text additionalText">
-                        المشاكل   
+                        ط§ظ„ظ…ط´ط§ظƒظ„   
                     </div>
 
                     <div class="numberCard">5</div> 
                     <div class="text additionalText">
-                         بيانات الاسره  
+                         ط¨ظٹط§ظ†ط§طھ ط§ظ„ط§ط³ط±ظ‡  
                     </div>
 
                     <div class="numberCard">6</div> 
                     <div class="text additionalText">
-                        المهارات
+                        ط§ظ„ظ…ظ‡ط§ط±ط§طھ
                     </div>
 
                 </div>
@@ -39,24 +39,24 @@
                     <div class="initData div" v-if="type == 0">
                         <v-form>
                             <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>اسم الطفل :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ط³ظ… ط§ظ„ط·ظپظ„ :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span> هاتف المنزل :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span> ظ‡ط§طھظپ ط§ظ„ظ…ظ†ط²ظ„ :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -66,24 +66,24 @@
                             </v-row>
 
                              <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>رقم الملف  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط±ظ‚ظ… ط§ظ„ظ…ظ„ظپ  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>  رقم المحمول :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>  ط±ظ‚ظ… ط§ظ„ظ…ط­ظ…ظˆظ„ :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -92,24 +92,24 @@
                                 </v-col>
                             </v-row>
                              <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>تاريخ الميلاد  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>طھط§ط±ظٹط® ط§ظ„ظ…ظٹظ„ط§ط¯  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>  نوع الاعاقه :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>  ظ†ظˆط¹ ط§ظ„ط§ط¹ط§ظ‚ظ‡ :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -118,24 +118,24 @@
                                 </v-col>
                             </v-row>
                              <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span> العمر :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span> ط§ظ„ط¹ظ…ط± :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span> مدخل البيانات  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span> ظ…ط¯ط®ظ„ ط§ظ„ط¨ظٹط§ظ†ط§طھ  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -144,12 +144,12 @@
                                 </v-col>
                             </v-row>
                              <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>محل الميلاد  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ظ…ط­ظ„ ط§ظ„ظ…ظٹظ„ط§ط¯  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -165,7 +165,7 @@
                             depressed
                             color="primary"
                             >
-                            التالي
+                            ط§ظ„طھط§ظ„ظٹ
                             </v-btn>
 
                             
@@ -174,16 +174,16 @@
 
                     <div class="div" v-if="type == 1">
                         <v-row>
-                            <v-col cols="6">
-                                <span>كود الاعاقه</span>
+                            <v-col cols="12" md="6">
+                                <span>ظƒظˆط¯ ط§ظ„ط§ط¹ط§ظ‚ظ‡</span>
                                 <v-text-field
                                     solo
                                 ></v-text-field>
                             </v-col>
                         </v-row>
                          <v-row>
-                            <v-col cols="6">
-                                <span>وصف الاعاقه</span>
+                            <v-col cols="12" md="6">
+                                <span>ظˆطµظپ ط§ظ„ط§ط¹ط§ظ‚ظ‡</span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -193,8 +193,8 @@
                             </v-col>
                         </v-row>
                          <v-row>
-                            <v-col cols="6">
-                                <span>الخدمات </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„ط®ط¯ظ…ط§طھ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -204,8 +204,8 @@
                             </v-col>
                         </v-row>
                         <v-row>
-                            <v-col cols="6">
-                                <span>الخدمات الاضافيه </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„ط®ط¯ظ…ط§طھ ط§ظ„ط§ط¶ط§ظپظٹظ‡ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -215,28 +215,28 @@
                             </v-col>
                         </v-row>
 
-                            <v-btn color="primary" @click="nextDetails">التالي</v-btn>
+                            <v-btn color="primary" @click="nextDetails">ط§ظ„طھط§ظ„ظٹ</v-btn>
                     </div>
 
                     <div class="div" v-if="type == 2">
                         <v-row>
-                            <v-col cols="6">
-                                <span>حدوث الاعاقه</span>
+                            <v-col cols="12" md="6">
+                                <span>ط­ط¯ظˆط« ط§ظ„ط§ط¹ط§ظ‚ظ‡</span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="قبل الولاده"
+                                        label="ظ‚ط¨ظ„ ط§ظ„ظˆظ„ط§ط¯ظ‡"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="اثناء الولاده"
+                                        label="ط§ط«ظ†ط§ط، ط§ظ„ظˆظ„ط§ط¯ظ‡"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                      <v-radio
-                                        label="بعد الولاده"
+                                        label="ط¨ط¹ط¯ ط§ظ„ظˆظ„ط§ط¯ظ‡"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -245,8 +245,8 @@
                         </v-row>
 
                           <v-row>
-                            <v-col cols="6">
-                                <span>سبب الاعاقه</span>
+                            <v-col cols="12" md="6">
+                                <span>ط³ط¨ط¨ ط§ظ„ط§ط¹ط§ظ‚ظ‡</span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -258,11 +258,11 @@
 
                         <v-row>
                            
-                            <v-col cols="6">
-                                <span>عمر الوالدين عند الولاده</span>
+                            <v-col cols="12" md="6">
+                                <span>ط¹ظ…ط± ط§ظ„ظˆط§ظ„ط¯ظٹظ† ط¹ظ†ط¯ ط§ظ„ظˆظ„ط§ط¯ظ‡</span>
                                 <v-row>
-                                    <v-col cols="2">الاب</v-col>
-                                    <v-col cols="4">
+                                    <v-col cols="4" sm="2">ط§ظ„ط§ط¨</v-col>
+                                    <v-col cols="12" sm="6" md="4">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -270,8 +270,8 @@
 
                                 </v-row>
                                  <v-row>
-                                    <v-col cols="2">الام</v-col>
-                                    <v-col cols="4">
+                                    <v-col cols="4" sm="2">ط§ظ„ط§ظ…</v-col>
+                                    <v-col cols="12" sm="6" md="4">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -281,18 +281,18 @@
                             </v-col>
                         </v-row>
                         <v-row>
-                            <v-col cols="6">
-                                <span> هل التحق الطفل بمؤسسه تعليميه</span>
+                            <v-col cols="12" md="6">
+                                <span> ظ‡ظ„ ط§ظ„طھط­ظ‚ ط§ظ„ط·ظپظ„ ط¨ظ…ط¤ط³ط³ظ‡ طھط¹ظ„ظٹظ…ظٹظ‡</span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -302,8 +302,8 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -315,18 +315,18 @@
 
 
                          <v-row>
-                            <v-col cols="6">
-                                <span> هل لدي الطفل مشاكل سلوكيه   </span>
+                            <v-col cols="12" md="6">
+                                <span> ظ‡ظ„ ظ„ط¯ظٹ ط§ظ„ط·ظپظ„ ظ…ط´ط§ظƒظ„ ط³ظ„ظˆظƒظٹظ‡   </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -336,8 +336,8 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -348,23 +348,23 @@
                         </v-row>
 
 
-                          <v-btn color="primary" @click="toProblem">التالي</v-btn>
+                          <v-btn color="primary" @click="toProblem">ط§ظ„طھط§ظ„ظٹ</v-btn>
                     </div>
 
                     <div class="problems div" v-if="type == 3">
                         <v-row>
-                            <v-col cols="6">
-                                <span>هل يعاني من مشاكل صحيه </span>
+                            <v-col cols="12" md="6">
+                                <span>ظ‡ظ„ ظٹط¹ط§ظ†ظٹ ظ…ظ† ظ…ط´ط§ظƒظ„ طµط­ظٹظ‡ </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -373,8 +373,8 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -385,18 +385,18 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
-                                <span>هل  لديه اعاقه عقليه   </span>
+                            <v-col cols="12" md="6">
+                                <span>ظ‡ظ„  ظ„ط¯ظٹظ‡ ط§ط¹ط§ظ‚ظ‡ ط¹ظ‚ظ„ظٹظ‡   </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -405,8 +405,8 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -417,18 +417,18 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span>هل لديه مشاكل في السمع او الابصار    </span>
+                            <v-col cols="12" md="6">
+                                <span>ظ‡ظ„ ظ„ط¯ظٹظ‡ ظ…ط´ط§ظƒظ„ ظپظٹ ط§ظ„ط³ظ…ط¹ ط§ظˆ ط§ظ„ط§ط¨طµط§ط±    </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -437,40 +437,8 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
-                                <v-textarea
-                                auto-grow
-                                outlined
-                                rows="3"
-                                row-height="25"
-                            ></v-textarea>
-                            </v-col>
-                        </v-row>
-
-                         <v-row>
-                            <v-col cols="6">
-                                <span>هل لديه اعاقات اخري    </span>
-                                 <v-radio-group
-                                    column
-                                    >
-                                    <v-radio
-                                        label="نعم "
-                                        color="#10a29b"
-                                        value="1"
-                                    ></v-radio>
-                                     <v-radio
-                                        label="لا "
-                                        color="#10a29b"
-                                        value="2"
-                                    ></v-radio>
-                                 </v-radio-group>  
-                            </v-col>
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -481,18 +449,18 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
-                                <span>هل لديه حساسيه من بعض الاطعمه    </span>
+                            <v-col cols="12" md="6">
+                                <span>ظ‡ظ„ ظ„ط¯ظٹظ‡ ط§ط¹ط§ظ‚ط§طھ ط§ط®ط±ظٹ    </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -501,8 +469,8 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -513,18 +481,18 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
-                                <span>هل  لديه حساسيه صدريه او جلديه   </span>
+                            <v-col cols="12" md="6">
+                                <span>ظ‡ظ„ ظ„ط¯ظٹظ‡ ط­ط³ط§ط³ظٹظ‡ ظ…ظ† ط¨ط¹ط¶ ط§ظ„ط§ط·ط¹ظ…ظ‡    </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -533,8 +501,8 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -545,18 +513,18 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
-                                <span>هل يتناول الادويه    </span>
+                            <v-col cols="12" md="6">
+                                <span>ظ‡ظ„  ظ„ط¯ظٹظ‡ ط­ط³ط§ط³ظٹظ‡ طµط¯ط±ظٹظ‡ ط§ظˆ ط¬ظ„ط¯ظٹظ‡   </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -565,8 +533,8 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -577,18 +545,18 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
-                                <span>هل  يعاني من التشنجات   </span>
+                            <v-col cols="12" md="6">
+                                <span>ظ‡ظ„ ظٹطھظ†ط§ظˆظ„ ط§ظ„ط§ط¯ظˆظٹظ‡    </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -597,8 +565,8 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -608,29 +576,61 @@
                             </v-col>
                         </v-row>
 
-                        <v-btn color="primary" @click="toFamily">التالي</v-btn>
+                         <v-row>
+                            <v-col cols="12" md="6">
+                                <span>ظ‡ظ„  ظٹط¹ط§ظ†ظٹ ظ…ظ† ط§ظ„طھط´ظ†ط¬ط§طھ   </span>
+                                 <v-radio-group
+                                    column
+                                    >
+                                    <v-radio
+                                        label="ظ†ط¹ظ… "
+                                        color="#10a29b"
+                                        value="1"
+                                    ></v-radio>
+                                     <v-radio
+                                        label="ظ„ط§ "
+                                        color="#10a29b"
+                                        value="2"
+                                    ></v-radio>
+                                 </v-radio-group>  
+                            </v-col>
+                        </v-row>
+
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
+                                <v-textarea
+                                auto-grow
+                                outlined
+                                rows="3"
+                                row-height="25"
+                            ></v-textarea>
+                            </v-col>
+                        </v-row>
+
+                        <v-btn color="primary" @click="toFamily">ط§ظ„طھط§ظ„ظٹ</v-btn>
                     </div>
 
                     <div class="family div" v-if="type == 4">
                         <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span>اسم ولي الامر :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span>ط§ط³ظ… ظˆظ„ظٹ ط§ظ„ط§ظ…ط± :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
                                     </v-col>
                                 </v-row> 
                             </v-col>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span> العمر  :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span> ط§ظ„ط¹ظ…ط±  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -640,24 +640,24 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span>صله القرابه   :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span>طµظ„ظ‡ ط§ظ„ظ‚ط±ط§ط¨ظ‡   :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
                                     </v-col>
                                 </v-row> 
                             </v-col>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                        <span> رقم المحمول  :</span>
+                                    <v-col cols="12" sm="4">
+                                        <span> ط±ظ‚ظ… ط§ظ„ظ…ط­ظ…ظˆظ„  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -667,24 +667,24 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span>المهنه   :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span>ط§ظ„ظ…ظ‡ظ†ظ‡   :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
                                     </v-col>
                                 </v-row> 
                             </v-col>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="4">
-                                            <span> المستوي التعليمي  :</span>
+                                    <v-col cols="12" sm="6" md="4">
+                                            <span> ط§ظ„ظ…ط³طھظˆظٹ ط§ظ„طھط¹ظ„ظٹظ…ظٹ  :</span>
                                     </v-col>
-                                    <v-col cols="5">
+                                    <v-col cols="12" sm="5">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -694,24 +694,24 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span>هاتف العمل   :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span>ظ‡ط§طھظپ ط§ظ„ط¹ظ…ظ„   :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
                                     </v-col>
                                 </v-row> 
                             </v-col>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span> عنوان العمل  :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span> ط¹ظ†ظˆط§ظ† ط§ظ„ط¹ظ…ظ„  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -721,24 +721,24 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span>اسم الام  :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span>ط§ط³ظ… ط§ظ„ط§ظ…  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
                                     </v-col>
                                 </v-row> 
                             </v-col>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span> العمر  :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span> ط§ظ„ط¹ظ…ط±  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -748,24 +748,24 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span>منطقه السكن    :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span>ظ…ظ†ط·ظ‚ظ‡ ط§ظ„ط³ظƒظ†    :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
                                     </v-col>
                                 </v-row> 
                             </v-col>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span> رقم المحمول  :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span> ط±ظ‚ظ… ط§ظ„ظ…ط­ظ…ظˆظ„  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -775,24 +775,24 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span>المهنه   :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span>ط§ظ„ظ…ظ‡ظ†ظ‡   :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
                                     </v-col>
                                 </v-row> 
                             </v-col>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span> المستوي التعليمي  :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span> ط§ظ„ظ…ط³طھظˆظٹ ط§ظ„طھط¹ظ„ظٹظ…ظٹ  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -802,24 +802,24 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span>هاتف العمل   :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span>ظ‡ط§طھظپ ط§ظ„ط¹ظ…ظ„   :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
                                     </v-col>
                                 </v-row> 
                             </v-col>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span> عنوان العمل  :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span> ط¹ظ†ظˆط§ظ† ط§ظ„ط¹ظ…ظ„  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -829,24 +829,24 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span>عدد الاخوه   :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span>ط¹ط¯ط¯ ط§ظ„ط§ط®ظˆظ‡   :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
                                     </v-col>
                                 </v-row> 
                             </v-col>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                            <span> ترتيب الطفل  :</span>
+                                    <v-col cols="12" sm="4">
+                                            <span> طھط±طھظٹط¨ ط§ظ„ط·ظپظ„  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -856,18 +856,18 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span> هل يوجد صله قرابه بين الوالدين   </span>
+                            <v-col cols="12" md="6">
+                                <span> ظ‡ظ„ ظٹظˆط¬ط¯ طµظ„ظ‡ ظ‚ط±ط§ط¨ظ‡ ط¨ظٹظ† ط§ظ„ظˆط§ظ„ط¯ظٹظ†   </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -876,8 +876,8 @@
                             </v-col>
                         </v-row>
                         <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -888,18 +888,18 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span> هل يوجد امراض مزمنه في الاسره      </span>
+                            <v-col cols="12" md="6">
+                                <span> ظ‡ظ„ ظٹظˆط¬ط¯ ط§ظ…ط±ط§ط¶ ظ…ط²ظ…ظ†ظ‡ ظپظٹ ط§ظ„ط§ط³ط±ظ‡      </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -908,8 +908,8 @@
                             </v-col>
                         </v-row>
                         <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -920,18 +920,18 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span> هل يوجد حالات مماثله في الاسره      </span>
+                            <v-col cols="12" md="6">
+                                <span> ظ‡ظ„ ظٹظˆط¬ط¯ ط­ط§ظ„ط§طھ ظ…ظ…ط§ط«ظ„ظ‡ ظپظٹ ط§ظ„ط§ط³ط±ظ‡      </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="نعم "
+                                        label="ظ†ط¹ظ… "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="لا "
+                                        label="ظ„ط§ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -940,8 +940,8 @@
                             </v-col>
                         </v-row>
                         <v-row>
-                            <v-col cols="6">
-                                <span>التوضيح </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ظ„طھظˆط¶ظٹط­ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -952,23 +952,23 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span> وسيله النقل </span>
+                            <v-col cols="12" md="6">
+                                <span> ظˆط³ظٹظ„ظ‡ ط§ظ„ظ†ظ‚ظ„ </span>
                                  <v-radio-group
                                     column
                                     >
                                     <v-radio
-                                        label="ولي امر "
+                                        label="ظˆظ„ظٹ ط§ظ…ط± "
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                      <v-radio
-                                        label="سائق خاص "
+                                        label="ط³ط§ط¦ظ‚ ط®ط§طµ "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                       <v-radio
-                                        label="حافله المركز  "
+                                        label="ط­ط§ظپظ„ظ‡ ط§ظ„ظ…ط±ظƒط²  "
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -978,12 +978,12 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                        <span>اسم السائق  :</span>
+                                    <v-col cols="12" sm="4">
+                                        <span>ط§ط³ظ… ط§ظ„ط³ط§ط¦ظ‚  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -993,12 +993,12 @@
                         </v-row>
 
                          <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                 <v-row>
-                                    <v-col cols="3">
-                                        <span>جوال السائق  :</span>
+                                    <v-col cols="12" sm="4">
+                                        <span>ط¬ظˆط§ظ„ ط§ظ„ط³ط§ط¦ظ‚  :</span>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field
                                             solo
                                         ></v-text-field>
@@ -1008,29 +1008,29 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12" md="6">
                                     
-                                <span>الدخل الشهري</span>                  
+                                <span>ط§ظ„ط¯ط®ظ„ ط§ظ„ط´ظ‡ط±ظٹ</span>                  
                                 <v-radio-group
                                 column
                                 >
                                 <v-radio
-                                    label="ضعيف اقل من 3000 الاف "
+                                    label="ط¶ط¹ظٹظپ ط§ظ‚ظ„ ظ…ظ† 3000 ط§ظ„ط§ظپ "
                                     color="#10a29b"
                                     value="1"
                                 ></v-radio>
                                     <v-radio
-                                    label="جيد 3000-5000 "
+                                    label="ط¬ظٹط¯ 3000-5000 "
                                     color="#10a29b"
                                     value="2"
                                 ></v-radio>
                                     <v-radio
-                                    label=" جيد جدا 5000-10000 "
+                                    label=" ط¬ظٹط¯ ط¬ط¯ط§ 5000-10000 "
                                     color="#10a29b"
                                     value="3"
                                 ></v-radio>
                                     <v-radio
-                                    label="ممتاز اكثر من 10000"
+                                    label="ظ…ظ…طھط§ط² ط§ظƒط«ط± ظ…ظ† 10000"
                                     color="#10a29b"
                                     value="4"
                                 ></v-radio>   
@@ -1038,40 +1038,40 @@
                             </v-col>
                         </v-row>
 
-                        <v-btn color="primary" @click="toSkills">التالي</v-btn>
+                        <v-btn color="primary" @click="toSkills">ط§ظ„طھط§ظ„ظٹ</v-btn>
                    
 
                     </div>
 
                     <div class="skills div" v-if="type == 5">
-                        <span> المهارات الاجتماعيه : </span>
+                        <span> ط§ظ„ظ…ظ‡ط§ط±ط§طھ ط§ظ„ط§ط¬طھظ…ط§ط¹ظٹظ‡ : </span>
                         <v-row>
-                            <v-col cols="3">
-                                <h5>يشارك اقرانه في اللعب</h5>
+                            <v-col cols="12" sm="4">
+                                <h5>ظٹط´ط§ط±ظƒ ط§ظ‚ط±ط§ظ†ظ‡ ظپظٹ ط§ظ„ظ„ط¹ط¨</h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1085,32 +1085,32 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5> هل يشارك الطفل اسرته   </h5>
+                            <v-col cols="12" sm="4">
+                                <h5> ظ‡ظ„ ظٹط´ط§ط±ظƒ ط§ظ„ط·ظپظ„ ط§ط³ط±طھظ‡   </h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1124,32 +1124,32 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5>يستجيب للمؤثرات الاجتماعيه</h5>
+                            <v-col cols="12" sm="4">
+                                <h5>ظٹط³طھط¬ظٹط¨ ظ„ظ„ظ…ط¤ط«ط±ط§طھ ط§ظ„ط§ط¬طھظ…ط§ط¹ظٹظ‡</h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1163,32 +1163,32 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5>يقلد حركات الاخرين  </h5>
+                            <v-col cols="12" sm="4">
+                                <h5>ظٹظ‚ظ„ط¯ ط­ط±ظƒط§طھ ط§ظ„ط§ط®ط±ظٹظ†  </h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1201,74 +1201,35 @@
 
                         </v-row>
 
-                        <span> المهارات الادراكيه : </span>
+                        <span> ط§ظ„ظ…ظ‡ط§ط±ط§طھ ط§ظ„ط§ط¯ط±ط§ظƒظٹظ‡ : </span>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5>يدرك بنفسه    </h5>
+                            <v-col cols="12" sm="4">
+                                <h5>ظٹط¯ط±ظƒ ط¨ظ†ظپط³ظ‡    </h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
-                                        color="#10a29b"
-                                        value="3"
-                                    ></v-radio>
-                                    </v-col>
-                                    
-                                      
-                                </v-row>
-                               </v-radio-group>  
-                            </v-col>
-
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="3">
-                                <h5>يدرك والديه/اخوته/المربيه</h5>
-                            </v-col>
-                            <v-col cols="9">
-                                <v-radio-group
-                                    column
-                                >
-                                <v-row>
-                                    <v-col cols="2">
-                                        <v-radio
-                                        label="نعم"
-                                        color="#10a29b"
-                                        value="1"
-                                    ></v-radio>
-                                    </v-col>
-                                   
-                                    <v-col cols="2">
-                                        <v-radio
-                                        label="لا"
-                                        color="#10a29b"
-                                        value="2"
-                                    ></v-radio>
-                                    </v-col>
-                                   <v-col cols="2">
-                                        <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1282,32 +1243,32 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5> يدرك الاشياء المحيطه من حوله</h5>
+                            <v-col cols="12" sm="4">
+                                <h5>ظٹط¯ط±ظƒ ظˆط§ظ„ط¯ظٹظ‡/ط§ط®ظˆطھظ‡/ط§ظ„ظ…ط±ط¨ظٹظ‡</h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1321,73 +1282,32 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5> يتعرف علي صور الاشياء المحيطه من حوله  </h5>
+                            <v-col cols="12" sm="4">
+                                <h5> ظٹط¯ط±ظƒ ط§ظ„ط§ط´ظٹط§ط، ط§ظ„ظ…ط­ظٹط·ظ‡ ظ…ظ† ط­ظˆظ„ظ‡</h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
-                                        color="#10a29b"
-                                        value="3"
-                                    ></v-radio>
-                                    </v-col>
-                                    
-                                      
-                                </v-row>
-                               </v-radio-group>  
-                            </v-col>
-
-                        </v-row>
-
-                        <span> المهارات الاتصاليه : </span>
-
-                        <v-row>
-                            <v-col cols="3">
-                                <h5>  التواصل البصري </h5>
-                            </v-col>
-                            <v-col cols="9">
-                                <v-radio-group
-                                    column
-                                >
-                                <v-row>
-                                    <v-col cols="2">
-                                        <v-radio
-                                        label="نعم"
-                                        color="#10a29b"
-                                        value="1"
-                                    ></v-radio>
-                                    </v-col>
-                                   
-                                    <v-col cols="2">
-                                        <v-radio
-                                        label="لا"
-                                        color="#10a29b"
-                                        value="2"
-                                    ></v-radio>
-                                    </v-col>
-                                   <v-col cols="2">
-                                        <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1401,32 +1321,32 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5>  اللغه الاستقباليه  </h5>
+                            <v-col cols="12" sm="4">
+                                <h5> ظٹطھط¹ط±ظپ ط¹ظ„ظٹ طµظˆط± ط§ظ„ط§ط´ظٹط§ط، ط§ظ„ظ…ط­ظٹط·ظ‡ ظ…ظ† ط­ظˆظ„ظ‡  </h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1439,73 +1359,35 @@
 
                         </v-row>
 
-                        <span>المهارات الحركيه :</span>
+                        <span> ط§ظ„ظ…ظ‡ط§ط±ط§طھ ط§ظ„ط§طھطµط§ظ„ظٹظ‡ : </span>
+
                         <v-row>
-                            <v-col cols="3">
-                                <h5>يشارك اقرانه في اللعب</h5>
+                            <v-col cols="12" sm="4">
+                                <h5>  ط§ظ„طھظˆط§طµظ„ ط§ظ„ط¨طµط±ظٹ </h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
-                                        color="#10a29b"
-                                        value="3"
-                                    ></v-radio>
-                                    </v-col>
-                                    
-                                      
-                                </v-row>
-                               </v-radio-group>  
-                            </v-col>
-
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="3">
-                                <h5> هل يشارك الطفل اسرته   </h5>
-                            </v-col>
-                            <v-col cols="9">
-                                <v-radio-group
-                                    column
-                                >
-                                <v-row>
-                                    <v-col cols="2">
-                                        <v-radio
-                                        label="نعم"
-                                        color="#10a29b"
-                                        value="1"
-                                    ></v-radio>
-                                    </v-col>
-                                   
-                                    <v-col cols="2">
-                                        <v-radio
-                                        label="لا"
-                                        color="#10a29b"
-                                        value="2"
-                                    ></v-radio>
-                                    </v-col>
-                                   <v-col cols="2">
-                                        <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1519,32 +1401,72 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5>يستجيب للمؤثرات الاجتماعيه</h5>
+                            <v-col cols="12" sm="4">
+                                <h5>  ط§ظ„ظ„ط؛ظ‡ ط§ظ„ط§ط³طھظ‚ط¨ط§ظ„ظٹظ‡  </h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
+                                        color="#10a29b"
+                                        value="3"
+                                    ></v-radio>
+                                    </v-col>
+                                    
+                                      
+                                </v-row>
+                               </v-radio-group>  
+                            </v-col>
+
+                        </v-row>
+
+                        <span>ط§ظ„ظ…ظ‡ط§ط±ط§طھ ط§ظ„ط­ط±ظƒظٹظ‡ :</span>
+                        <v-row>
+                            <v-col cols="12" sm="4">
+                                <h5>ظٹط´ط§ط±ظƒ ط§ظ‚ط±ط§ظ†ظ‡ ظپظٹ ط§ظ„ظ„ط¹ط¨</h5>
+                            </v-col>
+                            <v-col cols="9">
+                                <v-radio-group
+                                    column
+                                >
+                                <v-row>
+                                    <v-col cols="4" sm="2">
+                                        <v-radio
+                                        label="ظ†ط¹ظ…"
+                                        color="#10a29b"
+                                        value="1"
+                                    ></v-radio>
+                                    </v-col>
+                                   
+                                    <v-col cols="4" sm="2">
+                                        <v-radio
+                                        label="ظ„ط§"
+                                        color="#10a29b"
+                                        value="2"
+                                    ></v-radio>
+                                    </v-col>
+                                   <v-col cols="4" sm="2">
+                                        <v-radio
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1558,33 +1480,111 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
+                            <v-col cols="12" sm="4">
+                                <h5> ظ‡ظ„ ظٹط´ط§ط±ظƒ ط§ظ„ط·ظپظ„ ط§ط³ط±طھظ‡   </h5>
+                            </v-col>
+                            <v-col cols="9">
+                                <v-radio-group
+                                    column
+                                >
+                                <v-row>
+                                    <v-col cols="4" sm="2">
+                                        <v-radio
+                                        label="ظ†ط¹ظ…"
+                                        color="#10a29b"
+                                        value="1"
+                                    ></v-radio>
+                                    </v-col>
+                                   
+                                    <v-col cols="4" sm="2">
+                                        <v-radio
+                                        label="ظ„ط§"
+                                        color="#10a29b"
+                                        value="2"
+                                    ></v-radio>
+                                    </v-col>
+                                   <v-col cols="4" sm="2">
+                                        <v-radio
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
+                                        color="#10a29b"
+                                        value="3"
+                                    ></v-radio>
+                                    </v-col>
+                                    
+                                      
+                                </v-row>
+                               </v-radio-group>  
+                            </v-col>
+
+                        </v-row>
+
+                        <v-row>
+                            <v-col cols="12" sm="4">
+                                <h5>ظٹط³طھط¬ظٹط¨ ظ„ظ„ظ…ط¤ط«ط±ط§طھ ط§ظ„ط§ط¬طھظ…ط§ط¹ظٹظ‡</h5>
+                            </v-col>
+                            <v-col cols="9">
+                                <v-radio-group
+                                    column
+                                >
+                                <v-row>
+                                    <v-col cols="4" sm="2">
+                                        <v-radio
+                                        label="ظ†ط¹ظ…"
+                                        color="#10a29b"
+                                        value="1"
+                                    ></v-radio>
+                                    </v-col>
+                                   
+                                    <v-col cols="4" sm="2">
+                                        <v-radio
+                                        label="ظ„ط§"
+                                        color="#10a29b"
+                                        value="2"
+                                    ></v-radio>
+                                    </v-col>
+                                   <v-col cols="4" sm="2">
+                                        <v-radio
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
+                                        color="#10a29b"
+                                        value="3"
+                                    ></v-radio>
+                                    </v-col>
+                                    
+                                      
+                                </v-row>
+                               </v-radio-group>  
+                            </v-col>
+
+                        </v-row>
+
+                        <v-row>
+                            <v-col cols="12" sm="4">
                                
-                                <h5>يقلد حركات الاخرين  </h5>
+                                <h5>ظٹظ‚ظ„ط¯ ط­ط±ظƒط§طھ ط§ظ„ط§ط®ط±ظٹظ†  </h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نعم"
+                                        label="ظ†ط¹ظ…"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="لا"
+                                        label="ظ„ط§"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
                                     </v-col>
-                                   <v-col cols="2">
+                                   <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="نوعا ما"
+                                        label="ظ†ظˆط¹ط§ ظ…ط§"
                                         color="#10a29b"
                                         value="3"
                                     ></v-radio>
@@ -1595,29 +1595,29 @@
 
                         </v-row>
 
-                        <span>المساعده الذاتيه  :</span>
+                        <span>ط§ظ„ظ…ط³ط§ط¹ط¯ظ‡ ط§ظ„ط°ط§طھظٹظ‡  :</span>
 
                         
                         <v-row>
-                            <v-col cols="3">
-                                <h5>يشارك اقرانه في اللعب</h5>
+                            <v-col cols="12" sm="4">
+                                <h5>ظٹط´ط§ط±ظƒ ط§ظ‚ط±ط§ظ†ظ‡ ظپظٹ ط§ظ„ظ„ط¹ط¨</h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="مستقل"
+                                        label="ظ…ط³طھظ‚ظ„"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="بمساعده"
+                                        label="ط¨ظ…ط³ط§ط¹ط¯ظ‡"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -1631,25 +1631,25 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5>هل يشارك الطفل اسرته</h5>
+                            <v-col cols="12" sm="4">
+                                <h5>ظ‡ظ„ ظٹط´ط§ط±ظƒ ط§ظ„ط·ظپظ„ ط§ط³ط±طھظ‡</h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="مستقل"
+                                        label="ظ…ط³طھظ‚ظ„"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="بمساعده"
+                                        label="ط¨ظ…ط³ط§ط¹ط¯ظ‡"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -1663,25 +1663,25 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5>يستجيب للمؤثرات الاجتماعيه   </h5>
+                            <v-col cols="12" sm="4">
+                                <h5>ظٹط³طھط¬ظٹط¨ ظ„ظ„ظ…ط¤ط«ط±ط§طھ ط§ظ„ط§ط¬طھظ…ط§ط¹ظٹظ‡   </h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="مستقل"
+                                        label="ظ…ط³طھظ‚ظ„"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="بمساعده"
+                                        label="ط¨ظ…ط³ط§ط¹ط¯ظ‡"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -1695,25 +1695,25 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="3">
-                                <h5>يقلد حركات الاخرين   </h5>
+                            <v-col cols="12" sm="4">
+                                <h5>ظٹظ‚ظ„ط¯ ط­ط±ظƒط§طھ ط§ظ„ط§ط®ط±ظٹظ†   </h5>
                             </v-col>
                             <v-col cols="9">
                                 <v-radio-group
                                     column
                                 >
                                 <v-row>
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="مستقل"
+                                        label="ظ…ط³طھظ‚ظ„"
                                         color="#10a29b"
                                         value="1"
                                     ></v-radio>
                                     </v-col>
                                    
-                                    <v-col cols="2">
+                                    <v-col cols="4" sm="2">
                                         <v-radio
-                                        label="بمساعده"
+                                        label="ط¨ظ…ط³ط§ط¹ط¯ظ‡"
                                         color="#10a29b"
                                         value="2"
                                     ></v-radio>
@@ -1727,8 +1727,8 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
-                                <span>اذكر بعض المعززات لدي الطفل </span>
+                            <v-col cols="12" md="6">
+                                <span>ط§ط°ظƒط± ط¨ط¹ط¶ ط§ظ„ظ…ط¹ط²ط²ط§طھ ظ„ط¯ظٹ ط§ظ„ط·ظپظ„ </span>
                                 <v-textarea
                                 auto-grow
                                 outlined
@@ -1739,7 +1739,7 @@
                         </v-row>
 
                         <v-btn color="#10a29b" style="color:white" 
-                        @click="addChild">إضافه</v-btn>
+                        @click="addChild">ط¥ط¶ط§ظپظ‡</v-btn>
 
 
 
@@ -1749,14 +1749,14 @@
                     <div class="div final" v-if="type == 6" >
                       
                         <div class="contentDiv">
-                              <h3>تم اضافه الطفل بنجاح</h3><br>
+                              <h3>طھظ… ط§ط¶ط§ظپظ‡ ط§ظ„ط·ظپظ„ ط¨ظ†ط¬ط§ط­</h3><br>
                             <v-row>
-                                <v-col cols="6">
-                                    <v-btn @click="showAll" style="color:white" class="showAll" color="#10a29b">عرض قائمه الاطفال</v-btn>
+                                <v-col cols="12" md="6">
+                                    <v-btn @click="showAll" style="color:white" class="showAll" color="#10a29b">ط¹ط±ط¶ ظ‚ط§ط¦ظ…ظ‡ ط§ظ„ط§ط·ظپط§ظ„</v-btn>
                                 </v-col>
 
-                                <v-col cols="6">
-                                    <v-btn @click="addNew" style="border-color:#10a29b;color:#10a29b" class="addNew" outlined> إضافه طفل جديد  </v-btn>
+                                <v-col cols="12" md="6">
+                                    <v-btn @click="addNew" style="border-color:#10a29b;color:#10a29b" class="addNew" outlined> ط¥ط¶ط§ظپظ‡ ط·ظپظ„ ط¬ط¯ظٹط¯  </v-btn>
                                 </v-col>
                         </v-row>
                         </div>
@@ -1768,32 +1768,32 @@
 
         <div class="main" v-if="$route.params.id == 2">
             <div class="addForm" v-if="!showSuccess">
-                <h2>إضافه مدرسه</h2>
+                <h2>ط¥ط¶ط§ظپظ‡ ظ…ط¯ط±ط³ظ‡</h2>
                 <div class="header">
-                    <h3>بيانات المدرسه المراد اضافتها</h3>
+                    <h3>ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط¯ط±ط³ظ‡ ط§ظ„ظ…ط±ط§ط¯ ط§ط¶ط§ظپطھظ‡ط§</h3>
                 </div>
                 <div class="data">
                  <div class="initData div">
                         <v-form>
                             <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>الكود  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ظ„ظƒظˆط¯  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span> الاسم بالانجليزيه  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span> ط§ظ„ط§ط³ظ… ط¨ط§ظ„ط§ظ†ط¬ظ„ظٹط²ظٹظ‡  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -1803,24 +1803,24 @@
                             </v-row>
 
                              <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>الاسم بالعربي   :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ظ„ط§ط³ظ… ط¨ط§ظ„ط¹ط±ط¨ظٹ   :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>  المرحله  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>  ط§ظ„ظ…ط±ط­ظ„ظ‡  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -1829,24 +1829,24 @@
                                 </v-col>
                             </v-row>
                              <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>البريد الالكتروني   :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ظ„ط¨ط±ظٹط¯ ط§ظ„ط§ظ„ظƒطھط±ظˆظ†ظٹ   :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>  الهاتف  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>  ط§ظ„ظ‡ط§طھظپ  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -1855,24 +1855,24 @@
                                 </v-col>
                             </v-row>
                              <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="5">
-                                             <span> نوع المؤسسه التعليميه :</span>
+                                        <v-col cols="12" sm="5">
+                                             <span> ظ†ظˆط¹ ط§ظ„ظ…ط¤ط³ط³ظ‡ ط§ظ„طھط¹ظ„ظٹظ…ظٹظ‡ :</span>
                                         </v-col>
-                                        <v-col cols="4">
+                                        <v-col cols="12" sm="6" md="4">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span> نوع الترخيص   :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span> ظ†ظˆط¹ ط§ظ„طھط±ط®ظٹطµ   :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -1881,24 +1881,24 @@
                                 </v-col>
                             </v-row>
                              <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>البلد   :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ظ„ط¨ظ„ط¯   :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                 <v-row>
-                                        <v-col cols="3">
-                                             <span>المدينه   :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ظ„ظ…ط¯ظٹظ†ظ‡   :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -1909,24 +1909,24 @@
                             </v-row>
 
                               <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>المنطقه   :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ظ„ظ…ظ†ط·ظ‚ظ‡   :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                 <v-row>
-                                        <v-col cols="3">
-                                             <span>الشارع   :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ظ„ط´ط§ط±ط¹   :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -1938,12 +1938,12 @@
 
 
                               <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>العنوان مفصل   :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ظ„ط¹ظ†ظˆط§ظ† ظ…ظپطµظ„   :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-textarea
                                             auto-grow
                                             outlined
@@ -1953,12 +1953,12 @@
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                 <v-row>
-                                        <v-col cols="3">
-                                             <span>مدير الاداره   :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ظ…ط¯ظٹط± ط§ظ„ط§ط¯ط§ط±ظ‡   :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -1974,7 +1974,7 @@
                             depressed
                             color="primary"
                             >
-                            حفظ
+                            ط­ظپط¸
                             </v-btn>
                         </v-form>
                     </div>
@@ -1982,14 +1982,14 @@
             </div>
             <div class="div final" v-if="showSuccess">
             <div class="contentDiv">
-                    <h3>تم اضافه المؤسسه بنجاح</h3><br>
+                    <h3>طھظ… ط§ط¶ط§ظپظ‡ ط§ظ„ظ…ط¤ط³ط³ظ‡ ط¨ظ†ط¬ط§ط­</h3><br>
                 <v-row>
-                    <v-col cols="6">
-                        <v-btn @click="showSchools" style="color:white" class="showAll" color="#10a29b">عرض قائمه المؤسسات</v-btn>
+                    <v-col cols="12" md="6">
+                        <v-btn @click="showSchools" style="color:white" class="showAll" color="#10a29b">ط¹ط±ط¶ ظ‚ط§ط¦ظ…ظ‡ ط§ظ„ظ…ط¤ط³ط³ط§طھ</v-btn>
                     </v-col>
 
-                    <v-col cols="6">
-                        <v-btn @click="addNew" style="border-color:#10a29b;color:#10a29b" class="addNew" outlined> إضافه مؤسسه جديد  </v-btn>
+                    <v-col cols="12" md="6">
+                        <v-btn @click="addNew" style="border-color:#10a29b;color:#10a29b" class="addNew" outlined> ط¥ط¶ط§ظپظ‡ ظ…ط¤ط³ط³ظ‡ ط¬ط¯ظٹط¯  </v-btn>
                     </v-col>
             </v-row>
             </div>
@@ -2000,32 +2000,32 @@
 
         <div class="main" v-if="$route.params.id == 3">
             <div class="addForm" v-if="!showSuccessSpecialist">
-                <h2>إضافه متخصص</h2>
+                <h2>ط¥ط¶ط§ظپظ‡ ظ…طھط®طµطµ</h2>
                 <div class="header">
-                    <h3> مستخدم جديد  </h3>
+                    <h3> ظ…ط³طھط®ط¯ظ… ط¬ط¯ظٹط¯  </h3>
                 </div>
                 <div class="data">
                  <div class="initData div">
                         <v-form>
                             <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>اسم المستخدم  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ط³ظ… ط§ظ„ظ…ط³طھط®ط¯ظ…  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span> المسمي الوظيفي   :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span> ط§ظ„ظ…ط³ظ…ظٹ ط§ظ„ظˆط¸ظٹظپظٹ   :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -2035,24 +2035,24 @@
                             </v-row>
 
                              <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>البريد الالكتروني    :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ظ„ط¨ط±ظٹط¯ ط§ظ„ط§ظ„ظƒطھط±ظˆظ†ظٹ    :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>  كلمه المرور  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>  ظƒظ„ظ…ظ‡ ط§ظ„ظ…ط±ظˆط±  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -2061,12 +2061,12 @@
                                 </v-col>
                             </v-row>
                              <v-row>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>الصلاحيات :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>ط§ظ„طµظ„ط§ط­ظٹط§طھ :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-select
                                                 multiple=""
                                                 :items="[' admin','user']"
@@ -2075,12 +2075,12 @@
                                         </v-col>
                                     </v-row> 
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span>  تأكيد كلمه المرور  :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span>  طھط£ظƒظٹط¯ ظƒظ„ظ…ظ‡ ط§ظ„ظ…ط±ظˆط±  :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -2090,12 +2090,12 @@
                             </v-row>
                              <v-row>
                                
-                                <v-col cols="6">
+                                <v-col cols="12" md="6">
                                     <v-row>
-                                        <v-col cols="3">
-                                             <span> الهاتف :</span>
+                                        <v-col cols="12" sm="4">
+                                             <span> ط§ظ„ظ‡ط§طھظپ :</span>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="12" md="6">
                                             <v-text-field
                                                 solo
                                             ></v-text-field>
@@ -2111,7 +2111,7 @@
                             depressed
                             color="primary"
                             >
-                            حفظ
+                            ط­ظپط¸
                             </v-btn>
                         </v-form>
                     </div>
@@ -2119,14 +2119,14 @@
             </div>
             <div class="div final" v-if="showSuccessSpecialist">
             <div class="contentDiv">
-                    <h3>تم اضافه المتخصص بنجاح</h3><br>
+                    <h3>طھظ… ط§ط¶ط§ظپظ‡ ط§ظ„ظ…طھط®طµطµ ط¨ظ†ط¬ط§ط­</h3><br>
                 <v-row>
-                    <v-col cols="6">
-                        <v-btn @click="showSpecialist" style="color:white" class="showAll" color="#10a29b">عرض قائمه المستخدمين</v-btn>
+                    <v-col cols="12" md="6">
+                        <v-btn @click="showSpecialist" style="color:white" class="showAll" color="#10a29b">ط¹ط±ط¶ ظ‚ط§ط¦ظ…ظ‡ ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†</v-btn>
                     </v-col>
 
-                    <v-col cols="6">
-                        <v-btn @click="addNew" style="border-color:#10a29b;color:#10a29b" class="addNew" outlined> إضافه مستخدم جديد  </v-btn>
+                    <v-col cols="12" md="6">
+                        <v-btn @click="addNew" style="border-color:#10a29b;color:#10a29b" class="addNew" outlined> ط¥ط¶ط§ظپظ‡ ظ…ط³طھط®ط¯ظ… ط¬ط¯ظٹط¯  </v-btn>
                     </v-col>
             </v-row>
             </div>
@@ -2227,49 +2227,75 @@ export default {
 <style scoped>
 
 .main{
-    margin-top:15px;
-    margin-left:10px;
-    margin-right: 70px;
-} 
-.main .addForm {
-    /* padding-top:50px ;
-    display: flex;
-    align-items: center;
-    justify-content: center; */
+    margin-top: 1rem;
+    padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+    .main {
+        padding: 0 2rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .main {
+        padding: 0 3rem;
+    }
 }
 
 .main .addForm .data {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 1rem;
     direction: rtl;
 }
+
+@media (min-width: 576px) {
+    .main .addForm .data {
+        font-size: 1.125rem;
+    }
+}
+
 .main .addForm .heading{
-     font-weight: bold;
-    font-size: 25px;
+    font-weight: bold;
+    font-size: 1.25rem;
     direction: rtl;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+    .main .addForm .heading {
+        font-size: 1.5rem;
+    }
 }
 
 .main .addForm .header{
-    height: 75px;
+    min-height: auto;
     background-color: #fbfbfb;
     direction: rtl;
-    padding:20px
+    padding: 1rem;
 }
 
 .main .addForm .body{
-     display: flex;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .main .addForm .numberCard{
-    height: 20px;
-    width: 20px;
-    padding: 5px;
+    height: 1.5rem;
+    width: 1.5rem;
+    padding: 0.25rem;
     background-color: gray;
-    display: inline;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 21%;
     color: aliceblue;
+    font-size: 0.875rem;
+    flex-shrink: 0;
 }
 
 .main .addForm .active{
@@ -2282,8 +2308,7 @@ export default {
 
 .main .addForm .text{
     display: inline;
-    margin-left: 67px;
-   
+    margin-inline-end: 1rem;
 }
 
 main .addForm .additionalText{
@@ -2291,37 +2316,30 @@ main .addForm .additionalText{
 }
 
 .main .addForm .div{
-    margin-top: 20px;
-    margin-bottom: 10px;
-
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
-
-
-
 
 .main .addForm .initData .right{
-float: right;
-border:1px solid black
+    float: right;
+    border:1px solid black
 }
-
 
 .main .addForm .initData .left{
-float: left;
-border:1px solid black
-
+    float: left;
+    border:1px solid black
 }
-
 
 .main .addForm h2{
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 0.5rem;
     direction: rtl;
 }
 
 .main .final {
-   display: flex;
-align-items: center;
-justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .main .final h3{
@@ -2330,7 +2348,6 @@ justify-content: center;
 }
 
 .main .final .contentdiv{
-
     text-align: center;
 }
 

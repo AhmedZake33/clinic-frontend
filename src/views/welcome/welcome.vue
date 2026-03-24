@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-center align-items-center h-100">
     <b-card
       class="text-center shadow-sm p-4"
-      style="max-width: 400px; width: 100%;"
+      style="max-width: 25rem; width: 100%;"
     >
       <b-avatar
         size="4rem"

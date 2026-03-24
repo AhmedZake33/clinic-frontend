@@ -1,8 +1,8 @@
-<template>
+﻿<template>
   <div>
     <!-- Stats Cards -->
     <b-row class="mb-2">
-      <b-col lg="3" sm="6">
+      <b-col cols="12" sm="6" lg="3">
         <statistic-card-vertical
           icon="UsersIcon"
           :statistic="stats.total_doctors"
@@ -10,7 +10,7 @@
           color="primary"
         />
       </b-col>
-      <b-col lg="3" sm="6">
+      <b-col cols="12" sm="6" lg="3">
         <statistic-card-vertical
           icon="CheckCircleIcon"
           :statistic="stats.active_subscriptions"
@@ -18,7 +18,7 @@
           color="success"
         />
       </b-col>
-      <b-col lg="3" sm="6">
+      <b-col cols="12" sm="6" lg="3">
         <statistic-card-vertical
           icon="XCircleIcon"
           :statistic="stats.expired_subscriptions"
@@ -26,7 +26,7 @@
           color="danger"
         />
       </b-col>
-      <b-col lg="3" sm="6">
+      <b-col cols="12" sm="6" lg="3">
         <statistic-card-vertical
           icon="DollarSignIcon"
           :statistic="`$${stats.total_revenue}`"
@@ -109,7 +109,7 @@
     >
       <b-form @submit.prevent="saveDoctor">
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('client.name')" label-for="name">
               <b-form-input
                 id="name"
@@ -118,7 +118,7 @@
               />
             </b-form-group>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('clinic.email')" label-for="email">
               <b-form-input
                 id="email"
@@ -131,7 +131,7 @@
         </b-row>
 
         <b-row v-if="!isEditing">
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('clinic.password')" label-for="password">
               <b-form-input
                 id="password"
@@ -141,7 +141,7 @@
               />
             </b-form-group>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('validation.confirmPassword')" label-for="password_confirmation">
               <b-form-input
                 id="password_confirmation"
@@ -154,7 +154,7 @@
         </b-row>
 
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('admin.subscriptionPlan')" label-for="subscription_plan">
               <b-form-input
                 id="subscription_plan"
@@ -163,7 +163,7 @@
               />
             </b-form-group>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('admin.subscriptionAmount')" label-for="subscription_amount">
               <b-form-input
                 id="subscription_amount"
@@ -177,7 +177,7 @@
         </b-row>
 
         <b-row>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('admin.subscriptionStart')" label-for="subscription_start">
               <b-form-input
                 id="subscription_start"
@@ -186,7 +186,7 @@
               />
             </b-form-group>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('admin.subscriptionEnd')" label-for="subscription_end">
               <b-form-input
                 id="subscription_end"
@@ -237,40 +237,40 @@
     >
       <div v-if="selectedDoctor">
         <b-row class="mb-2">
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <strong>{{ $t('client.name') }}:</strong> {{ selectedDoctor.name }}
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <strong>{{ $t('clinic.email') }}:</strong> {{ selectedDoctor.email }}
           </b-col>
         </b-row>
 
         <b-row class="mb-2">
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <strong>{{ $t('admin.subscriptionStatus') }}:</strong>
             <b-badge :variant="getStatusVariant(selectedDoctor.subscription_status)" class="ml-50">
               {{ $t(`admin.status.${selectedDoctor.subscription_status}`) }}
             </b-badge>
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <strong>{{ $t('admin.subscriptionPlan') }}:</strong> {{ selectedDoctor.subscription_plan || 'N/A' }}
           </b-col>
         </b-row>
 
         <b-row class="mb-2">
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <strong>{{ $t('admin.subscriptionStart') }}:</strong> {{ selectedDoctor.subscription_start || 'N/A' }}
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <strong>{{ $t('admin.subscriptionEnd') }}:</strong> {{ selectedDoctor.subscription_end || 'N/A' }}
           </b-col>
         </b-row>
 
         <b-row class="mb-2">
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <strong>{{ $t('admin.subscriptionAmount') }}:</strong> ${{ selectedDoctor.subscription_amount || 0 }}
           </b-col>
-          <b-col md="6">
+          <b-col cols="12" md="6">
             <strong>{{ $t('admin.isActive') }}:</strong>
             <b-badge :variant="selectedDoctor.is_active ? 'success' : 'danger'">
               {{ selectedDoctor.is_active ? $t('admin.active') : $t('admin.inactive') }}

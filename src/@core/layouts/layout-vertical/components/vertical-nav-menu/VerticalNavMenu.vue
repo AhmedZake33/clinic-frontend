@@ -44,7 +44,7 @@
           <li class="nav-item order-2 flex-grow-1 text-center">
             <b-link
               class="navbar-brand d-flex align-items-center justify-content-center mb-0"
-              to="welcome"
+              to="dashboard"
             >
               <h2 class="brand-text mb-0">
                 {{ $t('clinic.appName') || appName }}
@@ -56,7 +56,7 @@
           <li class="nav-item" :class="$store.getters['language/isRTL'] ? 'order-3' : 'order-1'">
             <b-link
               class="navbar-brand d-flex align-items-center mb-0"
-              to="welcome"
+              to="dashboard"
             >
               <span class="brand-logo">
                 <b-img
