@@ -2,10 +2,6 @@ import Vue from 'vue'
 import { ToastPlugin, ModalPlugin } from 'bootstrap-vue'
 import VueCompositionAPI from '@vue/composition-api'
 
-// Bootstrap & BootstrapVue CSS
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-
 // BootstrapVue
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
@@ -63,10 +59,6 @@ require('@core/scss/core.scss')
 // import assets styles
 require('@/assets/scss/style.scss')
 
-// RTL CSS for Arabic support - MUST come AFTER core.scss and style.scss
-// so manual RTL overrides take precedence over postcss-rtl auto-generated rules
-import '@/assets/scss/rtl.scss'
-
 Vue.config.productionTip = false
 
 new Vue({
@@ -74,9 +66,6 @@ new Vue({
   store,
   i18n,
   created() {
-    // Initialize language store with current i18n locale without reloading
-    this.$store.dispatch('language/initializeLocale', this.$i18n.locale)
-
     // On every page load / refresh, re-fetch permissions from the server
     // so admin changes are picked up immediately
     if (this.$store.getters['auth/isLoggedIn']) {

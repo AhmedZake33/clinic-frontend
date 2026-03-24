@@ -1,14 +1,10 @@
 import { $themeConfig } from '@themeConfig'
 
-// Initialize RTL from stored locale (language takes priority over themeConfig)
-const storedLocale = localStorage.getItem('locale') || 'en'
-const initialIsRTL = storedLocale === 'ar'
-
 export default {
   namespaced: true,
   state: {
     layout: {
-      isRTL: initialIsRTL,
+      isRTL: $themeConfig.layout.isRTL,
       skin: localStorage.getItem('vuexy-skin') || $themeConfig.layout.skin,
       routerTransition: $themeConfig.layout.routerTransition,
       type: $themeConfig.layout.type,
@@ -33,6 +29,7 @@ export default {
     },
     SET_RTL(state, val) {
       state.layout.isRTL = val
+      document.documentElement.setAttribute('dir', state.layout.isRTL ? 'rtl' : 'ltr')
     },
     UPDATE_SKIN(state, skin) {
       state.layout.skin = skin

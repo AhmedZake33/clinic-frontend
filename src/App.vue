@@ -2,8 +2,7 @@
   <div
     id="app"
     class="h-100"
-    :class="[skinClasses, { 'rtl': isRTL }]"
-    :dir="isRTL ? 'rtl' : 'ltr'"
+    :class="[skinClasses]"
   >
     <component :is="layout">
       <router-view :key="$route.fullPath" />
@@ -21,7 +20,7 @@ import ScrollToTop from '@core/components/scroll-to-top/ScrollToTop.vue'
 // This will be populated in `beforeCreate` hook
 import { $themeColors, $themeBreakpoints, $themeConfig } from '@themeConfig'
 import { provideToast } from 'vue-toastification/composition'
-import { watch, computed } from '@vue/composition-api'
+import { watch } from '@vue/composition-api'
 import useAppConfig from '@core/app-config/useAppConfig'
 
 import { useWindowSize, useCssVar } from '@vueuse/core'
@@ -52,34 +51,6 @@ export default {
     contentLayoutType() {
       return this.$store.state.appConfig.layout.type
     },
-    isRTL() {
-      return this.$store.getters['language/isRTL']
-    },
-    currentLocale() {
-      return this.$store.getters['language/currentLocale']
-    },
-  },
-  watch: {
-    currentLocale: {
-      handler(newVal, oldVal) {
-        if (newVal !== oldVal) {
-          // Update document direction and language
-          const html = document.documentElement
-          const isRTL = newVal === 'ar'
-          
-          html.setAttribute('dir', isRTL ? 'rtl' : 'ltr')
-          html.setAttribute('lang', newVal)
-          
-          // Update body classes
-          document.body.classList.remove('rtl', 'ltr')
-          document.body.classList.add(isRTL ? 'rtl' : 'ltr')
-          
-          // Sync Vuexy appConfig RTL state
-          this.$store.commit('appConfig/SET_RTL', isRTL)
-        }
-      },
-      immediate: true
-    }
   },
   beforeCreate() {
     // Set colors in theme
@@ -98,16 +69,9 @@ export default {
       $themeBreakpoints[breakpoints[i]] = Number(useCssVar(`--breakpoint-${breakpoints[i]}`, document.documentElement).value.slice(0, -2))
     }
 
-    // Set RTL based on stored locale
-    const storedLocale = localStorage.getItem('locale') || 'en'
-    const isRTL = storedLocale === 'ar'
+    // Set RTL
+    const { isRTL } = $themeConfig.layout
     document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr')
-    document.documentElement.setAttribute('lang', storedLocale)
-    document.body.classList.remove('rtl', 'ltr')
-    document.body.classList.add(isRTL ? 'rtl' : 'ltr')
-    
-    // Sync appConfig RTL state at startup
-    store.commit('appConfig/SET_RTL', isRTL)
   },
   setup() {
     const { skin, skinClasses } = useAppConfig()
@@ -117,8 +81,6 @@ export default {
     if (skin.value === 'dark') document.body.classList.add('dark-layout')
 
     // Provide toast for Composition API usage
-    // This for those apps/components which uses composition API
-    // Demos will still use Options API for ease
     provideToast({
       hideProgressBar: true,
       closeOnClick: false,
@@ -135,17 +97,6 @@ export default {
       store.commit('app/UPDATE_WINDOW_WIDTH', val)
     })
 
-    // Ensure sidebar is visible on login
-    const isLoggedIn = computed(() => store.getters['auth/isLoggedIn'])
-    watch(isLoggedIn, (newVal) => {
-      if (newVal) {
-        // Force sidebar to be visible on login
-        setTimeout(() => {
-          store.commit('app/UPDATE_WINDOW_WIDTH', window.innerWidth)
-        }, 100)
-      }
-    })
-
     return {
       skinClasses,
       enableScrollToTop,
@@ -153,3 +104,113 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.card {
+  box-shadow: none !important;
+}
+
+.header-navbar.navbar-shadow {
+  box-shadow: none !important;
+}
+
+.pointer {
+  cursor: pointer !important;
+}
+
+.modal .modal-header .close {
+  margin: 0;
+}
+
+.main-menu.menu-light .navigation > li ul li > a {
+  padding-left: 10px !important;
+}
+
+.vs--single {
+  .vs__selected-options {
+    width: 0;
+  }
+
+  .vs__selected {
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    overflow: hidden;
+  }
+}
+
+.gap {
+  gap: 0.5rem;
+}
+
+/*! rtl:begin:ignore */
+
+html[dir='rtl'] body .v-select {
+  direction: rtl !important;
+}
+
+[dir='rtl'] .vs__search,
+[dir='rtl'] .vs__search:focus {
+  text-align: right;
+}
+
+[dir='rtl']
+.vertical-layout.vertical-menu-modern
+.main-menu
+ul
+.navigation
+li.has-sub
+a:after {
+  transform: rotate(180deg) !important;
+}
+
+html[dir='rtl']
+.vue-form-wizard
+.wizard-card-footer
+.wizard-footer-right
+.wizard-btn::after {
+  transform: rotate(180deg);
+  display: inline-block;
+}
+
+[dir='ltr']
+.table.b-table
+> thead
+> tr
+> [aria-sort]:not(.b-table-sort-icon-left),
+[dir='ltr']
+.table.b-table
+> tfoot
+> tr
+> [aria-sort]:not(.b-table-sort-icon-left) {
+  background-position: left calc(2.5rem / 3) center !important;
+}
+
+[dir='rtl']
+.table.b-table
+> thead
+> tr
+> [aria-sort]:not(.b-table-sort-icon-left),
+[dir='rtl']
+.table.b-table
+> tfoot
+> tr
+> [aria-sort]:not(.b-table-sort-icon-left) {
+  background-position: right calc(2.5rem / 2) center !important;
+}
+
+[dir='ltr'] .right_left {
+  direction: rtl !important;
+}
+
+[dir='rtl'] .left_right {
+  direction: ltr !important;
+}
+
+[dir='rtl'] .left_right > * {
+  direction: ltr !important;
+}
+
+/*! rtl:end:ignore */
+</style>

@@ -20,10 +20,10 @@
         :collapseTogglerIcon="collapseTogglerIcon"
       >
         <ul class="nav navbar-nav flex-row w-100 align-items-center"
-            :class="{ 'sidebar-header-rtl': $store.getters['language/isRTL'] }"
+            :class="{ 'sidebar-header-rtl': $store.state.appConfig.layout.isRTL }"
         >
           <!-- Toggler Button -->
-          <li class="nav-item nav-toggle" :class="$store.getters['language/isRTL'] ? 'order-1' : 'order-3'">
+          <li class="nav-item nav-toggle" :class="$store.state.appConfig.layout.isRTL ? 'order-1' : 'order-3'">
             <b-link class="nav-link modern-nav-toggle">
               <feather-icon
                 icon="XIcon"
@@ -53,7 +53,7 @@
           </li>
 
           <!-- Logo -->
-          <li class="nav-item" :class="$store.getters['language/isRTL'] ? 'order-3' : 'order-1'">
+          <li class="nav-item" :class="$store.state.appConfig.layout.isRTL ? 'order-3' : 'order-1'">
             <b-link
               class="navbar-brand d-flex align-items-center mb-0"
               to="dashboard"

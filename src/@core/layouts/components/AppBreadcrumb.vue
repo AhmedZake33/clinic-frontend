@@ -65,7 +65,7 @@ export default {
   },
   computed: {
     isRTL() {
-      return this.$store.getters['language/isRTL']
+      return this.$store.state.appConfig.layout.isRTL
     },
     pageTitle() {
       const { pageTitle, pageI18n } = this.$route.meta

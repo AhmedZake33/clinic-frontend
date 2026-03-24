@@ -14,18 +14,18 @@ export const $themeConfig = {
     appLogoImage: require('@/assets/images/logo/logo.svg'), // Will update logo in navigation menu (Branding)
   },
   layout: {
-    isRTL: (typeof localStorage !== 'undefined' && localStorage.getItem('locale') === 'ar'),
+    isRTL: false,
     skin: 'light', // light, dark, bordered, semi-dark
-    routerTransition: 'zoom-fade', // zoom-fade, slide-fade, fade-bottom, fade, zoom-out, none
+    routerTransition: 'none', // zoom-fade, slide-fade, fade-bottom, fade, zoom-out, none
     type: 'vertical', // vertical, horizontal
     contentWidth: 'full', // full, boxed
     menu: {
       hidden: false,
-      isCollapsed: false,
+      isCollapsed: true,
     },
     navbar: {
       // ? For horizontal menu, navbar type will work for navMenu type
-      type: 'static', // static , sticky , floating, hidden
+      type: 'floating', // static , sticky , floating, hidden
       backgroundColor: '', // BS color options [primary, success, etc]
     },
     footer: {

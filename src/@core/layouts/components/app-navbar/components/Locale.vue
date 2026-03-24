@@ -1,34 +1,16 @@
 <template>
-  <b-nav-item-dropdown
-    id="dropdown-grouped"
-    variant="link"
-    class="dropdown-language"
-    :right="isRTL"
-    :menu-class="isRTL ? 'dropdown-menu-left' : 'dropdown-menu-right'"
-  >
-    <template #button-content>
-      <div class="d-flex align-items-center" :class="isRTL ? 'flex-row-reverse' : ''">
-        <span class="locale-flag">{{ currentLocaleObj.flag }}</span>
-        <span class="text-body" :class="isRTL ? 'mr-50' : 'ml-50'">{{ currentLocaleObj.name }}</span>
-      </div>
-    </template>
-    <b-dropdown-item
-      v-for="localeObj in locales"
-      :key="localeObj.locale"
-      :class="{ 'active': localeObj.locale === currentLocale }"
-      @click="changeLanguage(localeObj.locale)"
-    >
-      <div class="d-flex align-items-center" :class="isRTL ? 'flex-row-reverse' : ''">
-        <span class="locale-flag">{{ localeObj.flag }}</span>
-        <span :class="isRTL ? 'mr-50' : 'ml-50'">{{ localeObj.name }}</span>
-      </div>
-    </b-dropdown-item>
-  </b-nav-item-dropdown>
+  <div id="dropdown-grouped" variant="link" class="dropdown-language" right>
+    <span class="pointer mx-1"
+          v-for="localeObj in locales"
+          v-if="$i18n.locale != localeObj.locale"
+          :key="localeObj.locale" @click="changeLocal(localeObj)">
+      <span class="ml-50">{{ localeObj.name }}</span>
+    </span>
+  </div>
 </template>
 
 <script>
 import { BNavItemDropdown, BDropdownItem, BImg } from 'bootstrap-vue'
-import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
@@ -37,48 +19,45 @@ export default {
     BImg,
   },
   computed: {
-    ...mapGetters('language', ['currentLocale']),
-    isRTL() {
-      return this.$store.getters['language/isRTL']
-    },
-    currentLocaleObj() {
-      return this.locales.find(l => l.locale === this.currentLocale)
+    currentLocale() {
+      return this.locales.find(l => l.locale === this.$i18n.locale)
     },
   },
-  methods: {
-    ...mapActions('language', ['changeLocale']),
-    changeLanguage(locale) {
-      if (this.currentLocale !== locale) {
-        this.changeLocale(locale)
-      }
+  mounted() {
+    const lang = localStorage.getItem('locale') || 'en'
+    if (lang) {
+      this.$i18n.locale = lang
+      const local = this.locales.find(l => l.locale === this.$i18n.locale)
+      this.$store.commit('appConfig/SET_RTL', local.RTL)
     }
   },
   setup() {
     const locales = [
       {
         locale: 'en',
-        flag: '🇺🇸',
+        img: '',
         name: 'English',
+        RTL: false,
       },
       {
         locale: 'ar',
-        flag: '🇸🇦',
-        name: 'العربية',
+        img: '',
+        name: 'عربى',
+        RTL: true,
       },
     ]
-
     return {
       locales,
     }
   },
+  methods: {
+    changeLocal(localeObj) {
+      this.$store.commit('appConfig/SET_RTL', localeObj.RTL)
+      this.$i18n.locale = localeObj.locale
+      localStorage.setItem('locale', localeObj.locale)
+    },
+  },
 }
 </script>
 
-<style scoped>
-.locale-flag {
-  font-size: 1.2rem;
-  line-height: 1;
-}
-</style><style>
-
-</style>
+<style></style>

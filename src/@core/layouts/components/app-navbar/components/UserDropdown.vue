@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     isRTL() {
-      return this.$store.getters['language/isRTL']
+      return this.$store.state.appConfig.layout.isRTL
     },
   },
   methods: {

@@ -5,162 +5,36 @@ NOTE:
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
 
-// Tell postcss-rtl to NOT process this file — RTL handled manually in rtl.scss
 /*! rtl:begin:ignore */
 
 // ============================================
-// GLOBAL FIXES
+// ICON FIXES — Keep all icons in ordinary/normal view
 // ============================================
 
-// Prevent horizontal overflow globally
-html, body {
-  overflow-x: hidden;
-  width: 100%;
+// Reset feather chevron/arrow icons to normal orientation.
+// Vuexy's custom-rtl.scss (if imported) applies a blanket
+// rotate(-180deg) !important on all chevrons — override it.
+.feather-chevron-left,
+.feather-chevron-right,
+.feather-chevrons-left,
+.feather-chevrons-right,
+.feather-arrow-left,
+.feather-arrow-right {
+  transform: none !important;
 }
 
-// ============================================
-// CUSTOM NAVBAR STYLING (visual only)
-// ============================================
-.header-navbar {
-  background: linear-gradient(135deg, #7367f0 0%, #9e95f5 100%) !important;
-  border-bottom: 3px solid rgba(255, 255, 255, 0.2) !important;
-  box-shadow: 0 4px 20px rgba(115, 103, 240, 0.4) !important;
-  backdrop-filter: blur(10px);
-  border-radius: 0 0 0.75rem 0.75rem;
-
-  .navbar-container {
-    .nav-link {
-      color: rgba(255, 255, 255, 0.95) !important;
-      transition: all 0.3s ease;
-      border-radius: 0.5rem;
-
-      &:hover {
-        color: #fff !important;
-        background: rgba(255, 255, 255, 0.15);
-      }
-
-      i, svg {
-        color: rgba(255, 255, 255, 0.95) !important;
-      }
-    }
-
-    // User dropdown styling
-    .dropdown-user {
-      .dropdown-toggle::after {
-        color: white;
-      }
-
-      .b-avatar {
-        border: 2px solid rgba(255, 255, 255, 0.5);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      }
-    }
-
-    // Dropdown menu styling
-    .dropdown-menu {
-      background: #fff;
-      border: none;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      border-radius: 0.625rem;
-      overflow: hidden;
-      max-width: calc(100vw - 2rem);
-
-      .dropdown-item {
-        color: #495057;
-        transition: all 0.2s ease;
-
-        &:hover {
-          background: linear-gradient(135deg, #7367f0 0%, #9e95f5 100%);
-          color: white;
-
-          i, svg {
-            color: white !important;
-          }
-        }
-      }
-
-      .dropdown-divider {
-        border-color: rgba(115, 103, 240, 0.1);
-      }
-    }
-  }
+// Fix: Vuexy's _rtl.scss rotates ALL pagination page-link SVGs.
+// Reset them, then only flip the actual prev/next arrows.
+[dir='rtl'] .pagination .page-item .page-link svg {
+  transform: none !important;
 }
 
-// ============================================
-// SIDEBAR VISUAL STYLING ONLY
-// Layout margins/positioning handled by Vuexy core + postcss-rtl
-// ============================================
-.vertical-layout .main-menu {
-  border-inline-end: 1px solid rgba(115, 103, 240, 0.1);
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.05);
-}
-
-// ============================================
-// RESPONSIVE CONTENT & CARD UTILITIES
-// ============================================
-
-// Ensure all images are responsive by default
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-// Responsive tables: always scrollable on small screens
-.table-responsive {
-  -webkit-overflow-scrolling: touch;
-}
-
-// Match-height utility for equal-height cards in a row
-.match-height {
-  > [class*="col"] {
-    display: flex;
-    flex-flow: column;
-
-    > .card {
-      flex: 1 1 auto;
-    }
-  }
-}
-
-// ============================================
-// RESPONSIVE FORM UTILITIES
-// ============================================
-.auth-wrapper {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.auth-inner {
-  width: 100%;
-  max-width: 26rem;
-}
-
-// ============================================
-// RESPONSIVE BUTTON GROUPS
-// ============================================
-@media (max-width: 575.98px) {
-  .btn-group-responsive {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    .btn {
-      width: 100%;
-    }
-  }
-}
-
-// ============================================
-// VUETIFY COMPONENTS RESPONSIVE OVERRIDES
-// (for legacy Vuetify components used in some views)
-// ============================================
-.v-application {
-  .v-card {
-    max-width: 100% !important;
-  }
+[dir='rtl'] .pagination .page-item.prev-item .page-link svg,
+[dir='rtl'] .pagination .page-item.prev .page-link svg,
+[dir='rtl'] .pagination .page-item.previous .page-link svg,
+[dir='rtl'] .pagination .page-item.next-item .page-link svg,
+[dir='rtl'] .pagination .page-item.next .page-link svg {
+  transform: rotate(180deg) !important;
 }
 
 /*! rtl:end:ignore */

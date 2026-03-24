@@ -163,7 +163,7 @@ export default {
       return this.user && this.user.role === 'doctor'
     },
     isRTL() {
-      return this.$store.getters['language/isRTL']
+      return this.$store.state.appConfig.layout.isRTL
     },
     assistantOptions() {
       const placeholder = [{ value: null, text: this.$t('assistantCall.selectAssistant'), disabled: true }]

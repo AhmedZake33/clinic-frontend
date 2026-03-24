@@ -1,22 +1,19 @@
 <template>
-  <div class="navbar-container d-flex content align-items-center custom-navbar">
-
-    <!-- Left: Menu toggle (in LTR) / Right: Menu toggle (in RTL) -->
-    <ul class="nav navbar-nav d-xl-none" :class="$store.getters['language/isRTL'] ? 'ml-auto' : ''">
+  <div class="navbar-container d-flex content align-items-center">
+    <!-- Nav Menu Toggler -->
+    <ul class="nav navbar-nav d-xl-none">
       <li class="nav-item">
-        <b-link
-          class="nav-link"
-          @click="toggleVerticalMenuActive"
-        >
-          <feather-icon
-            icon="MenuIcon"
-            size="21"
-          />
+        <b-link class="nav-link" @click="toggleVerticalMenuActive">
+          <feather-icon icon="MenuIcon" size="21" />
         </b-link>
       </li>
     </ul>
 
-    <b-navbar-nav :class="$store.getters['language/isRTL'] ? 'nav align-items-center ml-0 mr-0' : 'nav align-items-center ml-auto'">
+    <!-- Left Col -->
+    <div class="bookmark-wrapper align-items-center flex-grow-1 d-none d-lg-flex">
+    </div>
+
+    <b-navbar-nav class="nav align-items-center ml-auto">
       <call-assistant-dropdown />
       <locale />
       <user-dropdown />
@@ -56,11 +53,6 @@ export default {
     toggleVerticalMenuActive: {
       type: Function,
       default: () => {},
-    },
-  },
-  computed: {
-    isRTL() {
-      return this.$store.getters['language/isRTL']
     },
   },
 }
