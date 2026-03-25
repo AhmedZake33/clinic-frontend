@@ -22,45 +22,55 @@
       </b-row>
     </b-card>
 
-    <b-card>
-      <div class="d-flex justify-content-between align-items-center mb-1">
-        <h4 class="mb-0">{{ $t('reservation.medicalHistory') }}</h4>
-        <b-badge variant="primary" pill>
-          {{ (client.reservations || []).length }}
-        </b-badge>
-      </div>
+    <b-tabs pills>
+      <!-- Records Tab -->
+      <b-tab :title="$t('reservation.medicalHistory')" active>
+        <b-card>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <h4 class="mb-0">{{ $t('reservation.medicalHistory') }}</h4>
+            <b-badge variant="primary" pill>
+              {{ (client.reservations || []).length }}
+            </b-badge>
+          </div>
 
-      <b-table
-        :items="client.reservations"
-        :fields="fields"
-        responsive
-        striped
-        hover
-        show-empty
-      >
-        <template #cell(appointment_date)="{ item }">
-          {{ formatDateTime(item.appointment_date) }}
-        </template>
+          <b-table
+            :items="client.reservations"
+            :fields="fields"
+            responsive
+            striped
+            hover
+            show-empty
+          >
+            <template #cell(appointment_date)="{ item }">
+              {{ formatDateTime(item.appointment_date) }}
+            </template>
 
-        <template #cell(doctor)="{ item }">
-          {{ getDoctorName(item) }}
-        </template>
+            <template #cell(doctor)="{ item }">
+              {{ getDoctorName(item) }}
+            </template>
 
-        <template #cell(status)="{ item }">
-          <b-badge :variant="getStatusVariant(item.status)">{{ item.status }}</b-badge>
-        </template>
+            <template #cell(status)="{ item }">
+              <b-badge :variant="getStatusVariant(item.status)">{{ item.status }}</b-badge>
+            </template>
 
-        <template #cell(actions)="{ item }">
-          <b-button size="sm" variant="info" @click="viewReservation(item)">
-            <feather-icon icon="EyeIcon" />
-          </b-button>
-        </template>
+            <template #cell(actions)="{ item }">
+              <b-button size="sm" variant="info" @click="viewReservation(item)">
+                <feather-icon icon="EyeIcon" />
+              </b-button>
+            </template>
 
-        <template #empty>
-          <div class="text-center py-2">{{ $t('messages.noData') }}</div>
-        </template>
-      </b-table>
-    </b-card>
+            <template #empty>
+              <div class="text-center py-2">{{ $t('messages.noData') }}</div>
+            </template>
+          </b-table>
+        </b-card>
+      </b-tab>
+
+      <!-- Timeline Tab -->
+      <b-tab :title="$t('timeline.title')">
+        <medical-timeline :client-id="clientId" />
+      </b-tab>
+    </b-tabs>
 
     <!-- Reservation Details Modal -->
     <b-modal v-model="reservationModal" :title="$t('reservation.reservationDetails')" ok-only size="lg">
@@ -91,11 +101,14 @@ import {
   BBadge,
   BTable,
   BModal,
+  BTabs,
+  BTab,
 } from 'bootstrap-vue'
 import clientsService from '@/services/clients'
+import MedicalTimeline from './components/MedicalTimeline.vue'
 
 export default {
-  components: { BCard, BRow, BCol, BButton, BBadge, BTable, BModal },
+  components: { BCard, BRow, BCol, BButton, BBadge, BTable, BModal, BTabs, BTab, MedicalTimeline },
   data() {
     return {
       client: {},
@@ -111,14 +124,18 @@ export default {
       selectedReservation: null,
     }
   },
+  computed: {
+    clientId() {
+      return this.$route.params.id
+    },
+  },
   mounted() {
     this.fetchClient()
   },
   methods: {
     async fetchClient() {
-      const id = this.$route.params.id
       try {
-        const { data } = await clientsService.getClient(id)
+        const { data } = await clientsService.getClient(this.clientId)
         this.client = data
       } catch (error) {
         this.$toast({

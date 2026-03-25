@@ -238,7 +238,9 @@
     "reports": "التقارير",
     "waitingQueue": "قائمة الانتظار",
     "assistants": "مساعديّ",
-    "rolesPermissions": "الأدوار والصلاحيات"
+    "rolesPermissions": "الأدوار والصلاحيات",
+    "notificationSettings": "إعدادات التنبيهات",
+    "notificationLogs": "سجل التنبيهات"
   },
   "roles": {
     "rolesManagement": "إدارة الأدوار",
@@ -471,5 +473,34 @@
     "soundDisabled": "إشعارات الصوت معطلة. قم بتفعيلها لسماع تنبيهات الاستدعاءات الواردة.",
     "enableSound": "تفعيل الصوت",
     "soundEnabled": "تم تفعيل إشعارات الصوت!"
+  },
+  "timeline": {
+    "title": "الجدول الزمني",
+    "totalVisits": "إجمالي الزيارات",
+    "completed": "مكتملة",
+    "lastVisit": "آخر زيارة",
+    "noVisits": "لا توجد زيارات مسجلة بعد"
+  },
+  "notifications": {
+    "settingsTitle": "إعدادات التنبيهات",
+    "logsTitle": "سجل التنبيهات",
+    "sms": "رسائل نصية",
+    "whatsapp": "واتساب",
+    "smsTemplate": "قالب الرسالة النصية",
+    "templatePlaceholders": "المتغيرات المتاحة: {client_name}، {doctor_name}، {time}",
+    "whatsappTemplate": "اسم قالب واتساب",
+    "whatsappTemplateDesc": "معرف محتوى Twilio لقوالب واتساب (اختياري — اتركه فارغاً للرسائل النصية العادية)",
+    "sendTest": "إرسال تجريبي",
+    "enterPhone": "أدخل رقم الهاتف للاختبار",
+    "testSent": "تم إرسال الرسالة التجريبية بنجاح",
+    "testFailed": "فشل في إرسال الرسالة التجريبية",
+    "reminderTiming": "توقيت التذكير",
+    "24hoursBefore": "قبل الموعد بـ 24 ساعة",
+    "channel": "القناة",
+    "errorMessage": "تفاصيل الخطأ",
+    "status_pending": "قيد الانتظار",
+    "status_sent": "تم الإرسال",
+    "status_delivered": "تم التوصيل",
+    "status_failed": "فشل"
   }
 }

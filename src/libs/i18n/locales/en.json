@@ -416,7 +416,9 @@
     "reports": "Reports",
     "waitingQueue": "Waiting Queue",
     "assistants": "My Assistants",
-    "rolesPermissions": "Roles & Permissions"
+    "rolesPermissions": "Roles & Permissions",
+    "notificationSettings": "Notification Settings",
+    "notificationLogs": "Notification Logs"
   },
   "roles": {
     "rolesManagement": "Roles Management",
@@ -658,5 +660,34 @@
     "soundDisabled": "Sound notifications are disabled. Enable them to hear incoming call alerts.",
     "enableSound": "Enable Sound",
     "soundEnabled": "Sound notifications enabled!"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "totalVisits": "Total Visits",
+    "completed": "Completed",
+    "lastVisit": "Last Visit",
+    "noVisits": "No visits recorded yet"
+  },
+  "notifications": {
+    "settingsTitle": "Notification Settings",
+    "logsTitle": "Notification Logs",
+    "sms": "SMS",
+    "whatsapp": "WhatsApp",
+    "smsTemplate": "SMS Template",
+    "templatePlaceholders": "Available placeholders: {client_name}, {doctor_name}, {time}",
+    "whatsappTemplate": "WhatsApp Template Name",
+    "whatsappTemplateDesc": "Twilio Content SID for WhatsApp templates (optional — leave blank for plain text)",
+    "sendTest": "Send Test",
+    "enterPhone": "Enter phone number for test",
+    "testSent": "Test message sent successfully",
+    "testFailed": "Failed to send test message",
+    "reminderTiming": "Reminder Timing",
+    "24hoursBefore": "24 hours before appointment",
+    "channel": "Channel",
+    "errorMessage": "Error Details",
+    "status_pending": "Pending",
+    "status_sent": "Sent",
+    "status_delivered": "Delivered",
+    "status_failed": "Failed"
   }
 }

@@ -19,5 +19,9 @@ export default {
   
   deleteClient(id) {
     return apiClient.delete(`/clients/${id}`)
+  },
+
+  getClientTimeline(id, params = {}) {
+    return apiClient.get(`/clients/${id}/timeline`, { params })
   }
 }

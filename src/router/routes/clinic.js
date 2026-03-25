@@ -266,6 +266,47 @@ export default [
     },
   },
   {
+    path: '/doctor/notification-settings',
+    name: 'doctor-notification-settings',
+    component: () => import('@/views/doctor/NotificationSettings.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-schedule'],
+      pageTitle: 'menu.notificationSettings',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.notificationSettings',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/doctor/notification-logs',
+    name: 'doctor-notification-logs',
+    component: () => import('@/views/doctor/NotificationLogs.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-schedule'],
+      pageTitle: 'menu.notificationLogs',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.notificationSettings',
+          to: { name: 'doctor-notification-settings' },
+          i18n: true,
+        },
+        {
+          text: 'menu.notificationLogs',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/doctor/waiting-queue',
     name: 'doctor-waiting-queue',
     component: () => import('@/views/shared/WaitingQueue.vue'),

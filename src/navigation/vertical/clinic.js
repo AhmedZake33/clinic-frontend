@@ -102,6 +102,20 @@ const navigationItems = [
     permission: 'doctor.view-reports',
   },
   {
+    title: 'menu.notificationSettings',
+    i18n: true,
+    route: 'doctor-notification-settings',
+    icon: 'BellIcon',
+    permission: 'doctor.view-schedule',
+  },
+  {
+    title: 'menu.notificationLogs',
+    i18n: true,
+    route: 'doctor-notification-logs',
+    icon: 'MessageSquareIcon',
+    permission: 'doctor.view-schedule',
+  },
+  {
     header: 'menu.adminMenu',
     i18n: true,
     permission: 'admin.view-dashboard',
