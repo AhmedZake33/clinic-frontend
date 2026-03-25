@@ -109,7 +109,8 @@ export default {
           this.$router.push('/dashboard')
         }
       } catch (error) {
-        this.error = error.response?.data?.message || 'Login failed. Please try again.'
+        const data = error.response?.data
+        this.error = data?.errors?.email?.[0] || data?.message || 'Login failed. Please try again.'
       } finally {
         this.loading = false
       }

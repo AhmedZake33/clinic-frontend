@@ -12,9 +12,7 @@
     >
       <b-row class="breadcrumbs-top">
         <b-col cols="12">
-          <h2 class="content-header-title mb-0"
-            :class="isRTL ? 'float-right pl-1' : 'float-left pr-1'"
-          >
+          <h2 class="content-header-title float-left pr-1 mb-0">
             {{ pageTitle }}
           </h2>
           <div class="breadcrumb-wrapper">
@@ -64,9 +62,6 @@ export default {
     BButton,
   },
   computed: {
-    isRTL() {
-      return this.$store.state.appConfig.layout.isRTL
-    },
     pageTitle() {
       const { pageTitle, pageI18n } = this.$route.meta
       return pageI18n ? this.$t(pageTitle) : pageTitle
