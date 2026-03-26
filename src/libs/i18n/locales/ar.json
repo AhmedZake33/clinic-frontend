@@ -59,6 +59,7 @@
     "cancelReservation": "إلغاء الحجز",
     "reservationsList": "قائمة الحجوزات",
     "printPrescription": "طباعة الوصفة الطبية",
+    "printLastPrescription": "طباعة آخر وصفة طبية",
     "appointmentDate": "تاريخ ووقت الموعد",
     "notes": "الملاحظات",
     "searchByClientOrNotes": "البحث عن العميل أو الملاحظات",

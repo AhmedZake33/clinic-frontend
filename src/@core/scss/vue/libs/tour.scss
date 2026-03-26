@@ -50,14 +50,4 @@
 }
 
 // ----------- RTL -----------//
-html[dir='rtl'] {
-  .v-tour {
-    .v-step {
-      .btn {
-        svg {
-          transform: rotate(180deg);
-        }
-      }
-    }
-  }
-}
+// Tour button SVGs should NOT be rotated (non-directional icons)

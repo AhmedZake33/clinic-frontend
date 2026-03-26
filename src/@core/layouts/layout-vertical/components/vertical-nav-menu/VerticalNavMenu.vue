@@ -19,11 +19,9 @@
         :toggleCollapsed="toggleCollapsed"
         :collapseTogglerIcon="collapseTogglerIcon"
       >
-        <ul class="nav navbar-nav flex-row w-100 align-items-center"
-            :class="{ 'sidebar-header-rtl': $store.state.appConfig.layout.isRTL }"
-        >
+        <ul class="nav navbar-nav flex-row w-100 align-items-center">
           <!-- Toggler Button -->
-          <li class="nav-item nav-toggle" :class="$store.state.appConfig.layout.isRTL ? 'order-1' : 'order-3'">
+          <li class="nav-item nav-toggle order-3">
             <b-link class="nav-link modern-nav-toggle">
               <feather-icon
                 icon="XIcon"
@@ -53,7 +51,7 @@
           </li>
 
           <!-- Logo -->
-          <li class="nav-item" :class="$store.state.appConfig.layout.isRTL ? 'order-3' : 'order-1'">
+          <li class="nav-item order-1">
             <b-link
               class="navbar-brand d-flex align-items-center mb-0"
               to="dashboard"
@@ -180,7 +178,9 @@ export default {
 <style lang="scss">
 @import "~@core/scss/base/core/menu/menu-types/vertical-menu.scss";
 
-.sidebar-header-rtl {
-  direction: ltr; // force left-to-right ordering so toggle is on the left
+// When collapsed, prevent the hidden brand-text li (flex-grow-1)
+// from consuming all space and pushing the logo out of view in RTL.
+.main-menu:not(.expanded) .navbar-header .nav-item.flex-grow-1 {
+  flex-grow: 0 !important;
 }
 </style>

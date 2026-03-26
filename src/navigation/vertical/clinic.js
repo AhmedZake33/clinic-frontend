@@ -60,6 +60,13 @@ const navigationItems = [
     permission: 'doctor.view-dashboard',
   },
   {
+    title: 'menu.clients',
+    i18n: true,
+    route: 'doctor-clients',
+    icon: 'UsersIcon',
+    permission: 'doctor.view-clients',
+  },
+  {
     title: 'menu.myReservations',
     i18n: true,
     route: 'doctor-reservations',

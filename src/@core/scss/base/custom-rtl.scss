@@ -311,10 +311,7 @@ body .ps__rail-y {
   transform: scaleX(-1);
 }
 
-.feather-chevron-left,
-.feather-chevron-right {
-  transform: rotate(-180deg) !important;
-}
+// Chevron flip handled in style.scss overrides
 
 // Kanban
 .kanban-application {

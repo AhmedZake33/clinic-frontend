@@ -158,6 +158,47 @@ export default [
     },
   },
   {
+    path: '/doctor/clients',
+    name: 'doctor-clients',
+    component: () => import('@/views/assistant/Clients.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-clients'],
+      pageTitle: 'menu.clients',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.clients',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/doctor/clients/:id',
+    name: 'doctor-client-profile',
+    component: () => import('@/views/assistant/ClientProfile.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-clients'],
+      pageTitle: 'client.clientDetails',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.clients',
+          to: { name: 'doctor-clients' },
+          i18n: true,
+        },
+        {
+          text: 'client.clientDetails',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/doctor/dashboard',
     name: 'doctor-dashboard',
     component: () => import('@/views/doctor/Dashboard.vue'),

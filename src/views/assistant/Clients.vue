@@ -341,7 +341,8 @@ export default {
       }
     },
     goToProfile(id) {
-      this.$router.push({ name: 'assistant-client-profile', params: { id } })
+      const routeName = this.$route.name === 'doctor-clients' ? 'doctor-client-profile' : 'assistant-client-profile'
+      this.$router.push({ name: routeName, params: { id } })
     },
     applyFilters() {
       this.pagination.current_page = 1

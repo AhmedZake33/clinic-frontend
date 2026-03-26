@@ -14,7 +14,16 @@
           <p class="mb-0"><strong>{{ $t('client.medicalHistory') }}:</strong> {{ client.medical_history || $t('reservation.na') }}</p>
         </b-col>
         <b-col cols="12" md="4" class="text-right">
-          <b-button variant="outline-secondary" @click="$router.push({ name: 'assistant-clients' })">
+          <b-button
+            v-if="lastPrescriptionReservation"
+            variant="primary"
+            class="mb-1 d-block ml-auto"
+            @click="printPrescription(lastPrescriptionReservation)"
+          >
+            <feather-icon icon="PrinterIcon" class="mr-50" />
+            {{ $t('reservation.printLastPrescription') }}
+          </b-button>
+          <b-button variant="outline-secondary" @click="$router.push({ name: backRouteName })">
             <feather-icon icon="ChevronLeftIcon" class="mr-50 icon-directional" />
             {{ $t('navigation.patients') }}
           </b-button>
@@ -51,8 +60,16 @@
         </template>
 
         <template #cell(actions)="{ item }">
-          <b-button size="sm" variant="info" @click="viewReservation(item)">
+          <b-button size="sm" variant="info" class="mr-50" @click="viewReservation(item)">
             <feather-icon icon="EyeIcon" />
+          </b-button>
+          <b-button
+            v-if="item.status === 'completed' && item.treatment"
+            size="sm"
+            variant="primary"
+            @click="printPrescription(item)"
+          >
+            <feather-icon icon="PrinterIcon" />
           </b-button>
         </template>
 
@@ -63,7 +80,7 @@
     </b-card>
 
     <!-- Reservation Details Modal -->
-    <b-modal v-model="reservationModal" :title="$t('reservation.reservationDetails')" ok-only size="lg">
+    <b-modal v-model="reservationModal" :title="$t('reservation.reservationDetails')" size="lg">
       <div v-if="selectedReservation">
         <b-row>
           <b-col cols="12" md="6">
@@ -78,6 +95,20 @@
           </b-col>
         </b-row>
       </div>
+      <template #modal-footer="{ ok }">
+        <b-button
+          v-if="selectedReservation && selectedReservation.status === 'completed' && selectedReservation.treatment"
+          variant="primary"
+          class="mr-1"
+          @click="printPrescription(selectedReservation)"
+        >
+          <feather-icon icon="PrinterIcon" class="mr-50" />
+          {{ $t('reservation.printPrescription') }}
+        </b-button>
+        <b-button variant="secondary" @click="ok()">
+          {{ $t('actions.close') }}
+        </b-button>
+      </template>
     </b-modal>
   </div>
 </template>
@@ -93,9 +124,19 @@ import {
   BModal,
 } from 'bootstrap-vue'
 import clientsService from '@/services/clients'
+import reservationsService from '@/services/reservations'
 
 export default {
   components: { BCard, BRow, BCol, BButton, BBadge, BTable, BModal },
+  computed: {
+    lastPrescriptionReservation() {
+      const reservations = this.client.reservations || []
+      return reservations.find(r => r.status === 'completed' && r.treatment) || null
+    },
+    backRouteName() {
+      return this.$route.name === 'doctor-client-profile' ? 'doctor-clients' : 'assistant-clients'
+    },
+  },
   data() {
     return {
       client: {},
@@ -157,6 +198,37 @@ export default {
     viewReservation(item) {
       this.selectedReservation = item
       this.reservationModal = true
+    },
+    async printPrescription(reservation) {
+      try {
+        const response = await reservationsService.generatePrescription(reservation.id)
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `prescription_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        this.$toast({
+          component: 'ToastificationContent',
+          props: {
+            title: this.$t('messages.success'),
+            text: this.$t('messages.prescriptionDownloaded'),
+            variant: 'success',
+          },
+        })
+      } catch (error) {
+        this.$toast({
+          component: 'ToastificationContent',
+          props: {
+            title: this.$t('messages.error'),
+            text: error.response?.data?.message || this.$t('messages.generatePrescriptionError'),
+            variant: 'danger',
+          },
+        })
+      }
     },
   },
 }

@@ -59,6 +59,7 @@
     "cancelReservation": "Cancel Appointment",
     "reservationsList": "Appointments List",
     "printPrescription": "Print Prescription",
+    "printLastPrescription": "Print Last Prescription",
     "appointmentDate": "Appointment Date & Time",
     "notes": "Notes",
     "searchByClientOrNotes": "Search by client or notes",

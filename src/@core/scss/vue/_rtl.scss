@@ -70,9 +70,12 @@
     }
   }
 
-  // pagination
+  // pagination — only flip prev/next arrows, not all page-link SVGs
+  .pagination .page-item.prev-item .page-link,
+  .pagination .page-item.prev .page-link,
+  .pagination .page-item.previous .page-link,
   .pagination .page-item.next-item .page-link,
-  .pagination .page-item .page-link {
+  .pagination .page-item.next .page-link {
     svg {
       transform: rotate(180deg);
     }

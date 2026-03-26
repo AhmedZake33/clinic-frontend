@@ -125,6 +125,17 @@
           >
             <feather-icon icon="XCircleIcon" />
           </b-button>
+          <b-button
+            v-if="data.item.status === 'completed' && data.item.treatment"
+            v-b-tooltip.hover
+            :title="$t('reservation.printPrescription')"
+            variant="primary"
+            size="sm"
+            class="ml-1"
+            @click="printPrescription(data.item)"
+          >
+            <feather-icon icon="PrinterIcon" />
+          </b-button>
         </template>
 
         <template #table-busy>
@@ -981,6 +992,37 @@ export default {
           props: {
             title: this.$t('messages.error'),
             text: this.$t('messages.cancelReservationError'),
+            variant: 'danger',
+          },
+        })
+      }
+    },
+    async printPrescription(reservation) {
+      try {
+        const response = await reservationsService.generatePrescription(reservation.id)
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `prescription_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.success'),
+            text: this.$t('messages.prescriptionDownloaded'),
+            variant: 'success',
+          },
+        })
+      } catch (error) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: error.response?.data?.message || this.$t('messages.generatePrescriptionError'),
             variant: 'danger',
           },
         })

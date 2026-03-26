@@ -596,6 +596,7 @@ import {
 import reservationsService from '@/services/reservations'
 import openfdaService from '@/services/openfda'
 import clientsService from '@/services/clients'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   directives: {
@@ -692,9 +693,6 @@ export default {
     }
   },
   mounted() {
-    const today = this.getTodayDate()
-    this.filters.date_from = today
-    this.filters.date_to = today
     this.fetchReservations()
     this.fetchEgyptDrugFilters()
   },
@@ -755,7 +753,7 @@ export default {
         }
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: 'Error',
             text: 'Failed to load reservations',
@@ -771,8 +769,7 @@ export default {
       this.fetchReservations()
     },
     resetFilters() {
-      const today = this.getTodayDate()
-      this.filters = { search: '', status: '', date_from: today, date_to: today }
+      this.filters = { search: '', status: '', date_from: '', date_to: '' }
       this.pagination.current_page = 1
       this.fetchReservations()
     },
@@ -819,7 +816,7 @@ export default {
           this.completeForm
         )
         // this.$toast({
-        //   component: 'ToastificationContent',
+        //   component: ToastificationContent,
         //   props: {
         //     title: this.$t('messages.success'),
         //     text: this.$t('messages.reservationCompleted'),
@@ -830,7 +827,7 @@ export default {
         this.fetchReservations()
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: error.response?.data?.message || this.$t('messages.completeReservationError'),
@@ -857,7 +854,7 @@ export default {
         window.URL.revokeObjectURL(url)
         
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.success'),
             text: this.$t('messages.prescriptionDownloaded'),
@@ -866,7 +863,7 @@ export default {
         })
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: error.response?.data?.message || this.$t('messages.generatePrescriptionError'),
@@ -899,7 +896,7 @@ export default {
         this.egyptResults = []
         this.egyptResultsTotal = 0
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: this.$t('openfda.searchError'),
@@ -915,8 +912,7 @@ export default {
       if (!drug) return
       const name = drug.name
       const form = drug.form ? ` - ${drug.form}` : ''
-      const price = drug.price ? ` (${drug.price} EGP)` : ''
-      const entry = `${name}${form}${price}`
+      const entry = `${name}${form}`
 
       if (this.completeForm.treatment) {
         this.completeForm.treatment += '\n' + entry
@@ -925,7 +921,7 @@ export default {
       }
 
       this.$toast({
-        component: 'ToastificationContent',
+        component: ToastificationContent,
         props: {
           title: this.$t('messages.success'),
           text: this.$t('openfda.drugAdded', { name }),
@@ -945,7 +941,7 @@ export default {
         this.drugResults = []
         this.drugResultsTotal = 0
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: this.$t('openfda.searchError'),
@@ -975,7 +971,7 @@ export default {
       }
 
       this.$toast({
-        component: 'ToastificationContent',
+        component: ToastificationContent,
         props: {
           title: this.$t('messages.success'),
           text: this.$t('openfda.drugAdded', { name }),
@@ -1054,7 +1050,7 @@ export default {
         }
         this.editClientModalShow = false
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.success'),
             text: this.$t('messages.updateSuccess'),
@@ -1063,7 +1059,7 @@ export default {
         })
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: error.response?.data?.message || this.$t('messages.saveError'),
