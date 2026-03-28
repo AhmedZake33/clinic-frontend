@@ -18,7 +18,17 @@ export default {
   },
   
   completeReservation(id, data) {
-    return apiClient.post(`/reservations/${id}/complete`, data)
+    const config = data instanceof FormData
+      ? { headers: { 'Content-Type': 'multipart/form-data' } }
+      : undefined
+
+    return apiClient.post(`/reservations/${id}/complete`, data, config)
+  },
+
+  downloadArchiveFile(id) {
+    return apiClient.get(`/archive/download/${id}`, {
+      responseType: 'blob',
+    })
   },
 
   confirmReservation(id) {

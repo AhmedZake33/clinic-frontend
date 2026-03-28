@@ -137,6 +137,14 @@
           />
         </b-form-group>
 
+        <b-form-group :label="$t('client.whatsappNumber')" label-for="whatsapp-number">
+          <b-form-input
+            id="whatsapp-number"
+            v-model="form.whatsapp_number"
+            :placeholder="$t('client.whatsappPlaceholder')"
+          />
+        </b-form-group>
+
         <b-form-group label="Date of Birth" label-for="dob">
           <b-form-input
             id="dob"
@@ -183,6 +191,14 @@
           />
         </b-form-group>
 
+        <b-form-group :label="$t('client.job')" label-for="job">
+          <b-form-input
+            id="job"
+            v-model="form.job"
+            :placeholder="$t('client.jobPlaceholder')"
+          />
+        </b-form-group>
+
         <b-form-group label="Medical History" label-for="history">
           <b-form-textarea
             id="history"
@@ -190,6 +206,16 @@
             rows="3"
             placeholder="Enter medical history"
           />
+        </b-form-group>
+
+        <b-form-group :label="$t('client.chronicIllnesses')" label-for="chronic-illnesses">
+          <b-form-checkbox-group
+            id="chronic-illnesses"
+            v-model="form.chronic_illnesses"
+            :options="chronicIllnessOptions"
+            stacked
+          />
+          <small class="text-muted d-block mt-50">{{ $t('client.selectChronicIllnesses') }}</small>
         </b-form-group>
 
         <div class="text-right">
@@ -217,9 +243,12 @@
             <p><strong>Name:</strong> {{ selectedClient.name }}</p>
             <p><strong>Email:</strong> {{ selectedClient.email }}</p>
             <p><strong>Phone:</strong> {{ selectedClient.phone }}</p>
+            <p><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedClient.whatsapp_number || 'N/A' }}</p>
           </b-col>
           <b-col cols="12" md="6">
             <p><strong>Date of Birth:</strong> {{ selectedClient.date_of_birth || 'N/A' }}</p>
+            <p><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(selectedClient.date_of_birth) }}</p>
+            <p><strong>{{ $t('client.job') }}:</strong> {{ selectedClient.job || 'N/A' }}</p>
             <p><strong>{{ $t('client.height') }}:</strong> {{ selectedClient.height ? selectedClient.height + ' cm' : 'N/A' }}</p>
             <p><strong>{{ $t('client.weight') }}:</strong> {{ selectedClient.weight ? selectedClient.weight + ' kg' : 'N/A' }}</p>
             <p><strong>Created:</strong> {{ formatDate(selectedClient.created_at) }}</p>
@@ -228,6 +257,8 @@
         <hr>
         <p><strong>Address:</strong></p>
         <p>{{ selectedClient.address || 'N/A' }}</p>
+        <p><strong>{{ $t('client.chronicIllnesses') }}:</strong></p>
+        <p>{{ formatClientChronicIllnesses(selectedClient.chronic_illnesses) }}</p>
         <p><strong>Medical History:</strong></p>
         <p>{{ selectedClient.medical_history || 'N/A' }}</p>
       </div>
@@ -246,11 +277,14 @@ import {
   BModal,
   BForm,
   BFormGroup,
+  BFormCheckboxGroup,
   BFormInput,
   BFormTextarea,
   BSpinner,
 } from 'bootstrap-vue'
 import clientsService from '@/services/clients'
+import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
+import { formatAgeFromBirthDate } from '@/utils/clientAge'
 
 export default {
   components: {
@@ -263,9 +297,15 @@ export default {
     BModal,
     BForm,
     BFormGroup,
+    BFormCheckboxGroup,
     BFormInput,
     BFormTextarea,
     BSpinner,
+  },
+  computed: {
+    chronicIllnessOptions() {
+      return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
+    },
   },
   data() {
     return {
@@ -287,20 +327,25 @@ export default {
         created_from: '',
         created_to: '',
       },
+      chronicIllnessOptionValues: [],
       form: {
         name: '',
         email: '',
         phone: '',
+        whatsapp_number: '',
         date_of_birth: '',
         height: '',
         weight: '',
         address: '',
+        job: '',
         medical_history: '',
+        chronic_illnesses: [],
       },
       fields: [
         { key: 'name', label: 'Name', sortable: true },
         { key: 'email', label: 'Email', sortable: true },
         { key: 'phone', label: 'Phone' },
+        { key: 'age', label: this.$t('client.age'), formatter: (value, key, item) => this.calculateAge(item.date_of_birth) },
         { key: 'created_at', label: 'Created', formatter: this.formatDate },
         { key: 'actions', label: 'Actions' },
       ],
@@ -308,8 +353,18 @@ export default {
   },
   mounted() {
     this.fetchClients()
+    this.fetchClientOptions()
   },
   methods: {
+    async fetchClientOptions() {
+      try {
+        const response = await clientsService.getClientOptions()
+        this.chronicIllnessOptionValues = response.data.chronic_illnesses || []
+      } catch (error) {
+        this.chronicIllnessOptionValues = []
+      }
+    },
+
     async fetchClients() {
       this.loading = true
       try {
@@ -363,18 +418,24 @@ export default {
         name: '',
         email: '',
         phone: '',
+        whatsapp_number: '',
         date_of_birth: '',
         height: '',
         weight: '',
         address: '',
+        job: '',
         medical_history: '',
+        chronic_illnesses: [],
       }
       this.modalShow = true
     },
     editClient(client) {
       this.editMode = true
       this.selectedClient = client
-      this.form = { ...client }
+      this.form = {
+        ...client,
+        chronic_illnesses: [...(client.chronic_illnesses || [])],
+      }
       this.modalShow = true
     },
     viewClient(client) {
@@ -448,6 +509,12 @@ export default {
     formatDate(value) {
       if (!value) return 'N/A'
       return new Date(value).toLocaleDateString()
+    },
+    calculateAge(value) {
+      return formatAgeFromBirthDate(value, key => this.$t(key), 'N/A')
+    },
+    formatClientChronicIllnesses(values) {
+      return formatChronicIllnesses(values, key => this.$t(key), 'N/A')
     },
     paginationCountText(paginationState) {
       if (!paginationState?.total) return '0 / 0'

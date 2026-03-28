@@ -323,12 +323,16 @@
               <b-col cols="12" md="6">
                 <p class="mb-50"><strong>{{ $t('client.name') }}:</strong> {{ selectedReservation.client.name }}</p>
                 <p class="mb-50"><strong>{{ $t('client.phone') }}:</strong> {{ selectedReservation.client.phone }}</p>
+                <p class="mb-50"><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedReservation.client.whatsapp_number || $t('reservation.na') }}</p>
                 <p class="mb-50"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth || $t('reservation.na') }}</p>
+                <p class="mb-50"><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(selectedReservation.client.date_of_birth) }}</p>
               </b-col>
               <b-col cols="12" md="6">
                 <p class="mb-50"><strong>{{ $t('client.height') }}:</strong> {{ selectedReservation.client.height ? selectedReservation.client.height + ' cm' : $t('reservation.na') }}</p>
                 <p class="mb-50"><strong>{{ $t('client.weight') }}:</strong> {{ selectedReservation.client.weight ? selectedReservation.client.weight + ' kg' : $t('reservation.na') }}</p>
                 <p class="mb-50"><strong>{{ $t('client.address') }}:</strong> {{ selectedReservation.client.address || $t('reservation.na') }}</p>
+                <p class="mb-50"><strong>{{ $t('client.job') }}:</strong> {{ selectedReservation.client.job || $t('reservation.na') }}</p>
+                <p class="mb-50"><strong>{{ $t('client.chronicIllnesses') }}:</strong> {{ formatClientChronicIllnesses(selectedReservation.client.chronic_illnesses) }}</p>
               </b-col>
             </b-row>
             <div v-if="selectedReservation.client.medical_history" class="mt-50">
@@ -371,6 +375,36 @@
         <div v-if="selectedReservation.treatment">
           <p><strong>{{ $t('reservation.treatment') }}:</strong></p>
           <p>{{ selectedReservation.treatment }}</p>
+        </div>
+        <div v-if="selectedReservation.current_procedures">
+          <p><strong>{{ $t('reservation.currentProcedures') }}:</strong></p>
+          <p>{{ selectedReservation.current_procedures }}</p>
+        </div>
+        <div v-if="selectedReservation.procedure_notes">
+          <p><strong>{{ $t('reservation.procedureNotes') }}:</strong></p>
+          <p>{{ selectedReservation.procedure_notes }}</p>
+        </div>
+        <div v-if="selectedReservation.next_procedures">
+          <p><strong>{{ $t('reservation.nextProcedures') }}:</strong></p>
+          <p>{{ selectedReservation.next_procedures }}</p>
+        </div>
+        <div v-if="selectedReservation.completion_files && selectedReservation.completion_files.length">
+          <hr>
+          <p><strong>{{ $t('reservation.completionFiles') }}:</strong></p>
+          <div class="d-flex flex-column">
+            <b-button
+              v-for="file in selectedReservation.completion_files"
+              :key="file.id"
+              variant="outline-primary"
+              size="sm"
+              class="mb-50 text-left"
+              @click="downloadCompletionFile(file)"
+            >
+              <feather-icon icon="PaperclipIcon" size="14" class="mr-50" />
+              {{ file.file_name }}
+              <span v-if="file.size_text" class="text-muted ml-50">({{ file.size_text }})</span>
+            </b-button>
+          </div>
         </div>
 
         <div v-if="selectedReservation.requires_xray || selectedReservation.requires_lab">
@@ -485,6 +519,8 @@ import reservationsService from '@/services/reservations'
 import clientsService from '@/services/clients'
 import scheduleService from '@/services/schedule'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
+import { formatAgeFromBirthDate } from '@/utils/clientAge'
 
 export default {
   components: {
@@ -797,9 +833,37 @@ export default {
       }
       this.editModalShow = true
     },
-    viewReservation(reservation) {
-      this.selectedReservation = reservation
+    async viewReservation(reservation) {
+      try {
+        const response = await reservationsService.getReservation(reservation.id)
+        this.selectedReservation = response.data
+      } catch (error) {
+        this.selectedReservation = reservation
+      }
       this.viewModalShow = true
+    },
+    async downloadCompletionFile(file) {
+      try {
+        const response = await reservationsService.downloadArchiveFile(file.id)
+        const blob = new Blob([response.data])
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = file.file_name || `file_${file.id}`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+      } catch (error) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: this.$t('messages.downloadFileError'),
+            variant: 'danger',
+          },
+        })
+      }
     },
     async updateSelectedReservation() {
       this.updating = true
@@ -1036,6 +1100,12 @@ export default {
         cancelled: 'danger',
       }
       return variants[status] || 'secondary'
+    },
+    formatClientChronicIllnesses(values) {
+      return formatChronicIllnesses(values, key => this.$t(key), this.$t('reservation.na'))
+    },
+    calculateAge(value) {
+      return formatAgeFromBirthDate(value, key => this.$t(key), this.$t('reservation.na'))
     },
     formatDateTime(value) {
       if (!value) return 'N/A'

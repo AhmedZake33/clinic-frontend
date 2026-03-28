@@ -26,9 +26,16 @@
   "client": {
     "name": "اسم العميل",
     "phone": "رقم الهاتف",
+    "whatsappNumber": "رقم واتساب",
+    "whatsappPlaceholder": "أدخل رقم واتساب",
     "address": "العنوان",
+    "job": "الوظيفة",
+    "jobPlaceholder": "أدخل المهنة أو الوظيفة",
     "medicalHistory": "التاريخ المرضي",
+    "chronicIllnesses": "الأمراض المزمنة",
     "dateOfBirth": "تاريخ الميلاد",
+    "age": "العمر",
+    "ageUnit": "سنة",
     "height": "الطول (سم)",
     "weight": "الوزن (كجم)",
     "heightPlaceholder": "أدخل الطول بالسنتيمتر",
@@ -41,7 +48,20 @@
     "clientsManagement": "إدارة العملاء",
     "searchPlaceholder": "البحث في الاسم أو البريد الإلكتروني أو الهاتف",
     "filter": "تصفية",
-    "reset": "إعادة تعيين"
+    "reset": "إعادة تعيين",
+    "selectChronicIllnesses": "اختر مرضاً مزمناً واحداً أو أكثر",
+    "chronicIllnessOptions": {
+      "diabetes": "السكري",
+      "hypertension": "ارتفاع ضغط الدم",
+      "asthma": "الربو",
+      "heart_disease": "أمراض القلب",
+      "kidney_disease": "أمراض الكلى",
+      "liver_disease": "أمراض الكبد",
+      "thyroid_disorder": "اضطرابات الغدة الدرقية",
+      "epilepsy": "الصرع",
+      "arthritis": "التهاب المفاصل",
+      "copd": "الانسداد الرئوي المزمن"
+    }
   },
   "reservation": {
     "date": "التاريخ",
@@ -70,6 +90,14 @@
     "reservationDetails": "تفاصيل الحجز",
     "enterDiagnosis": "أدخل التشخيص",
     "enterTreatment": "أدخل خطة العلاج",
+    "currentProcedures": "الإجراءات الحالية",
+    "enterCurrentProcedures": "أدخل الإجراءات التي تم تنفيذها حالياً",
+    "procedureNotes": "ملاحظات الإجراءات",
+    "enterProcedureNotes": "أدخل ملاحظات حول الإجراءات",
+    "nextProcedures": "الإجراءات القادمة",
+    "enterNextProcedures": "أدخل الإجراءات المخطط لها لاحقاً",
+    "completionFiles": "ملفات الإكمال",
+    "selectCompletionFiles": "اختر الملفات لإرفاقها",
     "client": "العميل",
     "clientEmail": "بريد العميل الإلكتروني",
     "clientPhone": "هاتف العميل",
@@ -188,7 +216,8 @@
     "scheduleSaveError": "فشل في حفظ الجدول",
     "addHolidayError": "فشل في إضافة الإجازة",
     "reportsLoadError": "فشل في تحميل التقارير",
-    "reportsExportError": "فشل في تصدير ملف التقرير"
+    "reportsExportError": "فشل في تصدير ملف التقرير",
+    "downloadFileError": "فشل في تحميل الملف"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",

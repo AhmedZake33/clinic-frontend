@@ -1,6 +1,10 @@
 import apiClient from './api'
 
 export default {
+  getClientOptions() {
+    return apiClient.get('/clients/options')
+  },
+
   getClients(params = {}) {
     return apiClient.get('/clients', { params })
   },

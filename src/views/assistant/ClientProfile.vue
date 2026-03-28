@@ -7,13 +7,25 @@
           <p class="mb-0"><strong>{{ $t('client.name') }}:</strong> {{ client.name }}</p>
           <p class="mb-0"><strong>{{ $t('clinic.email') }}:</strong> {{ client.email }}</p>
           <p class="mb-0"><strong>{{ $t('client.phone') }}:</strong> {{ client.phone }}</p>
+          <p class="mb-0"><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ client.whatsapp_number || $t('reservation.na') }}</p>
           <p class="mb-0"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ client.date_of_birth ? formatDate(client.date_of_birth) : $t('reservation.na') }}</p>
+          <p class="mb-0"><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(client.date_of_birth) }}</p>
           <p class="mb-0"><strong>{{ $t('client.height') }}:</strong> {{ client.height ? client.height + ' cm' : $t('reservation.na') }}</p>
           <p class="mb-0"><strong>{{ $t('client.weight') }}:</strong> {{ client.weight ? client.weight + ' kg' : $t('reservation.na') }}</p>
           <p class="mb-0"><strong>{{ $t('client.address') }}:</strong> {{ client.address || $t('reservation.na') }}</p>
+          <p class="mb-0"><strong>{{ $t('client.job') }}:</strong> {{ client.job || $t('reservation.na') }}</p>
+          <p class="mb-0"><strong>{{ $t('client.chronicIllnesses') }}:</strong> {{ formatClientChronicIllnesses(client.chronic_illnesses) }}</p>
           <p class="mb-0"><strong>{{ $t('client.medicalHistory') }}:</strong> {{ client.medical_history || $t('reservation.na') }}</p>
         </b-col>
         <b-col cols="12" md="4" class="text-right">
+          <b-button
+            variant="warning"
+            class="mb-1 d-block ml-auto"
+            @click="openEditModal"
+          >
+            <feather-icon icon="EditIcon" class="mr-50" />
+            {{ $t('actions.edit') }}
+          </b-button>
           <b-button
             v-if="lastPrescriptionReservation"
             variant="primary"
@@ -110,6 +122,80 @@
         </b-button>
       </template>
     </b-modal>
+
+    <b-modal
+      v-model="editModalShow"
+      :title="$t('actions.edit') + ' ' + $t('client.clientDetails')"
+      hide-footer
+      size="lg"
+    >
+      <b-form @submit.prevent="saveClient">
+        <b-form-group :label="$t('client.name')" label-for="profile-client-name">
+          <b-form-input id="profile-client-name" v-model="clientForm.name" required />
+        </b-form-group>
+
+        <b-form-group :label="$t('clinic.email')" label-for="profile-client-email">
+          <b-form-input id="profile-client-email" v-model="clientForm.email" type="email" />
+        </b-form-group>
+
+        <b-form-group :label="$t('client.phone')" label-for="profile-client-phone">
+          <b-form-input id="profile-client-phone" v-model="clientForm.phone" required />
+        </b-form-group>
+
+        <b-form-group :label="$t('client.whatsappNumber')" label-for="profile-client-whatsapp-number">
+          <b-form-input id="profile-client-whatsapp-number" v-model="clientForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" />
+        </b-form-group>
+
+        <b-form-group :label="$t('client.dateOfBirth')" label-for="profile-client-date-of-birth">
+          <b-form-input id="profile-client-date-of-birth" v-model="clientForm.date_of_birth" type="date" />
+        </b-form-group>
+
+        <b-row>
+          <b-col cols="12" md="6">
+            <b-form-group :label="$t('client.height')" label-for="profile-client-height">
+              <b-form-input id="profile-client-height" v-model="clientForm.height" type="number" step="0.01" min="0" max="300" :placeholder="$t('client.heightPlaceholder')" />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12" md="6">
+            <b-form-group :label="$t('client.weight')" label-for="profile-client-weight">
+              <b-form-input id="profile-client-weight" v-model="clientForm.weight" type="number" step="0.01" min="0" max="500" :placeholder="$t('client.weightPlaceholder')" />
+            </b-form-group>
+          </b-col>
+        </b-row>
+
+        <b-form-group :label="$t('client.address')" label-for="profile-client-address">
+          <b-form-textarea id="profile-client-address" v-model="clientForm.address" rows="2" />
+        </b-form-group>
+
+        <b-form-group :label="$t('client.job')" label-for="profile-client-job">
+          <b-form-input id="profile-client-job" v-model="clientForm.job" :placeholder="$t('client.jobPlaceholder')" />
+        </b-form-group>
+
+        <b-form-group :label="$t('client.medicalHistory')" label-for="profile-client-history">
+          <b-form-textarea id="profile-client-history" v-model="clientForm.medical_history" rows="3" />
+        </b-form-group>
+
+        <b-form-group :label="$t('client.chronicIllnesses')" label-for="profile-client-chronic-illnesses">
+          <b-form-checkbox-group
+            id="profile-client-chronic-illnesses"
+            v-model="clientForm.chronic_illnesses"
+            :options="chronicIllnessOptions"
+            stacked
+          />
+          <small class="text-muted d-block mt-50">{{ $t('client.selectChronicIllnesses') }}</small>
+        </b-form-group>
+
+        <div class="text-right">
+          <b-button variant="secondary" class="mr-1" @click="editModalShow = false">
+            {{ $t('actions.close') }}
+          </b-button>
+          <b-button type="submit" variant="primary" :disabled="savingClient">
+            <b-spinner v-if="savingClient" small class="mr-1" />
+            {{ $t('actions.save') }}
+          </b-button>
+        </div>
+      </b-form>
+    </b-modal>
   </div>
 </template>
 
@@ -122,12 +208,34 @@ import {
   BBadge,
   BTable,
   BModal,
+  BForm,
+  BFormGroup,
+  BFormCheckboxGroup,
+  BFormInput,
+  BFormTextarea,
+  BSpinner,
 } from 'bootstrap-vue'
 import clientsService from '@/services/clients'
 import reservationsService from '@/services/reservations'
+import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
+import { formatAgeFromBirthDate } from '@/utils/clientAge'
 
 export default {
-  components: { BCard, BRow, BCol, BButton, BBadge, BTable, BModal },
+  components: {
+    BCard,
+    BRow,
+    BCol,
+    BButton,
+    BBadge,
+    BTable,
+    BModal,
+    BForm,
+    BFormGroup,
+    BFormCheckboxGroup,
+    BFormInput,
+    BFormTextarea,
+    BSpinner,
+  },
   computed: {
     lastPrescriptionReservation() {
       const reservations = this.client.reservations || []
@@ -136,10 +244,27 @@ export default {
     backRouteName() {
       return this.$route.name === 'doctor-client-profile' ? 'doctor-clients' : 'assistant-clients'
     },
+    chronicIllnessOptions() {
+      return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
+    },
   },
   data() {
     return {
       client: {},
+      clientForm: {
+        name: '',
+        email: '',
+        phone: '',
+        whatsapp_number: '',
+        date_of_birth: '',
+        height: '',
+        weight: '',
+        address: '',
+        job: '',
+        medical_history: '',
+        chronic_illnesses: [],
+      },
+      chronicIllnessOptionValues: [],
       fields: [
         { key: 'appointment_date', label: this.$t('reservation.appointmentDate') },
         { key: 'doctor', label: this.$t('reservation.doctor') },
@@ -148,14 +273,25 @@ export default {
         { key: 'treatment', label: this.$t('reservation.treatment') },
         { key: 'actions', label: this.$t('table.actions') },
       ],
+      editModalShow: false,
+      savingClient: false,
       reservationModal: false,
       selectedReservation: null,
     }
   },
   mounted() {
     this.fetchClient()
+    this.fetchClientOptions()
   },
   methods: {
+    async fetchClientOptions() {
+      try {
+        const response = await clientsService.getClientOptions()
+        this.chronicIllnessOptionValues = response.data.chronic_illnesses || []
+      } catch (error) {
+        this.chronicIllnessOptionValues = []
+      }
+    },
     async fetchClient() {
       const id = this.$route.params.id
       try {
@@ -172,15 +308,68 @@ export default {
         })
       }
     },
+    openEditModal() {
+      this.clientForm = {
+        name: this.client.name || '',
+        email: this.client.email || '',
+        phone: this.client.phone || '',
+        whatsapp_number: this.client.whatsapp_number || '',
+        date_of_birth: this.client.date_of_birth ? this.client.date_of_birth.substring(0, 10) : '',
+        height: this.client.height || '',
+        weight: this.client.weight || '',
+        address: this.client.address || '',
+        job: this.client.job || '',
+        medical_history: this.client.medical_history || '',
+        chronic_illnesses: [...(this.client.chronic_illnesses || [])],
+      }
+      this.editModalShow = true
+    },
+    async saveClient() {
+      this.savingClient = true
+      try {
+        const { data } = await clientsService.updateClient(this.client.id, this.clientForm)
+        this.client = {
+          ...this.client,
+          ...data,
+          reservations: this.client.reservations || [],
+        }
+        this.editModalShow = false
+        this.$toast({
+          component: 'ToastificationContent',
+          props: {
+            title: this.$t('messages.success'),
+            text: this.$t('messages.updateSuccess'),
+            variant: 'success',
+          },
+        })
+      } catch (error) {
+        this.$toast({
+          component: 'ToastificationContent',
+          props: {
+            title: this.$t('messages.error'),
+            text: error.response?.data?.message || this.$t('messages.saveError'),
+            variant: 'danger',
+          },
+        })
+      } finally {
+        this.savingClient = false
+      }
+    },
     getDoctorName(item) {
       if (!item || !item.doctor || !item.doctor.name) {
         return this.$t('reservation.na')
       }
       return item.doctor.name
     },
+    formatClientChronicIllnesses(values) {
+      return formatChronicIllnesses(values, key => this.$t(key), this.$t('reservation.na'))
+    },
     formatDate(value) {
       if (!value) return null
       return new Date(value).toLocaleDateString()
+    },
+    calculateAge(value) {
+      return formatAgeFromBirthDate(value, key => this.$t(key), this.$t('reservation.na'))
     },
     formatDateTime(value) {
       if (!value) return null

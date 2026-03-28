@@ -111,9 +111,14 @@
           <div v-if="selectedReservation && selectedReservation.client">
             <p class="mb-25"><strong>{{ $t('reservation.client') }}:</strong> {{ selectedReservation.client.name }}</p>
             <p class="mb-25"><strong>{{ $t('reservation.clientPhone') }}:</strong> {{ selectedReservation.client.phone }}</p>
+            <p class="mb-25"><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedReservation.client.whatsapp_number || $t('reservation.na') }}</p>
             <p class="mb-25" v-if="selectedReservation.client.date_of_birth"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth }}</p>
+            <p class="mb-25"><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(selectedReservation.client.date_of_birth) }}</p>
+            <p class="mb-25"><strong>{{ $t('client.address') }}:</strong> {{ selectedReservation.client.address || $t('reservation.na') }}</p>
+            <p class="mb-25"><strong>{{ $t('client.job') }}:</strong> {{ selectedReservation.client.job || $t('reservation.na') }}</p>
             <p class="mb-25" v-if="selectedReservation.client.height"><strong>{{ $t('client.height') }}:</strong> {{ selectedReservation.client.height }} cm</p>
             <p class="mb-25" v-if="selectedReservation.client.weight"><strong>{{ $t('client.weight') }}:</strong> {{ selectedReservation.client.weight }} kg</p>
+            <p class="mb-25"><strong>{{ $t('client.chronicIllnesses') }}:</strong> {{ formatClientChronicIllnesses(selectedReservation.client.chronic_illnesses) }}</p>
             <p class="mb-0" v-if="selectedReservation.client.medical_history"><strong>{{ $t('client.medicalHistory') }}:</strong> {{ selectedReservation.client.medical_history }}</p>
           </div>
           <p v-if="selectedReservation" class="mb-0 mt-50"><strong>{{ $t('reservation.appointment') }}:</strong> {{ formatDateTime(selectedReservation.appointment_date) }}</p>
@@ -128,6 +133,33 @@
           />
         </b-form-group>
 
+        <b-form-group :label="$t('reservation.currentProcedures')" label-for="current-procedures">
+          <b-form-textarea
+            id="current-procedures"
+            v-model="completeForm.current_procedures"
+            rows="3"
+            :placeholder="$t('reservation.enterCurrentProcedures')"
+          />
+        </b-form-group>
+
+        <b-form-group :label="$t('reservation.procedureNotes')" label-for="procedure-notes">
+          <b-form-textarea
+            id="procedure-notes"
+            v-model="completeForm.procedure_notes"
+            rows="3"
+            :placeholder="$t('reservation.enterProcedureNotes')"
+          />
+        </b-form-group>
+
+        <b-form-group :label="$t('reservation.nextProcedures')" label-for="next-procedures">
+          <b-form-textarea
+            id="next-procedures"
+            v-model="completeForm.next_procedures"
+            rows="3"
+            :placeholder="$t('reservation.enterNextProcedures')"
+          />
+        </b-form-group>
+
         <b-form-group :label="$t('reservation.treatment')" label-for="treatment">
           <b-form-textarea
             id="treatment"
@@ -135,6 +167,19 @@
             rows="4"
             :placeholder="$t('reservation.enterTreatment')"
           />
+        </b-form-group>
+
+        <b-form-group :label="$t('reservation.completionFiles')" label-for="completion-files">
+          <b-form-file
+            id="completion-files"
+            v-model="completionFiles"
+            multiple
+            :placeholder="$t('reservation.selectCompletionFiles')"
+            :browse-text="$t('actions.add')"
+          />
+          <small v-if="completionFiles.length" class="text-muted d-block mt-50">
+            {{ completionFiles.map(file => file.name).join(', ') }}
+          </small>
         </b-form-group>
 
         <!-- Drug Search with Tabs -->
@@ -437,12 +482,16 @@
                 <p class="mb-50"><strong>{{ $t('client.name') }}:</strong> {{ selectedReservation.client.name }}</p>
                 <p class="mb-50"><strong>{{ $t('reservation.clientEmail') }}:</strong> {{ selectedReservation.client.email }}</p>
                 <p class="mb-50"><strong>{{ $t('reservation.clientPhone') }}:</strong> {{ selectedReservation.client.phone }}</p>
+                <p class="mb-50"><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedReservation.client.whatsapp_number || $t('reservation.na') }}</p>
                 <p class="mb-50"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth || $t('reservation.na') }}</p>
+                <p class="mb-50"><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(selectedReservation.client.date_of_birth) }}</p>
               </b-col>
               <b-col cols="12" md="6">
                 <p class="mb-50"><strong>{{ $t('client.height') }}:</strong> {{ selectedReservation.client.height ? selectedReservation.client.height + ' cm' : $t('reservation.na') }}</p>
                 <p class="mb-50"><strong>{{ $t('client.weight') }}:</strong> {{ selectedReservation.client.weight ? selectedReservation.client.weight + ' kg' : $t('reservation.na') }}</p>
                 <p class="mb-50"><strong>{{ $t('client.address') }}:</strong> {{ selectedReservation.client.address || $t('reservation.na') }}</p>
+                <p class="mb-50"><strong>{{ $t('client.job') }}:</strong> {{ selectedReservation.client.job || $t('reservation.na') }}</p>
+                <p class="mb-50"><strong>{{ $t('client.chronicIllnesses') }}:</strong> {{ formatClientChronicIllnesses(selectedReservation.client.chronic_illnesses) }}</p>
               </b-col>
             </b-row>
             <div v-if="selectedReservation.client.medical_history" class="mt-50">
@@ -482,6 +531,36 @@
         <div v-if="selectedReservation.treatment">
           <p><strong>{{ $t('reservation.treatment') }}:</strong></p>
           <p>{{ selectedReservation.treatment }}</p>
+        </div>
+        <div v-if="selectedReservation.current_procedures">
+          <p><strong>{{ $t('reservation.currentProcedures') }}:</strong></p>
+          <p>{{ selectedReservation.current_procedures }}</p>
+        </div>
+        <div v-if="selectedReservation.procedure_notes">
+          <p><strong>{{ $t('reservation.procedureNotes') }}:</strong></p>
+          <p>{{ selectedReservation.procedure_notes }}</p>
+        </div>
+        <div v-if="selectedReservation.next_procedures">
+          <p><strong>{{ $t('reservation.nextProcedures') }}:</strong></p>
+          <p>{{ selectedReservation.next_procedures }}</p>
+        </div>
+        <div v-if="selectedReservation.completion_files && selectedReservation.completion_files.length">
+          <hr>
+          <p><strong>{{ $t('reservation.completionFiles') }}:</strong></p>
+          <div class="d-flex flex-column">
+            <b-button
+              v-for="file in selectedReservation.completion_files"
+              :key="file.id"
+              variant="outline-primary"
+              size="sm"
+              class="mb-50 text-left"
+              @click="downloadCompletionFile(file)"
+            >
+              <feather-icon icon="PaperclipIcon" size="14" class="mr-50" />
+              {{ file.file_name }}
+              <span v-if="file.size_text" class="text-muted ml-50">({{ file.size_text }})</span>
+            </b-button>
+          </div>
         </div>
 
         <div v-if="selectedReservation.requires_xray || selectedReservation.requires_lab">
@@ -532,10 +611,18 @@
             </b-form-group>
           </b-col>
           <b-col cols="12" md="6">
+            <b-form-group :label="$t('client.whatsappNumber')" label-for="client-whatsapp-number">
+              <b-form-input id="client-whatsapp-number" v-model="clientForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="12" md="6">
             <b-form-group :label="$t('client.dateOfBirth')" label-for="client-dob">
               <b-form-input id="client-dob" v-model="clientForm.date_of_birth" type="date" />
             </b-form-group>
           </b-col>
+          <b-col cols="12" md="6" />
         </b-row>
         <b-row>
           <b-col cols="12" md="6">
@@ -552,8 +639,20 @@
         <b-form-group :label="$t('client.address')" label-for="client-address">
           <b-form-textarea id="client-address" v-model="clientForm.address" rows="2" />
         </b-form-group>
+        <b-form-group :label="$t('client.job')" label-for="client-job">
+          <b-form-input id="client-job" v-model="clientForm.job" :placeholder="$t('client.jobPlaceholder')" />
+        </b-form-group>
         <b-form-group :label="$t('client.medicalHistory')" label-for="client-history">
           <b-form-textarea id="client-history" v-model="clientForm.medical_history" rows="3" />
+        </b-form-group>
+        <b-form-group :label="$t('client.chronicIllnesses')" label-for="client-chronic-illnesses">
+          <b-form-checkbox-group
+            id="client-chronic-illnesses"
+            v-model="clientForm.chronic_illnesses"
+            :options="chronicIllnessOptions"
+            stacked
+          />
+          <small class="text-muted d-block mt-50">{{ $t('client.selectChronicIllnesses') }}</small>
         </b-form-group>
         <div class="text-right">
           <b-button variant="secondary" class="mr-1" @click="editClientModalShow = false">
@@ -580,9 +679,10 @@ import {
   BModal,
   BForm,
   BFormGroup,
+  BFormCheckboxGroup,
   BFormInput,
-  BFormSelect,
   BFormTextarea,
+  BFormFile,
   BFormCheckbox,
   BSpinner,
   BBadge,
@@ -597,6 +697,8 @@ import reservationsService from '@/services/reservations'
 import openfdaService from '@/services/openfda'
 import clientsService from '@/services/clients'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
+import { formatAgeFromBirthDate } from '@/utils/clientAge'
 
 export default {
   directives: {
@@ -612,9 +714,10 @@ export default {
     BModal,
     BForm,
     BFormGroup,
+    BFormCheckboxGroup,
     BFormInput,
-    BFormSelect,
     BFormTextarea,
+    BFormFile,
     BFormCheckbox,
     BSpinner,
     BBadge,
@@ -643,11 +746,15 @@ export default {
       completeForm: {
         diagnosis: '',
         treatment: '',
+        current_procedures: '',
+        procedure_notes: '',
+        next_procedures: '',
         requires_xray: false,
         xray_notes: '',
         requires_lab: false,
         lab_notes: '',
       },
+      completionFiles: [],
       // OpenFDA drug search
       drugTabIndex: 0,
       drugSearchQuery: '',
@@ -670,6 +777,7 @@ export default {
       egyptFormFilter: '',
       egyptCategories: [],
       egyptForms: [],
+      chronicIllnessOptionValues: [],
       filters: {
         search: '',
         status: '',
@@ -684,17 +792,21 @@ export default {
         name: '',
         email: '',
         phone: '',
+        whatsapp_number: '',
         date_of_birth: '',
         height: '',
         weight: '',
         address: '',
+        job: '',
         medical_history: '',
+        chronic_illnesses: [],
       },
     }
   },
   mounted() {
     this.fetchReservations()
     this.fetchEgyptDrugFilters()
+    this.fetchClientOptions()
   },
   watch: {
     '$store.state.broadcast.eventCounter'() {
@@ -730,6 +842,9 @@ export default {
         { value: '', text: this.$t('openfda.allForms') },
         ...this.egyptForms.map(f => ({ value: f, text: f })),
       ]
+    },
+    chronicIllnessOptions() {
+      return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
     },
   },
   methods: {
@@ -782,11 +897,15 @@ export default {
       this.completeForm = {
         diagnosis: '',
         treatment: '',
+        current_procedures: '',
+        procedure_notes: '',
+        next_procedures: '',
         requires_xray: false,
         xray_notes: '',
         requires_lab: false,
         lab_notes: '',
       }
+      this.completionFiles = []
       // Reset drug search state
       this.drugSearchQuery = ''
       this.drugResults = []
@@ -804,16 +923,34 @@ export default {
       this.drugTabIndex = 0
       this.completeModalShow = true
     },
-    viewReservation(reservation) {
-      this.selectedReservation = reservation
+    async viewReservation(reservation) {
+      try {
+        const response = await reservationsService.getReservation(reservation.id)
+        this.selectedReservation = response.data
+      } catch (error) {
+        this.selectedReservation = reservation
+      }
       this.viewModalShow = true
     },
     async completeReservation() {
       this.completing = true
       try {
+        const formData = new FormData()
+        Object.entries(this.completeForm).forEach(([key, value]) => {
+          if (typeof value === 'boolean') {
+            formData.append(key, value ? '1' : '0')
+          } else {
+            formData.append(key, value ?? '')
+          }
+        })
+
+        this.completionFiles.forEach(file => {
+          formData.append('files[]', file)
+        })
+
         await reservationsService.completeReservation(
           this.selectedReservation.id,
-          this.completeForm
+          formData
         )
         // this.$toast({
         //   component: ToastificationContent,
@@ -836,6 +973,29 @@ export default {
         })
       } finally {
         this.completing = false
+      }
+    },
+    async downloadCompletionFile(file) {
+      try {
+        const response = await reservationsService.downloadArchiveFile(file.id)
+        const blob = new Blob([response.data])
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = file.file_name || `file_${file.id}`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+      } catch (error) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: this.$t('messages.downloadFileError'),
+            variant: 'danger',
+          },
+        })
       }
     },
     async printPrescription(reservation) {
@@ -879,6 +1039,14 @@ export default {
         this.egyptForms = response.data.forms || []
       } catch (error) {
         // Silently fail — filters are optional
+      }
+    },
+    async fetchClientOptions() {
+      try {
+        const response = await clientsService.getClientOptions()
+        this.chronicIllnessOptionValues = response.data.chronic_illnesses || []
+      } catch (error) {
+        this.chronicIllnessOptionValues = []
       }
     },
     async searchEgyptDrugs() {
@@ -1013,6 +1181,12 @@ export default {
       const date = new Date(value + (value.includes(' ') ? '' : ''))
       return date.toLocaleString()
     },
+    formatClientChronicIllnesses(values) {
+      return formatChronicIllnesses(values, key => this.$t(key), this.$t('reservation.na'))
+    },
+    calculateAge(value) {
+      return formatAgeFromBirthDate(value, key => this.$t(key), this.$t('reservation.na'))
+    },
     getTodayDate() {
       const d = new Date()
       const year = d.getFullYear()
@@ -1032,11 +1206,14 @@ export default {
         name: client.name || '',
         email: client.email || '',
         phone: client.phone || '',
+        whatsapp_number: client.whatsapp_number || '',
         date_of_birth: client.date_of_birth ? client.date_of_birth.substring(0, 10) : '',
         height: client.height || '',
         weight: client.weight || '',
         address: client.address || '',
+        job: client.job || '',
         medical_history: client.medical_history || '',
+        chronic_illnesses: [...(client.chronic_illnesses || [])],
       }
       this.editClientModalShow = true
     },

@@ -26,9 +26,16 @@
   "client": {
     "name": "Client Name",
     "phone": "Phone Number",
+    "whatsappNumber": "WhatsApp Number",
+    "whatsappPlaceholder": "Enter WhatsApp number",
     "address": "Address",
+    "job": "Job",
+    "jobPlaceholder": "Enter job title",
     "medicalHistory": "Medical History",
+    "chronicIllnesses": "Chronic Illnesses",
     "dateOfBirth": "Date of Birth",
+    "age": "Age",
+    "ageUnit": "years",
     "height": "Height (cm)",
     "weight": "Weight (kg)",
     "heightPlaceholder": "Enter height in cm",
@@ -41,7 +48,20 @@
     "clientsManagement": "Clients Management",
     "searchPlaceholder": "Search name, email, or phone",
     "filter": "Filter",
-    "reset": "Reset"
+    "reset": "Reset",
+    "selectChronicIllnesses": "Select one or more chronic illnesses",
+    "chronicIllnessOptions": {
+      "diabetes": "Diabetes",
+      "hypertension": "Hypertension",
+      "asthma": "Asthma",
+      "heart_disease": "Heart Disease",
+      "kidney_disease": "Kidney Disease",
+      "liver_disease": "Liver Disease",
+      "thyroid_disorder": "Thyroid Disorder",
+      "epilepsy": "Epilepsy",
+      "arthritis": "Arthritis",
+      "copd": "COPD"
+    }
   },
   "reservation": {
     "date": "Date",
@@ -70,6 +90,14 @@
     "reservationDetails": "Reservation Details",
     "enterDiagnosis": "Enter diagnosis",
     "enterTreatment": "Enter treatment plan",
+    "currentProcedures": "Current Procedures",
+    "enterCurrentProcedures": "Enter current procedures performed",
+    "procedureNotes": "Procedure Notes",
+    "enterProcedureNotes": "Enter notes about the procedures",
+    "nextProcedures": "Next Procedures",
+    "enterNextProcedures": "Enter the next planned procedures",
+    "completionFiles": "Completion Files",
+    "selectCompletionFiles": "Select files to attach",
     "client": "Client",
     "clientEmail": "Client Email",
     "clientPhone": "Client Phone",
@@ -188,7 +216,8 @@
     "scheduleSaveError": "Failed to save schedule",
     "addHolidayError": "Failed to add holiday",
     "reportsLoadError": "Failed to load reports",
-    "reportsExportError": "Failed to export report PDF"
+    "reportsExportError": "Failed to export report PDF",
+    "downloadFileError": "Failed to download file"
   },
   "validation": {
     "required": "This field is required",
