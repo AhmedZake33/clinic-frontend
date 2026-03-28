@@ -547,9 +547,34 @@
         <div v-if="selectedReservation.completion_files && selectedReservation.completion_files.length">
           <hr>
           <p><strong>{{ $t('reservation.completionFiles') }}:</strong></p>
-          <div class="d-flex flex-column">
+
+          <!-- Image previews -->
+          <div v-if="imageFiles.length" class="d-flex flex-wrap mb-1">
+            <div
+              v-for="file in imageFiles"
+              :key="file.id"
+              class="mr-1 mb-1 position-relative"
+              style="cursor: pointer;"
+              @click="openImagePreview(file)"
+            >
+              <img
+                v-if="filePreviewUrls[file.id]"
+                :src="filePreviewUrls[file.id]"
+                :alt="file.file_name"
+                class="rounded border"
+                style="width: 120px; height: 120px; object-fit: cover;"
+              >
+              <div v-else class="rounded border d-flex align-items-center justify-content-center bg-light" style="width: 120px; height: 120px;">
+                <b-spinner small />
+              </div>
+              <small class="d-block text-center text-truncate mt-25" style="max-width: 120px;">{{ file.file_name }}</small>
+            </div>
+          </div>
+
+          <!-- Non-image files (download) -->
+          <div v-if="nonImageFiles.length" class="d-flex flex-column">
             <b-button
-              v-for="file in selectedReservation.completion_files"
+              v-for="file in nonImageFiles"
               :key="file.id"
               variant="outline-primary"
               size="sm"
@@ -562,6 +587,24 @@
             </b-button>
           </div>
         </div>
+
+        <!-- Image preview modal -->
+        <b-modal
+          v-model="imagePreviewModalShow"
+          :title="previewImageName"
+          size="xl"
+          centered
+          hide-footer
+          body-class="text-center p-0"
+        >
+          <img
+            v-if="previewImageUrl"
+            :src="previewImageUrl"
+            :alt="previewImageName"
+            class="img-fluid"
+            style="max-height: 80vh;"
+          >
+        </b-modal>
 
         <div v-if="selectedReservation.requires_xray || selectedReservation.requires_lab">
           <hr>
@@ -755,6 +798,10 @@ export default {
         lab_notes: '',
       },
       completionFiles: [],
+      filePreviewUrls: {},
+      imagePreviewModalShow: false,
+      previewImageUrl: null,
+      previewImageName: '',
       // OpenFDA drug search
       drugTabIndex: 0,
       drugSearchQuery: '',
@@ -808,6 +855,9 @@ export default {
     this.fetchEgyptDrugFilters()
     this.fetchClientOptions()
   },
+  beforeDestroy() {
+    this.revokePreviewUrls()
+  },
   watch: {
     '$store.state.broadcast.eventCounter'() {
       this.fetchReservations()
@@ -845,6 +895,14 @@ export default {
     },
     chronicIllnessOptions() {
       return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
+    },
+    imageFiles() {
+      if (!this.selectedReservation?.completion_files) return []
+      return this.selectedReservation.completion_files.filter(f => this.isImageFile(f))
+    },
+    nonImageFiles() {
+      if (!this.selectedReservation?.completion_files) return []
+      return this.selectedReservation.completion_files.filter(f => !this.isImageFile(f))
     },
   },
   methods: {
@@ -924,6 +982,7 @@ export default {
       this.completeModalShow = true
     },
     async viewReservation(reservation) {
+      this.revokePreviewUrls()
       try {
         const response = await reservationsService.getReservation(reservation.id)
         this.selectedReservation = response.data
@@ -931,6 +990,7 @@ export default {
         this.selectedReservation = reservation
       }
       this.viewModalShow = true
+      this.$nextTick(() => this.loadFilePreviewUrls())
     },
     async completeReservation() {
       this.completing = true
@@ -997,6 +1057,38 @@ export default {
           },
         })
       }
+    },
+    isImageFile(file) {
+      const imageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/svg+xml']
+      if (file.application_type && imageTypes.includes(file.application_type)) return true
+      if (file.file_name) {
+        const ext = file.file_name.split('.').pop().toLowerCase()
+        return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext)
+      }
+      return false
+    },
+    async loadFilePreviewUrls() {
+      if (!this.selectedReservation?.completion_files) return
+      const images = this.selectedReservation.completion_files.filter(f => this.isImageFile(f))
+      for (const file of images) {
+        if (this.filePreviewUrls[file.id]) continue
+        try {
+          const response = await reservationsService.previewArchiveFile(file.id)
+          const blob = new Blob([response.data], { type: file.application_type || 'image/jpeg' })
+          this.$set(this.filePreviewUrls, file.id, window.URL.createObjectURL(blob))
+        } catch {
+          // skip failed previews
+        }
+      }
+    },
+    openImagePreview(file) {
+      this.previewImageUrl = this.filePreviewUrls[file.id] || null
+      this.previewImageName = file.file_name || ''
+      this.imagePreviewModalShow = true
+    },
+    revokePreviewUrls() {
+      Object.values(this.filePreviewUrls).forEach(url => window.URL.revokeObjectURL(url))
+      this.filePreviewUrls = {}
     },
     async printPrescription(reservation) {
       try {

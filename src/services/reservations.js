@@ -31,6 +31,12 @@ export default {
     })
   },
 
+  previewArchiveFile(id) {
+    return apiClient.get(`/archive/preview/${id}`, {
+      responseType: 'blob',
+    })
+  },
+
   confirmReservation(id) {
     return apiClient.post(`/reservations/${id}/confirm`)
   },
