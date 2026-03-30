@@ -42,7 +42,7 @@
               <div>
                 <feather-icon icon="AlertCircleIcon" class="text-danger mr-50" />
                 <strong>{{ call.doctor ? call.doctor.name : $t('assistantCall.doctor') }}</strong>
-                {{ $t('assistantCall.isRequestingAssistance') }}
+                <span v-if="currentUserRole === 'assistant'">{{ $t('assistantCall.isRequestingAssistance') }}</span>
                 <b-badge :variant="call.status === 'pending' ? 'warning' : 'info'" class="ml-50">
                   {{ $t('assistantCall.' + call.status) }}
                 </b-badge>
@@ -264,6 +264,7 @@ export default {
       activeCalls: [],
       hasNewCall: false,
       currentUserId: null,
+      currentUserRole: null,
       soundEnabled: false,
       audioContext: null,
       callSoundInterval: null,
@@ -302,6 +303,7 @@ export default {
   mounted() {
     const user = JSON.parse(localStorage.getItem('user') || 'null')
     this.currentUserId = user ? user.id : null
+    this.currentUserRole = user ? user.role : null
     this.soundEnabled = localStorage.getItem('assistantCallSoundEnabled') === 'true'
     // Try to restore AudioContext if previously enabled
     if (this.soundEnabled) {
@@ -317,6 +319,9 @@ export default {
       document.addEventListener('click', this._audioUnlockHandler, { once: false })
       document.addEventListener('keydown', this._audioUnlockHandler, { once: false })
     }
+    // Listen for global stop-sound events (e.g., accept from other views)
+    this._assistantCallsStopHandler = () => { this.stopCallSound() }
+    window.addEventListener('assistantCalls:stopSound', this._assistantCallsStopHandler)
     this.fetchStats()
     this.fetchTodayReservations()
     this.fetchActiveCalls()
@@ -327,6 +332,9 @@ export default {
     if (this._audioUnlockHandler) {
       document.removeEventListener('click', this._audioUnlockHandler)
       document.removeEventListener('keydown', this._audioUnlockHandler)
+    }
+    if (this._assistantCallsStopHandler) {
+      window.removeEventListener('assistantCalls:stopSound', this._assistantCallsStopHandler)
     }
     if (this.audioContext) {
       try { this.audioContext.close() } catch (e) { /* ignore */ }
@@ -528,7 +536,7 @@ export default {
             gain.connect(this.audioContext.destination)
             osc.frequency.value = freq
             osc.type = 'sine'
-            gain.gain.setValueAtTime(0.4, startTime)
+            gain.gain.setValueAtTime(0.7, startTime)
             gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration)
             osc.start(startTime)
             osc.stop(startTime + duration)

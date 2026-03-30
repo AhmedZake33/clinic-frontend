@@ -8,6 +8,8 @@
       <router-view :key="$route.fullPath" />
     </component>
 
+    <assistant-call-mini-widget class="assistant-mini-widget-root" />
+
     <scroll-to-top v-if="enableScrollToTop" />
   </div>
 </template>
@@ -40,6 +42,8 @@ export default {
     LayoutFull,
 
     ScrollToTop,
+    // Global assistant mini widget
+    AssistantCallMiniWidget: () => import('@/components/AssistantCallMiniWidget.vue'),
   },
   // ! We can move this computed: layout & contentLayoutType once we get to use Vue 3
   // Currently, router.currentRoute is not reactive and doesn't trigger any change
@@ -142,6 +146,19 @@ export default {
 
 .gap {
   gap: 0.5rem;
+}
+
+/* Floating assistant mini-widget placement */
+.assistant-mini-widget-root {
+  position: fixed;
+  right: 1rem;
+  bottom: 1.25rem;
+  z-index: 1050;
+}
+
+@media (min-width: 992px) {
+  /* hide on large screens as navbar already shows calls */
+  .assistant-mini-widget-root { display: none; }
 }
 
 /*! rtl:begin:ignore */

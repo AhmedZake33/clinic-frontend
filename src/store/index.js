@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import auth from './modules/auth'
 import broadcast from './modules/broadcast'
+import assistantCalls from './modules/assistantCalls'
 
 
 // Modules
@@ -33,6 +34,7 @@ export default new Vuex.Store({
     'app-ecommerce': ecommerceStoreModule,
     auth,
     broadcast,
+    assistantCalls,
   },
   strict: process.env.DEV,
 })

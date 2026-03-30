@@ -36,6 +36,10 @@ import '@/libs/echo'
 import GlobalBroadcast from '@/plugins/globalBroadcast'
 Vue.use(GlobalBroadcast)
 
+// Global assistant call handling (sound, subscribe, accept/complete helpers)
+import AssistantCalls from '@/plugins/assistantCalls'
+Vue.use(AssistantCalls)
+
 // Permission directive
 import '@/plugins/permission'
 

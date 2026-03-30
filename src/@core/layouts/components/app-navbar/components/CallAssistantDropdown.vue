@@ -1,6 +1,6 @@
 <template>
   <b-nav-item-dropdown
-    v-if="isDoctor"
+    v-if="isDoctor || isAssistant"
     :right="!isRTL"
     toggle-class="d-flex align-items-center"
     menu-class="call-assistant-dropdown-menu"
@@ -35,8 +35,8 @@
       </div>
     </li>
 
-    <!-- Call Form -->
-    <li class="px-2 py-75">
+    <!-- Call Form (doctors only) -->
+    <li v-if="isDoctor" class="px-2 py-75">
       <div class="d-flex align-items-center">
         <b-form-select
           v-if="assistantsList.length !== 1"
@@ -104,16 +104,29 @@
             </b-badge>
           </div>
         </div>
-        <b-button
-          v-if="call.status === 'accepted'"
-          variant="flat-success"
-          size="sm"
-          class="btn-icon p-25"
-          :title="$t('assistantCall.markDone')"
-          @click.stop="markCallDone(call)"
-        >
-          <feather-icon icon="CheckCircleIcon" size="16" />
-        </b-button>
+        <div>
+          <b-button
+            v-if="isAssistant && call.status === 'pending'"
+            variant="primary"
+            size="sm"
+            class="btn-icon p-25 mr-50"
+            :title="$t('assistantCall.accept')"
+            @click.stop="acceptCall(call)"
+          >
+            <feather-icon icon="UserCheckIcon" size="14" />
+          </b-button>
+
+          <b-button
+            v-if="call.status === 'accepted'"
+            variant="flat-success"
+            size="sm"
+            class="btn-icon p-25"
+            :title="$t('assistantCall.markDone')"
+            @click.stop="markCallDone(call)"
+          >
+            <feather-icon icon="CheckCircleIcon" size="16" />
+          </b-button>
+        </div>
       </div>
     </li>
 
@@ -134,10 +147,33 @@ import {
   BSpinner,
   BDropdownDivider,
 } from 'bootstrap-vue'
-import assistantCallsService from '@/services/assistantCalls'
 import assistantsService from '@/services/assistants'
 import { updateEchoAuth } from '@/libs/echo'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+
+// Small notification sound helper. Respects the assistant sound preference stored in localStorage as 'assistantCallSoundEnabled'.
+function playNotificationSound() {
+  try {
+    if (localStorage.getItem('assistantCallSoundEnabled') !== 'true') return
+    const AudioCtx = window.AudioContext || window.webkitAudioContext
+    if (!AudioCtx) return
+    const ctx = new AudioCtx()
+    const now = ctx.currentTime
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(880, now)
+    gain.gain.setValueAtTime(0.25, now)
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25)
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start(now)
+    osc.stop(now + 0.25)
+    setTimeout(() => { try { ctx.close() } catch (e) {} }, 500)
+  } catch (e) {
+    console.warn('[WS] Could not play notification sound', e)
+  }
+}
 
 export default {
   components: {
@@ -153,14 +189,19 @@ export default {
     return {
       user: null,
       callLoading: false,
-      activeCalls: [],
       selectedAssistantId: null,
       assistantsList: [],
     }
   },
   computed: {
+    activeCalls() {
+      return this.$store.state.assistantCalls?.activeCalls || []
+    },
     isDoctor() {
       return this.user && this.user.role === 'doctor'
+    },
+    isAssistant() {
+      return this.user && this.user.role === 'assistant'
     },
     isRTL() {
       return this.$store.state.appConfig.layout.isRTL
@@ -177,12 +218,17 @@ export default {
       this.fetchAssistants()
       this.fetchActiveCalls()
       this.listenForCallEvents()
+    } else if (this.isAssistant) {
+      this.fetchActiveCalls()
+      this.listenForCallEvents()
     }
   },
   beforeDestroy() {
     if (this._callChannel && this.user) {
       try {
-        window.Echo.leave(`clinic.${this.user.id}.assistant-calls`)
+        // leave the subscribed channel depending on role
+        if (this.isDoctor) window.Echo.leave(`clinic.${this.user.id}.assistant-calls`)
+        else if (this.isAssistant) window.Echo.leave(`assistant.${this.user.id}`)
       } catch (e) { /* ignore */ }
     }
   },
@@ -192,10 +238,10 @@ export default {
       if (!assistantId) return
       this.callLoading = true
       try {
-        const response = await assistantCallsService.createCall({ assistant_id: assistantId })
+        const response = await this.$store.dispatch('assistantCalls/createCall', { assistant_id: assistantId })
         const newCall = response.data?.call
-        if (newCall && !this.activeCalls.find(c => c.id === newCall.id)) {
-          this.activeCalls.push(newCall)
+        if (newCall) {
+          // store action already added the call; keep local selectedAssistantId unchanged
         }
         this.$toast({
           component: ToastificationContent,
@@ -220,16 +266,14 @@ export default {
     },
     async fetchActiveCalls() {
       try {
-        const response = await assistantCallsService.getActiveCalls()
-        this.activeCalls = response.data || []
+        await this.$store.dispatch('assistantCalls/fetchActiveCalls')
       } catch (e) {
         console.error('Failed to fetch active calls', e)
       }
     },
     async markCallDone(call) {
       try {
-        await assistantCallsService.completeCall(call.id)
-        this.activeCalls = this.activeCalls.filter(c => c.id !== call.id)
+        await this.$store.dispatch('assistantCalls/completeCall', call.id)
         this.$toast({
           component: ToastificationContent,
           props: { title: this.$t('assistantCall.callCompleted'), variant: 'success', icon: 'CheckCircleIcon' },
@@ -238,40 +282,67 @@ export default {
         console.error('Failed to complete call', e)
       }
     },
+    async acceptCall(call) {
+      try {
+        await this.$store.dispatch('assistantCalls/acceptCall', call.id)
+        this.$toast({
+          component: ToastificationContent,
+          props: { title: this.$t('assistantCall.callAccepted'), variant: 'success', icon: 'UserCheckIcon' },
+        })
+      } catch (e) {
+        console.error('Failed to accept call', e)
+      }
+    },
     handleCallEvent(data) {
       const call = data.call
       if (!call) return
 
+      // Let the Vuex store handle call state
+      try {
+        this.$store.dispatch('assistantCalls/processCallEvent', data)
+      } catch (e) {
+        console.error('Failed to process call event in store', e)
+      }
+
       if (data.action === 'created') {
-        if (!this.activeCalls.find(c => c.id === call.id)) {
-          this.activeCalls.push(call)
+        // show a toast to assistants (sound handled globally by plugin)
+        if (this.isAssistant) {
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: this.$t('assistantCall.incomingCalls'),
+              text: `${call.doctor?.name || this.$t('assistantCall.doctor')} ${this.$t('assistantCall.isRequestingAssistance')}`,
+              icon: 'PhoneCallIcon',
+              variant: 'danger',
+            },
+          })
         }
       } else if (data.action === 'accepted') {
-        const idx = this.activeCalls.findIndex(c => c.id === call.id)
-        if (idx !== -1) {
-          this.$set(this.activeCalls, idx, { ...this.activeCalls[idx], ...call })
+        // Only notify doctors when an assistant accepts a call
+        if (this.isDoctor) {
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: this.$t('assistantCall.callAccepted'),
+              text: call.assistant?.name || '',
+              variant: 'info',
+              icon: 'UserCheckIcon',
+            },
+          })
         }
-        this.$toast({
-          component: ToastificationContent,
-          props: {
-            title: this.$t('assistantCall.callAccepted'),
-            text: call.assistant?.name || '',
-            variant: 'info',
-            icon: 'UserCheckIcon',
-          },
-        })
-      } else if (data.action === 'completed') {
-        this.activeCalls = this.activeCalls.filter(c => c.id !== call.id)
       }
     },
     listenForCallEvents() {
       if (!window.Echo || !this.user) return
       try {
         updateEchoAuth()
-        this._callChannel = window.Echo.private(`clinic.${this.user.id}.assistant-calls`)
-          .listen('.assistant.call', data => {
-            this.handleCallEvent(data)
-          })
+        if (this.isDoctor) {
+          this._callChannel = window.Echo.private(`clinic.${this.user.id}.assistant-calls`)
+            .listen('.assistant.call', data => this.handleCallEvent(data))
+        } else if (this.isAssistant) {
+          this._callChannel = window.Echo.private(`assistant.${this.user.id}`)
+            .listen('.assistant.call', data => this.handleCallEvent(data))
+        }
       } catch (e) {
         console.error('[WS] Failed to subscribe to assistant-call channel', e)
       }

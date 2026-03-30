@@ -145,6 +145,14 @@
           />
         </b-form-group>
 
+        <b-form-group :label="$t('client.bloodType')" label-for="blood-type">
+          <b-form-select
+            id="blood-type"
+            v-model="form.blood_type"
+            :options="bloodTypeOptions()"
+          />
+        </b-form-group>
+
         <b-form-group label="Date of Birth" label-for="dob">
           <b-form-input
             id="dob"
@@ -244,6 +252,7 @@
             <p><strong>Email:</strong> {{ selectedClient.email }}</p>
             <p><strong>Phone:</strong> {{ selectedClient.phone }}</p>
             <p><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedClient.whatsapp_number || 'N/A' }}</p>
+            <p><strong>{{ $t('client.bloodType') }}:</strong> {{ selectedClient.blood_type || 'N/A' }}</p>
           </b-col>
           <b-col cols="12" md="6">
             <p><strong>Date of Birth:</strong> {{ selectedClient.date_of_birth || 'N/A' }}</p>
@@ -279,6 +288,7 @@ import {
   BFormGroup,
   BFormCheckboxGroup,
   BFormInput,
+  BFormSelect,
   BFormTextarea,
   BSpinner,
 } from 'bootstrap-vue'
@@ -299,6 +309,7 @@ export default {
     BFormGroup,
     BFormCheckboxGroup,
     BFormInput,
+    BFormSelect,
     BFormTextarea,
     BSpinner,
   },
@@ -333,6 +344,7 @@ export default {
         email: '',
         phone: '',
         whatsapp_number: '',
+        blood_type: '',
         date_of_birth: '',
         height: '',
         weight: '',
@@ -345,6 +357,7 @@ export default {
         { key: 'name', label: 'Name', sortable: true },
         { key: 'email', label: 'Email', sortable: true },
         { key: 'phone', label: 'Phone' },
+        { key: 'blood_type', label: this.$t('client.bloodType') },
         { key: 'age', label: this.$t('client.age'), formatter: (value, key, item) => this.calculateAge(item.date_of_birth) },
         { key: 'created_at', label: 'Created', formatter: this.formatDate },
         { key: 'actions', label: 'Actions' },
@@ -356,6 +369,20 @@ export default {
     this.fetchClientOptions()
   },
   methods: {
+    bloodTypeOptions() {
+      return [
+        { value: '', text: this.$t('reservation.na') },
+        { value: 'A+', text: 'A+' },
+        { value: 'A-', text: 'A-' },
+        { value: 'B+', text: 'B+' },
+        { value: 'B-', text: 'B-' },
+        { value: 'AB+', text: 'AB+' },
+        { value: 'AB-', text: 'AB-' },
+        { value: 'O+', text: 'O+' },
+        { value: 'O-', text: 'O-' },
+      ]
+    },
+
     async fetchClientOptions() {
       try {
         const response = await clientsService.getClientOptions()
@@ -419,6 +446,7 @@ export default {
         email: '',
         phone: '',
         whatsapp_number: '',
+        blood_type: '',
         date_of_birth: '',
         height: '',
         weight: '',

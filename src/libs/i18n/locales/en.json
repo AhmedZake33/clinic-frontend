@@ -45,6 +45,7 @@
     "deleteClient": "Delete Client",
     "clientsList": "Clients List",
     "clientDetails": "Client Details",
+    "bloodType": "Blood Type",
     "clientsManagement": "Clients Management",
     "searchPlaceholder": "Search name, email, or phone",
     "filter": "Filter",

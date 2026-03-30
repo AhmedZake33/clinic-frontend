@@ -45,6 +45,7 @@
     "deleteClient": "حذف العميل",
     "clientsList": "قائمة العملاء",
     "clientDetails": "تفاصيل العميل",
+    "bloodType": "فصيلة الدم",
     "clientsManagement": "إدارة العملاء",
     "searchPlaceholder": "البحث في الاسم أو البريد الإلكتروني أو الهاتف",
     "filter": "تصفية",
