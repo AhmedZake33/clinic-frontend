@@ -381,8 +381,16 @@ export default {
       this.draggingId = null
     },
 
+    updateQueueNumbers() {
+      this.queue = this.queue.map((item, idx) => ({
+        ...item,
+        waiting_number: idx + 1,
+      }))
+    },
+
     async syncOrder() {
       try {
+        this.updateQueueNumbers()
         const orderedIds = this.queue.map(i => i.id)
         await reservationsService.reorderWaitingQueue(orderedIds)
         this.$toast({
