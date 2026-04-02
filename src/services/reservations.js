@@ -71,4 +71,8 @@ export default {
   getQueueSummary(params = {}) {
     return apiClient.get('/waiting-queue/summary', { params })
   }
+  ,
+  reorderWaitingQueue(orderedIds) {
+    return apiClient.post('/waiting-queue/reorder', { ordered_ids: orderedIds })
+  }
 }

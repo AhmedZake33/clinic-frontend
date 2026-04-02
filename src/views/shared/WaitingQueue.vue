@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <!-- Queue Stats Cards -->
     <b-row class="mb-2">
@@ -97,7 +97,13 @@
           :key="item.id"
           class="queue-item d-flex align-items-center p-1 mb-1 rounded border"
           :class="queueItemClass(item)"
+          @dragover.prevent="onDragOver($event, index)"
+          @drop.prevent="onDrop($event, index)"
         >
+          <!-- Drag handle (only this element starts the drag) -->
+          <div class="drag-handle mr-1" draggable="true" @dragstart="onDragStart($event, item.id)" @dragend="onDragEnd($event)">
+            <feather-icon icon="MoveIcon" size="16" />
+          </div>
           <!-- Waiting Number Badge -->
           <div class="queue-number mr-1" :class="queueNumberClass(item)">
             <span class="font-weight-bolder">{{ item.waiting_number }}</span>
@@ -203,6 +209,10 @@ export default {
       loading: false,
       filterDate: this.getTodayDate(),
       refreshInterval: null,
+      // drag/drop state
+      draggingId: null,
+      lastOverId: null,
+      movedDuringDrag: false,
     }
   },
   computed: {
@@ -287,6 +297,115 @@ export default {
         })
       }
     },
+    async onDragStart(event, id) {
+      try {
+        event.dataTransfer.setData('text/plain', String(id))
+        event.dataTransfer.effectAllowed = 'move'
+        event.dataTransfer.dropEffect = 'move'
+        this.draggingId = id
+        this.movedDuringDrag = false
+      } catch (e) {
+        // ignore
+      }
+    },
+
+    onDragOver(event, index) {
+      const target = this.queue[index]
+      if (!target) return
+      const targetId = target.id
+      // avoid doing the same work repeatedly
+      if (this.lastOverId === targetId && !event.shiftKey) return
+      this.lastOverId = targetId
+
+      let draggedId = this.draggingId
+      if (draggedId === null || draggedId === undefined) {
+        draggedId = parseInt(event.dataTransfer.getData('text/plain'), 10)
+      }
+      if (isNaN(draggedId)) return
+
+      const from = this.queue.findIndex(i => i.id === draggedId)
+      if (from === -1) return
+
+      // determine whether to insert before or after based on cursor position
+      const rect = event.currentTarget.getBoundingClientRect()
+      const offset = event.clientY - rect.top
+      const before = offset < rect.height / 2
+      let to = before ? index : index + 1
+
+      // normalize target when moving forward in the array
+      if (from < to) to -= 1
+      if (to === from) return
+
+      const item = this.queue.splice(from, 1)[0]
+      this.queue.splice(to, 0, item)
+      this.movedDuringDrag = true
+    },
+
+    async onDrop(event, index) {
+      // clear hover state; always sync order on drop
+      event.preventDefault()
+      this.lastOverId = null
+
+      let draggedId = this.draggingId
+      if (draggedId === null || draggedId === undefined) {
+        draggedId = parseInt(event.dataTransfer.getData('text/plain'), 10)
+      }
+      if (!isNaN(draggedId)) {
+        const from = this.queue.findIndex(i => i.id === draggedId)
+        const target = this.queue[index]
+        if (target && from !== -1) {
+          const rect = event.currentTarget.getBoundingClientRect()
+          const offset = event.clientY - rect.top
+          const before = offset < rect.height / 2
+          let to = before ? index : index + 1
+          if (from < to) to -= 1
+          if (to !== from && to >= 0 && to <= this.queue.length) {
+            const item = this.queue.splice(from, 1)[0]
+            this.queue.splice(to, 0, item)
+          }
+        }
+      }
+
+      await this.syncOrder()
+      this.draggingId = null
+      this.movedDuringDrag = false
+    },
+
+    async onDragEnd(event) {
+      // some browsers may stop in dragend before drop, keep sync fallback
+      this.lastOverId = null
+      if (this.movedDuringDrag) {
+        this.movedDuringDrag = false
+        await this.syncOrder()
+      }
+      this.draggingId = null
+    },
+
+    async syncOrder() {
+      try {
+        const orderedIds = this.queue.map(i => i.id)
+        await reservationsService.reorderWaitingQueue(orderedIds)
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.success'),
+            text: this.$t('queue.reorderSuccess') || 'Queue reordered',
+            variant: 'success',
+          },
+        })
+        this.fetchQueue()
+      } catch (error) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: error.response?.data?.error || this.$t('queue.reorderError') || 'Unable to reorder',
+            variant: 'danger',
+          },
+        })
+        this.fetchQueue()
+      }
+    },
     queueItemClass(item) {
       if (item.queue_status === 'completed') return 'border-success bg-light-success queue-completed'
       if (item.is_current) return 'border-danger bg-light-danger queue-current'
@@ -325,6 +444,17 @@ export default {
   font-size: 1.25rem;
   flex-shrink: 0;
 }
+
+.drag-handle {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  flex-shrink: 0;
+}
+.drag-handle:active { cursor: grabbing; }
 
 .queue-item {
   transition: all 0.3s ease;
