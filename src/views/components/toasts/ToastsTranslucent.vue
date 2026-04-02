@@ -25,7 +25,7 @@
         <template #toast-title>
           <div class="d-flex flex-grow-1 align-items-center mr-1">
             <b-img
-              :src="require('@/assets/images/logo/logo.png')"
+              :src="require('@/assets/images/logo/logo.svg')"
               class="mr-1"
               height="18"
               width="25"
