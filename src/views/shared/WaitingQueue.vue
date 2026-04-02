@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <!-- Queue Stats Cards -->
     <b-row class="mb-2">
@@ -97,6 +97,10 @@
           :key="item.id"
           class="queue-item d-flex align-items-center p-1 mb-1 rounded border"
           :class="queueItemClass(item)"
+          draggable="true"
+          @dragstart="onDragStart($event, item.id)"
+          @dragover.prevent="onDragOver($event, index)"
+          @dragend="onDragEnd($event)"
         >
           <!-- Waiting Number Badge -->
           <div class="queue-number mr-1" :class="queueNumberClass(item)">
@@ -203,6 +207,9 @@ export default {
       loading: false,
       filterDate: this.getTodayDate(),
       refreshInterval: null,
+      draggingIndex: null,
+      lastOverId: null,
+      movedDuringDrag: false,
     }
   },
   computed: {
@@ -285,6 +292,76 @@ export default {
             variant: 'danger',
           },
         })
+      }
+    },
+    async onDragStart(event, id) {
+      try {
+        event.dataTransfer.setData('text/plain', String(id))
+        this.draggingIndex = id
+        this.movedDuringDrag = false
+      } catch (e) {
+        // ignore
+      }
+      // Do not refresh the queue while dragging — it interferes with user reorder
+    },
+
+    onDragOver(event, index) {
+      const target = this.queue[index]
+      if (!target) return
+      const targetId = target.id
+      if (this.lastOverId === targetId) return
+      this.lastOverId = targetId
+      let draggedId = null
+      if (this.draggingIndex !== null) {
+        draggedId = this.draggingIndex
+      } else {
+        draggedId = parseInt(event.dataTransfer.getData('text/plain'), 10)
+      }
+      if (isNaN(draggedId)) return
+      const from = this.queue.findIndex(i => i.id === draggedId)
+      if (from === -1 || from === index) return
+      const item = this.queue.splice(from, 1)[0]
+      this.queue.splice(index, 0, item)
+      this.movedDuringDrag = true
+    },
+
+    async onDragEnd(event) {
+      this.lastOverId = null
+      if (this.movedDuringDrag) {
+        this.movedDuringDrag = false
+        await this.syncOrder()
+      }
+      this.draggingIndex = null
+    },
+    
+    async syncOrder() {
+      try {
+        const orderedIds = this.queue.map(i => i.id)
+        console.debug('syncOrder: orderedIds', orderedIds)
+        await reservationsService.reorderWaitingQueue(orderedIds)
+        console.debug('syncOrder: reorder request sent')
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.success'),
+            text: this.$t('queue.reorderSuccess') || 'Queue reordered',
+            variant: 'success',
+          },
+        })
+        // Refresh queue from server to get updated estimated times and statuses
+        this.fetchQueue()
+      } catch (error) {
+        console.error('syncOrder error', error)
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: error.response?.data?.error || this.$t('queue.reorderError') || 'Unable to reorder',
+            variant: 'danger',
+          },
+        })
+        // Re-fetch to restore server state
+        this.fetchQueue()
       }
     },
     queueItemClass(item) {

@@ -45,12 +45,14 @@ export const updateEchoAuth = () => {
  * @param {Function} onDeleted - Callback when reservation is deleted
  * @returns {Object} - Echo channel subscription
  */
-export const subscribeToDoctorChannel = (doctorId, { onCreated, onUpdated, onCompleted, onDeleted }) => {
-  return echo.private(`doctor.${doctorId}`)
+export const subscribeToDoctorChannel = (doctorId, { onCreated, onUpdated, onCompleted, onDeleted, onReordered }) => {
+  const ch = echo.private(`doctor.${doctorId}`)
     .listen('.reservation.created', onCreated)
     .listen('.reservation.updated', onUpdated)
     .listen('.reservation.completed', onCompleted)
     .listen('.reservation.deleted', onDeleted)
+  if (onReordered) ch.listen('.queue.reordered', onReordered)
+  return ch
 }
 
 /**
@@ -61,12 +63,14 @@ export const subscribeToDoctorChannel = (doctorId, { onCreated, onUpdated, onCom
  * @param {Function} onDeleted - Callback when reservation is deleted
  * @returns {Object} - Echo channel subscription
  */
-export const subscribeToAssistantChannel = ({ onCreated, onUpdated, onCompleted, onDeleted }) => {
-  return echo.private('assistant.reservations')
+export const subscribeToAssistantChannel = ({ onCreated, onUpdated, onCompleted, onDeleted, onReordered }) => {
+  const ch = echo.private('assistant.reservations')
     .listen('.reservation.created', onCreated)
     .listen('.reservation.updated', onUpdated)
     .listen('.reservation.completed', onCompleted)
     .listen('.reservation.deleted', onDeleted)
+  if (onReordered) ch.listen('.queue.reordered', onReordered)
+  return ch
 }
 
 /**

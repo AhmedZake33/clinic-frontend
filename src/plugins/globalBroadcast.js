@@ -146,6 +146,11 @@ function subscribe(vm) {
       playNotificationSound()
       store.commit('broadcast/RESERVATION_EVENT', { type: 'created', data })
     },
+    onReordered(data) {
+      showToast(vm, 'info', 'ListIcon', 'Queue Reordered', data.message || 'Waiting queue order changed')
+      playNotificationSound()
+      store.commit('broadcast/RESERVATION_EVENT', { type: 'reordered', data })
+    },
     onUpdated(data) {
       const name = data.reservation?.client?.name || 'Unknown'
       showToast(vm, 'info', 'EditIcon', 'Reservation Updated', `Appointment updated for ${name}`)
