@@ -97,11 +97,14 @@
           :key="item.id"
           class="queue-item d-flex align-items-center p-1 mb-1 rounded border"
           :class="queueItemClass(item)"
+          draggable="true"
+          @dragstart="onDragStart($event, item.id)"
+          @dragend="onDragEnd($event)"
           @dragover.prevent="onDragOver($event, index)"
           @drop.prevent="onDrop($event, index)"
         >
-          <!-- Drag handle (only this element starts the drag) -->
-          <div class="drag-handle mr-1" draggable="true" @dragstart="onDragStart($event, item.id)" @dragend="onDragEnd($event)">
+          <!-- Drag handle (now visual only, row is draggable) -->
+          <div class="drag-handle mr-1">
             <feather-icon icon="MoveIcon" size="16" />
           </div>
           <!-- Waiting Number Badge -->
