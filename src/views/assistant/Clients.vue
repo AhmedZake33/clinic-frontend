@@ -3,8 +3,9 @@
     <b-card>
       <b-row class="mb-2">
         <b-col cols="12" md="4">
+          <h4>{{ $t('client.clientsList') }}</h4>
         </b-col>
-        <b-col cols="12" md="8" class="text-end">
+        <b-col cols="12" md="8" class="text-right">
           <b-button variant="primary" @click="showAddModal">
             <feather-icon icon="PlusIcon" class="mr-50" />
             {{ $t('client.addClient') }}

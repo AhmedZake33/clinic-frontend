@@ -163,6 +163,9 @@ function subscribe(vm) {
       playNotificationSound()
       store.commit('broadcast/RESERVATION_EVENT', { type: 'deleted', data })
     },
+    onReordered(data) {
+      store.commit('broadcast/RESERVATION_EVENT', { type: 'reordered', data })
+    },
   }
 
   if (user.role === 'doctor') {

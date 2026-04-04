@@ -13,7 +13,7 @@
               <b-form-input v-model="filters.date_to" type="date" />
             </b-form-group>
           </b-col>
-          <b-col md="3" class="d-flex align-items-end">
+          <b-col md="3" class="d-flex align-items-center">
             <b-button variant="primary" class="mr-1" type="submit" :disabled="loading">
               <b-spinner v-if="loading" small class="mr-50" />
               {{ $t('filters.apply') }}

@@ -158,14 +158,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Auto-refresh indicator -->
-      <div class="text-center mt-2">
-        <small class="text-muted">
-          <feather-icon icon="RefreshCwIcon" size="12" class="mr-25" />
-          {{ $t('queue.autoRefresh') }}
-        </small>
-      </div>
     </b-card>
   </div>
 </template>
@@ -211,7 +203,6 @@ export default {
       },
       loading: false,
       filterDate: this.getTodayDate(),
-      refreshInterval: null,
       // drag/drop state
       draggingId: null,
       lastOverId: null,
@@ -226,15 +217,6 @@ export default {
   },
   mounted() {
     this.fetchQueue()
-    // Auto-refresh every 30 seconds
-    this.refreshInterval = setInterval(() => {
-      this.fetchQueue()
-    }, 30000)
-  },
-  beforeDestroy() {
-    if (this.refreshInterval) {
-      clearInterval(this.refreshInterval)
-    }
   },
   watch: {
     '$store.state.broadcast.eventCounter'() {
