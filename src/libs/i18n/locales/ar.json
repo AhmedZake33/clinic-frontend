@@ -349,6 +349,32 @@
     "partialCount": "سجلات مدفوعة جزئياً",
     "unpaidCount": "سجلات غير مدفوعة"
   },
+  "purchases": {
+    "purchases": "المشتريات",
+    "title": "المشتريات",
+    "purchasesList": "قائمة المشتريات",
+    "newPurchase": "مشتريات جديدة",
+    "editPurchase": "تعديل المشتريات",
+    "itemName": "اسم العنصر",
+    "category": "الفئة",
+    "quantity": "الكمية",
+    "amountPaid": "المبلغ المدفوع",
+    "supplier": "المورد / البائع",
+    "paymentMethod": "طريقة الدفع",
+    "purchaseDate": "تاريخ الشراء",
+    "notes": "ملاحظات",
+    "dailyTotal": "إجمالي المشتريات اليومية",
+    "monthlyTotal": "إجمالي المشتريات الشهرية",
+    "totalByCategory": "إجمالي الإنفاق حسب الفئة"
+  },
+  "categoryOptions": {
+    "selectCategory": "اختر الفئة",
+    "medicalSupplies": "مستلزمات طبية",
+    "equipment": "معدات",
+    "services": "خدمات",
+    "maintenance": "صيانة",
+    "other": "أخرى"
+  },
   "openfda": {
     "egyptDrugs": "الأدوية المصرية",
     "fdaDrugs": "أدوية FDA الدولية",

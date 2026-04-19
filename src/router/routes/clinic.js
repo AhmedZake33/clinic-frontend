@@ -122,6 +122,54 @@ export default [
     },
   },
   {
+    path: '/assistant/purchases',
+    name: 'assistant-purchases',
+    component: () => import('@/views/assistant/Purchases.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['assistant.view-purchases'],
+      pageTitle: 'purchases.purchases',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'purchases.purchases',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/assistant/purchases/new',
+    name: 'assistant-purchase-new',
+    component: () => import('@/views/assistant/PurchaseForm.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['assistant.create-purchases'],
+      pageTitle: 'purchases.newPurchase',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'purchases.purchases', to: { name: 'assistant-purchases' }, i18n: true },
+        { text: 'purchases.newPurchase', active: true, i18n: true },
+      ],
+    },
+  },
+  {
+    path: '/assistant/purchases/:id/edit',
+    name: 'assistant-purchase-edit',
+    component: () => import('@/views/assistant/PurchaseForm.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['assistant.edit-purchases'],
+      pageTitle: 'purchases.editPurchase',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'purchases.purchases', to: { name: 'assistant-purchases' }, i18n: true },
+        { text: 'purchases.editPurchase', active: true, i18n: true },
+      ],
+    },
+  },
+  {
     path: '/assistant/reports',
     name: 'assistant-reports',
     component: () => import('@/views/shared/Reports.vue'),
@@ -267,6 +315,50 @@ export default [
           active: true,
           i18n: true,
         },
+      ],
+    },
+  },
+  {
+    path: '/doctor/purchases',
+    name: 'doctor-purchases',
+    component: () => import('@/views/assistant/Purchases.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-purchases'],
+      pageTitle: 'purchases.purchases',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'purchases.purchases', active: true, i18n: true },
+      ],
+    },
+  },
+  {
+    path: '/doctor/purchases/new',
+    name: 'doctor-purchase-new',
+    component: () => import('@/views/assistant/PurchaseForm.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.create-purchases'],
+      pageTitle: 'purchases.newPurchase',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'purchases.purchases', to: { name: 'doctor-purchases' }, i18n: true },
+        { text: 'purchases.newPurchase', active: true, i18n: true },
+      ],
+    },
+  },
+  {
+    path: '/doctor/purchases/:id/edit',
+    name: 'doctor-purchase-edit',
+    component: () => import('@/views/assistant/PurchaseForm.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.edit-purchases'],
+      pageTitle: 'purchases.editPurchase',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'purchases.purchases', to: { name: 'doctor-purchases' }, i18n: true },
+        { text: 'purchases.editPurchase', active: true, i18n: true },
       ],
     },
   },

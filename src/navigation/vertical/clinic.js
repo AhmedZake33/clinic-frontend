@@ -41,6 +41,13 @@ const navigationItems = [
     permission: 'assistant.view-financials',
   },
   {
+    title: 'purchases.purchases',
+    i18n: true,
+    route: 'assistant-purchases',
+    icon: 'ShoppingCartIcon',
+    permission: 'assistant.view-purchases',
+  },
+  {
     title: 'menu.reports',
     i18n: true,
     route: 'assistant-reports',
@@ -93,6 +100,13 @@ const navigationItems = [
     route: 'doctor-financials',
     icon: 'DollarSignIcon',
     permission: 'doctor.view-financials',
+  },
+  {
+    title: 'purchases.purchases',
+    i18n: true,
+    route: 'doctor-purchases',
+    icon: 'ShoppingCartIcon',
+    permission: 'doctor.view-purchases',
   },
   {
     title: 'menu.assistants',

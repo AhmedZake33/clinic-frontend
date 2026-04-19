@@ -99,12 +99,12 @@ export default {
           roles: response.data.roles || [],
         })
 
-        // Redirect based on role
+        // Redirect to role-specific dashboards
         const role = response.data.user.role
         if (role === 'doctor') {
-          this.$router.push('/doctor/reservations')
+          this.$router.push('/doctor/dashboard')
         } else if (role === 'assistant') {
-          this.$router.push('/assistant/clients')
+          this.$router.push('/assistant/dashboard')
         } else {
           this.$router.push('/dashboard')
         }

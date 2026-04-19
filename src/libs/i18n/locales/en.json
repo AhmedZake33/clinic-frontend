@@ -148,7 +148,8 @@
     "thisMonth": "This Month",
     "search": "Search",
     "reset": "Reset",
-    "apply": "Apply"
+    "apply": "Apply",
+    "selectCategory": "-- Select category --"
   },
   "actions": {
     "add": "Add",
@@ -444,10 +445,12 @@
     "myReservations": "My Reservations",
     "schedule": "Schedule",
     "financials": "Financials",
+    "purchases": "Purchases",
     "reports": "Reports",
     "waitingQueue": "Waiting Queue",
     "assistants": "My Assistants",
-    "rolesPermissions": "Roles & Permissions"
+    "rolesPermissions": "Roles & Permissions",
+    "total": "Total"
   },
   "roles": {
     "rolesManagement": "Roles Management",
@@ -527,6 +530,33 @@
     "paidCount": "Paid Records",
     "partialCount": "Partial Records",
     "unpaidCount": "Unpaid Records"
+  },
+  "purchases": {
+    "purchases": "Purchases",
+    "title": "Purchases",
+    "purchasesList": "Purchases List",
+    "newPurchase": "New Purchase",
+    "editPurchase": "Edit Purchase",
+    "itemName": "Item name",
+    "category": "Category",
+    "quantity": "Quantity",
+    "amountPaid": "Amount paid",
+    "supplier": "Supplier / Vendor",
+    "paymentMethod": "Payment method",
+    "purchaseDate": "Purchase date",
+    "notes": "Notes",
+    "dailyTotal": "Daily purchases total",
+    "monthlyTotal": "Monthly purchases total",
+    "totalByCategory": "Total spending by category",
+    "periodTotal": "Total purchases for selected period"
+  },
+  "categoryOptions": {
+    "selectCategory": "Select Category",
+    "medicalSupplies": "Medical Supplies",
+    "equipment": "Equipment",
+    "services": "Services",
+    "maintenance": "Maintenance",
+    "other": "Other"
   },
   "openfda": {
     "egyptDrugs": "Egypt Drugs",
