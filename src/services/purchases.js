@@ -20,22 +20,9 @@ export default {
   deletePurchase(id) {
     return apiClient.delete(`/purchases/${id}`)
   },
-  // stats
-  getDailyTotal(params = {}) {
-    return apiClient.get('/purchases/stats', { params })
-  },
-
-  // POST version: send payload in request body for more complex filters / ranges
+  // stats: unified endpoint (POST for filters/range)
   stats(payload = {}) {
     console.log('Fetching stats with payload:', payload)
     return apiClient.post('/purchases/stats', payload)
-  },
-
-  getMonthlyTotal(params = {}) {
-    return apiClient.get('/purchases/stats', { params })
-  },
-
-  getTotalsByCategory(params = {}) {
-    return apiClient.get('/purchases/stats', { params })
   },
 }

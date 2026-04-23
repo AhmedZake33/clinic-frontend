@@ -183,6 +183,7 @@
     "confirm": "تأكيد",
     "loading": "جارٍ التحميل...",
     "noData": "لا توجد بيانات",
+    "noRecords": "لا توجد سجلات للعرض",
     "saveSuccess": "تم الحفظ بنجاح",
     "deleteConfirm": "هل أنت متأكد من الحذف؟",
     "deleteSuccess": "تم الحذف بنجاح",
@@ -363,9 +364,8 @@
     "paymentMethod": "طريقة الدفع",
     "purchaseDate": "تاريخ الشراء",
     "notes": "ملاحظات",
-    "dailyTotal": "إجمالي المشتريات اليومية",
-    "monthlyTotal": "إجمالي المشتريات الشهرية",
-    "totalByCategory": "إجمالي الإنفاق حسب الفئة"
+    "periodTotal": "إجمالي المشتريات للفترة المحددة",
+    "noRecords": "لا توجد سجلات للعرض"
   },
   "categoryOptions": {
     "selectCategory": "اختر الفئة",
@@ -433,6 +433,29 @@
     "checkInConfirmText": "سيتم إضافة المريض إلى قائمة الانتظار"
   },
   "assistantMgmt": {
+    "title": "مساعديّ",
+    "addAssistant": "إضافة مساعد",
+    "editAssistant": "تعديل بيانات المساعد",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "newPassword": "كلمة المرور الجديدة",
+    "leaveBlank": "اتركه فارغاً للإبقاء على كلمة المرور الحالية",
+    "created": "تم إنشاء المساعد بنجاح",
+    "updated": "تم تحديث بيانات المساعد بنجاح",
+    "deleted": "تم حذف المساعد بنجاح",
+    "createError": "فشل في إنشاء المساعد",
+    "updateError": "فشل في تحديث بيانات المساعد",
+    "deleteError": "فشل في حذف المساعد",
+    "deleteConfirm": "حذف هذا المساعد؟",
+    "deleteText": "لا يمكن التراجع عن هذا الإجراء.",
+    "noAssistants": "لا يوجد مساعدون",
+    "createdAt": "تاريخ الإنشاء",
+    "actions": "الإجراءات"
+  },
+
+  "assistant": {
     "title": "مساعديّ",
     "addAssistant": "إضافة مساعد",
     "editAssistant": "تعديل بيانات المساعد",

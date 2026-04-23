@@ -31,47 +31,12 @@
         </b-row>
       </b-form>
 
-    <!-- Summary Cards (styled like Financials) -->
+    <!-- Summary: Total purchases for selected period -->
     <b-row class="mb-2">
-      <b-col cols="12" sm="6" md="3">
+      <b-col cols="12" md="4">
         <b-card class="text-center border">
           <b-card-text class="text-muted small mb-0">{{ $t('purchases.periodTotal') }}</b-card-text>
           <h3 class="mb-0 text-primary">{{ formatCurrency(stats.periodTotal) }}</h3>
-        </b-card>
-      </b-col>
-      <b-col cols="12" sm="6" md="3">
-        <b-card class="text-center border">
-          <b-card-text class="text-muted small mb-0">{{ $t('purchases.dailyTotal') || $t('purchases.daily') }}</b-card-text>
-          <h3 class="mb-0 text-success">{{ formatCurrency(stats.daily) }}</h3>
-        </b-card>
-      </b-col>
-      <b-col cols="12" sm="6" md="3">
-        <b-card class="text-center border">
-          <b-card-text class="text-muted small mb-0">{{ $t('purchases.monthlyTotal') || $t('purchases.monthly') }}</b-card-text>
-          <h3 class="mb-0 text-info">{{ formatCurrency(stats.monthly) }}</h3>
-        </b-card>
-      </b-col>
-      <b-col cols="12" sm="6" md="3">
-        <b-card class="text-center border">
-          <b-card-text class="text-muted small mb-0">{{ $t('purchases.totalByCategory') }}</b-card-text>
-          <h3 class="mb-0 text-secondary">{{ stats.byCategory.length }}</h3>
-        </b-card>
-      </b-col>
-    </b-row>
-
-    <!-- Totals by Category cards -->
-    <b-row class="mb-3">
-      <b-col v-for="c in stats.byCategory" :key="c.category" cols="12" sm="6" md="3">
-        <b-card class="text-center border">
-          <b-card-text class="text-muted small mb-0">
-            <span v-if="$i18n.locale === 'ar'">
-              {{ (c.labels && c.labels.ar) }}
-            </span>
-            <span v-else>
-              {{ (c.labels && c.labels.en)  }}
-            </span>
-          </b-card-text>
-          <h5 class="mb-0">{{ formatCurrency(c.total) }}</h5>
         </b-card>
       </b-col>
     </b-row>
@@ -95,6 +60,9 @@
         :busy="loading"
         show-empty
       >
+        <template #empty>
+          <div class="text-center text-muted py-2">{{ $t('purchases.noRecords') }}</div>
+        </template>
         <template #cell(purchase_date)="data">
           {{ formatDate(data.item.purchase_date) }}
         </template>
@@ -147,11 +115,8 @@ export default {
         to: new Date().toISOString().substr(0, 10),
         category: '',
       },
-      // stats
+      // stats (only period total required)
       stats: {
-        daily: 0,
-        monthly: 0,
-        byCategory: [],
         periodTotal: 0,
       },
       fields: [
@@ -239,14 +204,13 @@ export default {
         } else if (from) {
           params.date = from
         }
-        // send stats payload in request body (POST)
+        // request stats (POST) and extract period total
         const res = await purchasesApi.stats(params)
-        this.stats.daily = res.data.daily || 0
-        this.stats.monthly = res.data.monthly || 0
-        this.stats.byCategory = res.data.byCategory || []
-        this.stats.periodTotal = res.data.period_total || 0
+        console.debug('purchases.stats response', res)
+        const payload = (res && typeof res.data !== 'undefined') ? res.data : res
+        this.stats.periodTotal = payload.period_total || payload.periodTotal || 0
       } catch (e) {
-        // ignore for now
+        console.error('loadStats error', e)
       }
     },
     formatCurrency(value) {
