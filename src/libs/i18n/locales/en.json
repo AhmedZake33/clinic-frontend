@@ -63,6 +63,9 @@
       "arthritis": "Arthritis",
       "copd": "COPD"
     }
+    ,
+    "countryCode": "Country Code",
+    "selectCountryCode": "-- Select country code --"
   },
   "reservation": {
     "date": "Date",

@@ -132,7 +132,7 @@
             {{ stats.pendingReservations }}
           </h2>
           <p class="card-text">
-            Pending
+            {{ $t('reservation.pending') }}
           </p>
         </b-card>
       </b-col>
@@ -152,7 +152,7 @@
             {{ stats.completedReservations }}
           </h2>
           <p class="card-text">
-            Completed
+            {{ $t('reservation.completed') }}
           </p>
         </b-card>
       </b-col>
@@ -396,7 +396,7 @@ export default {
       return variants[status] || 'secondary'
     },
     formatDateTime(value) {
-      if (!value) return 'N/A'
+      if (!value) return this.$t('reservation.na')
       // Parse as local time since backend returns Y-m-d H:i:s format
       const date = new Date(value + (value.includes(' ') ? '' : ''))
       return date.toLocaleString()

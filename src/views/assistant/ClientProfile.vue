@@ -6,8 +6,8 @@
           <h4 class="mb-1">{{ $t('client.clientDetails') }}</h4>
           <p class="mb-0"><strong>{{ $t('client.name') }}:</strong> {{ client.name }}</p>
           <p class="mb-0"><strong>{{ $t('clinic.email') }}:</strong> {{ client.email }}</p>
-          <p class="mb-0"><strong>{{ $t('client.phone') }}:</strong> {{ client.phone }}</p>
-          <p class="mb-0"><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ client.whatsapp_number || $t('reservation.na') }}</p>
+          <p class="mb-0"><strong>{{ $t('client.phone') }}:</strong> {{ (client.phone_country_code || client.country_code) ? (client.phone_country_code || client.country_code) + ' ' : '' }}{{ client.phone }}</p>
+          <p class="mb-0"><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ (client.whatsapp_country_code || client.country_code) ? (client.whatsapp_country_code || client.country_code) + ' ' : '' }}{{ client.whatsapp_number || $t('reservation.na') }}</p>
           <p class="mb-0"><strong>{{ $t('client.bloodType') }}:</strong> {{ client.blood_type || $t('reservation.na') }}</p>
           <p class="mb-0"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ client.date_of_birth ? formatDate(client.date_of_birth) : $t('reservation.na') }}</p>
           <p class="mb-0"><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(client.date_of_birth) }}</p>
@@ -140,11 +140,34 @@
         </b-form-group>
 
         <b-form-group :label="$t('client.phone')" label-for="profile-client-phone">
-          <b-form-input id="profile-client-phone" v-model="clientForm.phone" required />
+          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+            <div class="country-col">
+              <b-form-select
+                id="profile-client-country"
+                class="phone-country-select"
+                v-model="clientForm.phone_country_code"
+                :options="countrySelectOptions"
+              />
+            </div>
+            <div class="number-col">
+              <b-form-input id="profile-client-phone" class="phone-number-input" v-model="clientForm.phone" required />
+            </div>
+          </div>
         </b-form-group>
 
         <b-form-group :label="$t('client.whatsappNumber')" label-for="profile-client-whatsapp-number">
-          <b-form-input id="profile-client-whatsapp-number" v-model="clientForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" />
+          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+            <div class="country-col">
+              <b-form-select
+                class="phone-country-select"
+                v-model="clientForm.whatsapp_country_code"
+                :options="countrySelectOptions"
+              />
+            </div>
+            <div class="number-col">
+              <b-form-input id="profile-client-whatsapp-number" class="phone-number-input" v-model="clientForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" />
+            </div>
+          </div>
         </b-form-group>
 
         <b-form-group :label="$t('client.bloodType')" label-for="profile-client-blood-type">
@@ -229,6 +252,8 @@ import clientsService from '@/services/clients'
 import reservationsService from '@/services/reservations'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
+import vSelect from 'vue-select'
+import countryList from '@/utils/countries'
 
 export default {
   components: {
@@ -246,6 +271,7 @@ export default {
     BFormSelect,
     BFormTextarea,
     BSpinner,
+    vSelect,
   },
   computed: {
     lastPrescriptionReservation() {
@@ -258,6 +284,12 @@ export default {
     chronicIllnessOptions() {
       return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
     },
+    countryOptions() {
+      return countryList
+    },
+    countrySelectOptions() {
+      return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(c => ({ value: c.value, text: c.label })))
+    },
   },
   data() {
     return {
@@ -266,6 +298,8 @@ export default {
         name: '',
         email: '',
         phone: '',
+        phone_country_code: '',
+        whatsapp_country_code: '',
         whatsapp_number: '',
         blood_type: '',
         date_of_birth: '',
@@ -338,6 +372,8 @@ export default {
         name: this.client.name || '',
         email: this.client.email || '',
         phone: this.client.phone || '',
+        phone_country_code: this.client.phone_country_code || this.client.country_code || '',
+        whatsapp_country_code: this.client.whatsapp_country_code || this.client.country_code || '',
         whatsapp_number: this.client.whatsapp_number || '',
         blood_type: this.client.blood_type || '',
         date_of_birth: this.client.date_of_birth ? this.client.date_of_birth.substring(0, 10) : '',
@@ -452,6 +488,141 @@ export default {
 <style scoped>
 .icon-directional {
   display: inline-block;
+}
+
+.phone-combined-control {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  transition: box-shadow 0.2s ease;
+}
+
+.phone-combined-control:focus-within {
+  border-radius: 0.357rem;
+  box-shadow: 0 0 0 0.2rem rgba(115, 103, 240, 0.15);
+}
+
+.country-col {
+  flex: 0 0 140px;
+  max-width: 140px;
+}
+
+.number-col {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+::v-deep .phone-country-select .vs__dropdown-toggle {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  height: 38px;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #d8d6de;
+  background: #fff;
+  border-radius: 0.357rem 0 0 0.357rem;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+::v-deep .phone-country-select .vs__dropdown-toggle:hover {
+  background-color: #f8f8f8;
+  border-color: #c9c9c9;
+}
+
+::v-deep .phone-country-select .vs__selected-options,
+::v-deep .phone-country-select .vs__actions {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+::v-deep .phone-country-select .vs__selected {
+  margin: 0;
+  padding-right: 0.25rem;
+}
+
+::v-deep .phone-country-select .vs__search {
+  margin: 0;
+}
+
+::v-deep .phone-country-select.vs--open .vs__dropdown-toggle {
+  border-color: #7367f0;
+}
+
+/* Match b-form-input typography and caret */
+::v-deep .phone-country-select .vs__dropdown-toggle,
+::v-deep .phone-country-select .vs__selected,
+::v-deep .phone-country-select .vs__selected-options {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #495057;
+}
+
+::v-deep .phone-country-select .vs__open-indicator {
+  margin-left: 0.375rem;
+  color: #6c6c6c;
+}
+
+::v-deep .phone-country-select .vs__dropdown-toggle .vs__open-indicator svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Ensure placeholder text matches input placeholder styling */
+::v-deep .phone-country-select .vs__search::-webkit-input-placeholder {
+  color: #9aa0a6;
+}
+::v-deep .phone-country-select .vs__search::placeholder {
+  color: #9aa0a6;
+}
+
+.phone-number-input {
+  height: 38px;
+  border: 1px solid #d8d6de;
+  border-left: 0;
+  border-radius: 0 0.357rem 0.357rem 0;
+  padding: 0.375rem 0.75rem;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.phone-number-input:hover {
+  background-color: #fcfcfc;
+  border-color: #c9c9c9;
+}
+
+.phone-number-input:focus {
+  box-shadow: none;
+  border-color: #7367f0;
+}
+
+.phone-combined-control:focus-within ::v-deep .phone-country-select .vs__dropdown-toggle,
+.phone-combined-control:focus-within .phone-number-input {
+  border-color: #7367f0;
+}
+
+.phone-combined-control--rtl {
+  flex-direction: row-reverse;
+}
+
+.phone-combined-control--rtl ::v-deep .phone-country-select .vs__dropdown-toggle {
+  border-radius: 0 0.357rem 0.357rem 0;
+}
+
+.phone-combined-control--rtl .phone-number-input {
+  border-radius: 0.357rem 0 0 0.357rem;
+  border-left: 1px solid #d8d6de;
+  border-right: 0;
+}
+
+@media (max-width: 575.98px) {
+  .country-col {
+    flex-basis: 124px;
+    max-width: 124px;
+  }
 }
 </style>
 

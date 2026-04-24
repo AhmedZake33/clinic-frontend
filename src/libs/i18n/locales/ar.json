@@ -63,6 +63,9 @@
       "arthritis": "التهاب المفاصل",
       "copd": "الانسداد الرئوي المزمن"
     }
+    ,
+    "countryCode": "رمز الدولة",
+    "selectCountryCode": "-- اختر رمز الدولة --"
   },
   "reservation": {
     "date": "التاريخ",

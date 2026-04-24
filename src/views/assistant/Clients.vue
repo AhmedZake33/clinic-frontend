@@ -42,7 +42,7 @@
 
       <b-table
         :items="clients"
-        :fields="fields"
+        :fields="computedFields"
         responsive
         striped
         hover
@@ -65,7 +65,7 @@
             @click="goToProfile(data.item.id)"
           >
             <feather-icon icon="UserIcon" class="mr-50" />
-            Profile
+            {{ $t('client.clientDetails') }}
           </b-button>
           <b-button
             variant="warning"
@@ -107,44 +107,69 @@
     <!-- Add/Edit Modal -->
     <b-modal
       v-model="modalShow"
-      :title="editMode ? 'Edit Client' : 'Add New Client'"
+      :title="editMode ? $t('client.editClient') : $t('client.addClient')"
       hide-footer
       size="lg"
     >
       <b-form @submit.prevent="saveClient">
-        <b-form-group label="Name" label-for="name">
+        <b-form-group :label="$t('client.name')" label-for="name">
           <b-form-input
             id="name"
             v-model="form.name"
             required
-            placeholder="Enter client name"
+            :placeholder="$t('client.name')"
           />
         </b-form-group>
 
-        <b-form-group label="Email" label-for="email">
+        <b-form-group :label="$t('clinic.email')" label-for="email">
           <b-form-input
             id="email"
             v-model="form.email"
             type="email"
-            placeholder="Enter email"
+            :placeholder="$t('clinic.email')"
           />
         </b-form-group>
 
-        <b-form-group label="Phone" label-for="phone">
-          <b-form-input
-            id="phone"
-            v-model="form.phone"
-            required
-            placeholder="Enter phone number"
-          />
+        <b-form-group :label="$t('client.phone')" label-for="phone">
+          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+            <div class="country-col">
+              <b-form-select
+                id="country-code"
+                class="phone-country-select"
+                v-model="form.phone_country_code"
+                :options="countrySelectOptions"
+              />
+            </div>
+            <div class="number-col">
+              <b-form-input
+                id="phone"
+                class="phone-number-input"
+                v-model="form.phone"
+                required
+                :placeholder="$t('client.phone')"
+              />
+            </div>
+          </div>
         </b-form-group>
 
         <b-form-group :label="$t('client.whatsappNumber')" label-for="whatsapp-number">
-          <b-form-input
-            id="whatsapp-number"
-            v-model="form.whatsapp_number"
-            :placeholder="$t('client.whatsappPlaceholder')"
-          />
+          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+            <div class="country-col">
+              <b-form-select
+                class="phone-country-select"
+                v-model="form.whatsapp_country_code"
+                :options="countrySelectOptions"
+              />
+            </div>
+            <div class="number-col">
+              <b-form-input
+                id="whatsapp-number"
+                class="phone-number-input"
+                v-model="form.whatsapp_number"
+                :placeholder="$t('client.whatsappPlaceholder')"
+              />
+            </div>
+          </div>
         </b-form-group>
 
         <b-form-group :label="$t('client.bloodType')" label-for="blood-type">
@@ -155,7 +180,7 @@
           />
         </b-form-group>
 
-        <b-form-group label="Date of Birth" label-for="dob">
+        <b-form-group :label="$t('client.dateOfBirth')" label-for="dob">
           <b-form-input
             id="dob"
             v-model="form.date_of_birth"
@@ -192,12 +217,12 @@
           </b-col>
         </b-row>
 
-        <b-form-group label="Address" label-for="address">
+        <b-form-group :label="$t('client.address')" label-for="address">
           <b-form-textarea
             id="address"
             v-model="form.address"
             rows="2"
-            placeholder="Enter address"
+            :placeholder="$t('client.address')"
           />
         </b-form-group>
 
@@ -209,12 +234,12 @@
           />
         </b-form-group>
 
-        <b-form-group label="Medical History" label-for="history">
+        <b-form-group :label="$t('client.medicalHistory')" label-for="history">
           <b-form-textarea
             id="history"
             v-model="form.medical_history"
             rows="3"
-            placeholder="Enter medical history"
+            :placeholder="$t('client.medicalHistory')"
           />
         </b-form-group>
 
@@ -230,11 +255,11 @@
 
         <div class="text-right">
           <b-button variant="secondary" class="mr-1" @click="modalShow = false">
-            Cancel
+            {{ $t('actions.cancel') }}
           </b-button>
           <b-button type="submit" variant="primary" :disabled="saving">
             <b-spinner v-if="saving" small class="mr-1" />
-            Save
+            {{ $t('actions.save') }}
           </b-button>
         </div>
       </b-form>
@@ -243,35 +268,35 @@
     <!-- View Modal -->
     <b-modal
       v-model="viewModalShow"
-      title="Client Details"
+      :title="$t('client.clientDetails')"
       ok-only
       size="lg"
     >
       <div v-if="selectedClient">
         <b-row>
           <b-col cols="12" md="6">
-            <p><strong>Name:</strong> {{ selectedClient.name }}</p>
-            <p><strong>Email:</strong> {{ selectedClient.email }}</p>
-            <p><strong>Phone:</strong> {{ selectedClient.phone }}</p>
-            <p><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedClient.whatsapp_number || 'N/A' }}</p>
-            <p><strong>{{ $t('client.bloodType') }}:</strong> {{ selectedClient.blood_type || 'N/A' }}</p>
+            <p><strong>{{ $t('client.name') }}:</strong> {{ selectedClient.name }}</p>
+            <p><strong>{{ $t('clinic.email') }}:</strong> {{ selectedClient.email }}</p>
+            <p><strong>{{ $t('client.phone') }}:</strong> {{ selectedClient.phone }}</p>
+            <p><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedClient.whatsapp_number || $t('reservation.na') }}</p>
+            <p><strong>{{ $t('client.bloodType') }}:</strong> {{ selectedClient.blood_type || $t('reservation.na') }}</p>
           </b-col>
           <b-col cols="12" md="6">
-            <p><strong>Date of Birth:</strong> {{ selectedClient.date_of_birth || 'N/A' }}</p>
+            <p><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedClient.date_of_birth || $t('reservation.na') }}</p>
             <p><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(selectedClient.date_of_birth) }}</p>
-            <p><strong>{{ $t('client.job') }}:</strong> {{ selectedClient.job || 'N/A' }}</p>
-            <p><strong>{{ $t('client.height') }}:</strong> {{ selectedClient.height ? selectedClient.height + ' cm' : 'N/A' }}</p>
-            <p><strong>{{ $t('client.weight') }}:</strong> {{ selectedClient.weight ? selectedClient.weight + ' kg' : 'N/A' }}</p>
-            <p><strong>Created:</strong> {{ formatDate(selectedClient.created_at) }}</p>
+            <p><strong>{{ $t('client.job') }}:</strong> {{ selectedClient.job || $t('reservation.na') }}</p>
+            <p><strong>{{ $t('client.height') }}:</strong> {{ selectedClient.height ? selectedClient.height + ' cm' : $t('reservation.na') }}</p>
+            <p><strong>{{ $t('client.weight') }}:</strong> {{ selectedClient.weight ? selectedClient.weight + ' kg' : $t('reservation.na') }}</p>
+            <p><strong>{{ $t('reservation.created') }}:</strong> {{ formatDate(selectedClient.created_at) }}</p>
           </b-col>
         </b-row>
         <hr>
-        <p><strong>Address:</strong></p>
-        <p>{{ selectedClient.address || 'N/A' }}</p>
+        <p><strong>{{ $t('client.address') }}:</strong></p>
+        <p>{{ selectedClient.address || $t('reservation.na') }}</p>
         <p><strong>{{ $t('client.chronicIllnesses') }}:</strong></p>
         <p>{{ formatClientChronicIllnesses(selectedClient.chronic_illnesses) }}</p>
-        <p><strong>Medical History:</strong></p>
-        <p>{{ selectedClient.medical_history || 'N/A' }}</p>
+        <p><strong>{{ $t('client.medicalHistory') }}:</strong></p>
+        <p>{{ selectedClient.medical_history || $t('reservation.na') }}</p>
       </div>
     </b-modal>
   </div>
@@ -297,6 +322,8 @@ import {
 import clientsService from '@/services/clients'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
+import vSelect from 'vue-select'
+import countryList from '@/utils/countries'
 
 export default {
   components: {
@@ -314,10 +341,28 @@ export default {
     BFormSelect,
     BFormTextarea,
     BSpinner,
+    vSelect,
   },
   computed: {
     chronicIllnessOptions() {
       return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
+    },
+    computedFields() {
+      return [
+        { key: 'name', label: this.$t('client.name'), sortable: true },
+        { key: 'email', label: this.$t('clinic.email'), sortable: true },
+        { key: 'phone', label: this.$t('client.phone') },
+        { key: 'blood_type', label: this.$t('client.bloodType') },
+        { key: 'age', label: this.$t('client.age'), formatter: (value, key, item) => this.calculateAge(item.date_of_birth) },
+        { key: 'created_at', label: this.$t('reservation.created'), formatter: this.formatDate },
+        { key: 'actions', label: this.$t('actions.actions') },
+      ]
+    },
+    countryOptions() {
+      return countryList
+    },
+    countrySelectOptions() {
+      return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(c => ({ value: c.value, text: c.label })))
     },
   },
   data() {
@@ -345,6 +390,8 @@ export default {
         name: '',
         email: '',
         phone: '',
+        phone_country_code: '',
+        whatsapp_country_code: '',
         whatsapp_number: '',
         blood_type: '',
         date_of_birth: '',
@@ -355,15 +402,7 @@ export default {
         medical_history: '',
         chronic_illnesses: [],
       },
-      fields: [
-        { key: 'name', label: 'Name', sortable: true },
-        { key: 'email', label: 'Email', sortable: true },
-        { key: 'phone', label: 'Phone' },
-        { key: 'blood_type', label: this.$t('client.bloodType') },
-        { key: 'age', label: this.$t('client.age'), formatter: (value, key, item) => this.calculateAge(item.date_of_birth) },
-        { key: 'created_at', label: 'Created', formatter: this.formatDate },
-        { key: 'actions', label: 'Actions' },
-      ],
+      
     }
   },
   mounted() {
@@ -447,6 +486,8 @@ export default {
         name: '',
         email: '',
         phone: '',
+        phone_country_code: '',
+        whatsapp_country_code: '',
         whatsapp_number: '',
         blood_type: '',
         date_of_birth: '',
@@ -464,6 +505,8 @@ export default {
       this.selectedClient = client
       this.form = {
         ...client,
+        phone_country_code: client.phone_country_code || client.country_code || '',
+        whatsapp_country_code: client.whatsapp_country_code || client.country_code || '',
         chronic_illnesses: [...(client.chronic_illnesses || [])],
       }
       this.modalShow = true
@@ -555,5 +598,150 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.phone-combined-control {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  transition: box-shadow 0.2s ease;
+}
+
+.phone-combined-control:focus-within {
+  border-radius: 0.357rem;
+  box-shadow: 0 0 0 0.2rem rgba(115, 103, 240, 0.15);
+}
+
+.country-col {
+  flex: 0 0 140px;
+  max-width: 140px;
+}
+
+.number-col {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+::v-deep .phone-country-select .vs__dropdown-toggle {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  height: 38px;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #d8d6de;
+  background: #fff;
+  border-radius: 0.357rem 0 0 0.357rem;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+::v-deep .phone-country-select .vs__dropdown-toggle:hover {
+  background-color: #f8f8f8;
+  border-color: #c9c9c9;
+}
+
+::v-deep .phone-country-select .vs__selected-options,
+::v-deep .phone-country-select .vs__actions {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+::v-deep .phone-country-select .vs__selected {
+  margin: 0;
+  padding-right: 0.25rem;
+}
+
+::v-deep .phone-country-select .vs__search {
+  margin: 0;
+}
+
+::v-deep .phone-country-select.vs--open .vs__dropdown-toggle {
+  border-color: #7367f0;
+}
+
+/* Match b-form-input typography and caret */
+::v-deep .phone-country-select .vs__dropdown-toggle,
+::v-deep .phone-country-select .vs__selected,
+::v-deep .phone-country-select .vs__selected-options {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #495057;
+}
+
+::v-deep .phone-country-select .vs__open-indicator {
+  margin-left: 0.375rem;
+  color: #6c6c6c;
+}
+
+::v-deep .phone-country-select .vs__dropdown-toggle .vs__open-indicator svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Ensure placeholder text matches input placeholder styling */
+::v-deep .phone-country-select .vs__search::-webkit-input-placeholder {
+  color: #9aa0a6;
+}
+::v-deep .phone-country-select .vs__search::placeholder {
+  color: #9aa0a6;
+}
+
+.phone-number-input {
+  height: 38px;
+  border: 1px solid #d8d6de;
+  border-left: 0;
+  border-radius: 0 0.357rem 0.357rem 0;
+  padding: 0.375rem 0.75rem;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.phone-number-input:hover {
+  background-color: #fcfcfc;
+  border-color: #c9c9c9;
+}
+
+.phone-number-input:focus {
+  box-shadow: none;
+  border-color: #7367f0;
+}
+
+.phone-combined-control:focus-within ::v-deep .phone-country-select .vs__dropdown-toggle,
+.phone-combined-control:focus-within .phone-number-input {
+  border-color: #7367f0;
+}
+
+.phone-combined-control--rtl {
+  flex-direction: row-reverse;
+}
+
+.phone-combined-control--rtl ::v-deep .phone-country-select .vs__dropdown-toggle {
+  border-top-right-radius: 0.357rem;
+  border-bottom-right-radius: 0.357rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-right: 1px solid #d8d6de;
+  border-left: 0;
+}
+
+.phone-combined-control--rtl .phone-number-input {
+  border-top-left-radius: 0.357rem;
+  border-bottom-left-radius: 0.357rem;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-left: 1px solid #d8d6de;
+  border-right: 0;
+}
+
+@media (max-width: 575.98px) {
+  .country-col {
+    flex-basis: 124px;
+    max-width: 124px;
+  }
+}
+</style>
 
 

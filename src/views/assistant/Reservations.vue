@@ -683,6 +683,12 @@ export default {
     },
   },
   mounted() {
+    if (!this.filters.date_from) {
+      this.filters.date_from = this.getTodayDate()
+    }
+    if (!this.filters.date_to) {
+      this.filters.date_to = this.getTodayDate()
+    }
     this.fetchReservations()
     this.fetchClients()
     this.fetchDoctors()
@@ -697,6 +703,13 @@ export default {
       if (el && !el.contains(e.target)) {
         this.clientDropdownOpen = false
       }
+    },
+    getTodayDate() {
+      const d = new Date()
+      const year = d.getFullYear()
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const day = String(d.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
     },
     async fetchReservations() {
       this.loading = true
