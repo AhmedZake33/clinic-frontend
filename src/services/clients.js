@@ -1,4 +1,5 @@
 import apiClient from './api'
+import countryList from '@/utils/countries'
 
 function cleanPrefix(p) {
   if (!p && p !== 0) return ''
@@ -52,6 +53,19 @@ function prepareClientPayload(client = {}) {
   }
 
   return payload
+}
+
+// Sorted longest-first so e.g. +966 is matched before +9
+const _sortedPrefixes = [...new Set(countryList.map(c => c.value))].sort((a, b) => b.length - a.length)
+
+export function splitPhoneNumber(combined) {
+  if (!combined) return { prefix: '', number: '' }
+  const s = String(combined).trim()
+  if (!s.startsWith('+')) return { prefix: '', number: s }
+  for (const p of _sortedPrefixes) {
+    if (s.startsWith(p)) return { prefix: p, number: s.slice(p.length) }
+  }
+  return { prefix: '', number: s }
 }
 
 export default {

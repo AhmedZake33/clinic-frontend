@@ -319,7 +319,7 @@ import {
   BFormTextarea,
   BSpinner,
 } from 'bootstrap-vue'
-import clientsService from '@/services/clients'
+import clientsService, { splitPhoneNumber } from '@/services/clients'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
 import vSelect from 'vue-select'
@@ -503,10 +503,14 @@ export default {
     editClient(client) {
       this.editMode = true
       this.selectedClient = client
+      const ph = splitPhoneNumber(client.phone)
+      const wa = splitPhoneNumber(client.whatsapp_number)
       this.form = {
         ...client,
-        phone_country_code: client.phone_country_code || client.country_code || '',
-        whatsapp_country_code: client.whatsapp_country_code || client.country_code || '',
+        phone: ph.number,
+        phone_country_code: ph.prefix,
+        whatsapp_number: wa.number,
+        whatsapp_country_code: wa.prefix,
         chronic_illnesses: [...(client.chronic_illnesses || [])],
       }
       this.modalShow = true

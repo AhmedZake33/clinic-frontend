@@ -248,7 +248,7 @@ import {
   BFormTextarea,
   BSpinner,
 } from 'bootstrap-vue'
-import clientsService from '@/services/clients'
+import clientsService, { splitPhoneNumber } from '@/services/clients'
 import reservationsService from '@/services/reservations'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
@@ -368,13 +368,15 @@ export default {
       }
     },
     openEditModal() {
+      const ph = splitPhoneNumber(this.client.phone)
+      const wa = splitPhoneNumber(this.client.whatsapp_number)
       this.clientForm = {
         name: this.client.name || '',
         email: this.client.email || '',
-        phone: this.client.phone || '',
-        phone_country_code: this.client.phone_country_code || this.client.country_code || '',
-        whatsapp_country_code: this.client.whatsapp_country_code || this.client.country_code || '',
-        whatsapp_number: this.client.whatsapp_number || '',
+        phone: ph.number,
+        phone_country_code: ph.prefix,
+        whatsapp_country_code: wa.prefix,
+        whatsapp_number: wa.number,
         blood_type: this.client.blood_type || '',
         date_of_birth: this.client.date_of_birth ? this.client.date_of_birth.substring(0, 10) : '',
         height: this.client.height || '',
