@@ -7,9 +7,17 @@
           <b-row>
             <b-col cols="12" md="8">
               <h2>{{ $t('dashboard.welcomeBack') }}, {{ user ? user.name : $t('reservation.doctor') }}! 👨‍⚕️</h2>
-              <p class="mb-2">
+              <p class="mb-1">
                 {{ $t('dashboard.doctorOverview') }}
               </p>
+              <!-- Specialization Badge -->
+              <div v-if="specialization" class="mb-1">
+                <b-badge :variant="specialization.color || 'primary'" class="px-75 py-50" style="font-size:0.9rem;">
+                  <feather-icon icon="StarIcon" size="14" class="mr-25" />
+                  {{ specialization.name }}
+                  <span v-if="specialization.name_en" class="ml-25 opacity-75">/ {{ specialization.name_en }}</span>
+                </b-badge>
+              </div>
             </b-col>
             <b-col cols="12" md="4" class="text-md-right mt-1 mt-md-0">
               <b-button
@@ -198,6 +206,11 @@ export default {
       fields: [],
       completedFields: [],
     }
+  },
+  computed: {
+    specialization() {
+      return this.$store.getters['auth/specialization']
+    },
   },
   mounted() {
     this.user = JSON.parse(localStorage.getItem('user') || 'null')

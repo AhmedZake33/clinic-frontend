@@ -55,6 +55,17 @@ export default {
     subscriptionStatus: state => {
       return state.user?.subscription_status || 'unknown'
     },
+    // Specialization of the current doctor
+    specialization: state => {
+      return state.user?.specialization || null
+    },
+    // Check if doctor's specialization has a given feature enabled
+    hasFeature: state => feature => {
+      const spec = state.user?.specialization
+      if (!spec) return true // no restriction if no specialization set
+      if (!spec.features || spec.features.length === 0) return true // no features list = all enabled
+      return spec.features.includes(feature)
+    },
     // Permission-based getters
     permissions: state => {
       return state.permissions || JSON.parse(localStorage.getItem('permissions') || '[]')

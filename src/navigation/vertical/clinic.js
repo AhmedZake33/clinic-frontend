@@ -72,6 +72,7 @@ const navigationItems = [
     route: 'doctor-clients',
     icon: 'UsersIcon',
     permission: 'doctor.view-clients',
+    feature: 'clients',
   },
   {
     title: 'menu.myReservations',
@@ -79,6 +80,7 @@ const navigationItems = [
     route: 'doctor-reservations',
     icon: 'ClipboardIcon',
     permission: 'doctor.view-reservations',
+    feature: 'reservations',
   },
   {
     title: 'menu.schedule',
@@ -86,6 +88,7 @@ const navigationItems = [
     route: 'doctor-schedule',
     icon: 'ClockIcon',
     permission: 'doctor.view-schedule',
+    feature: 'schedule',
   },
   {
     title: 'menu.waitingQueue',
@@ -93,6 +96,7 @@ const navigationItems = [
     route: 'doctor-waiting-queue',
     icon: 'ListIcon',
     permission: 'doctor.view-waiting-queue',
+    feature: 'waiting-queue',
   },
   {
     title: 'menu.financials',
@@ -100,6 +104,7 @@ const navigationItems = [
     route: 'doctor-financials',
     icon: 'DollarSignIcon',
     permission: 'doctor.view-financials',
+    feature: 'financials',
   },
   {
     title: 'purchases.purchases',
@@ -107,6 +112,7 @@ const navigationItems = [
     route: 'doctor-purchases',
     icon: 'ShoppingCartIcon',
     permission: 'doctor.view-purchases',
+    feature: 'purchases',
   },
   {
     title: 'menu.assistants',
@@ -114,6 +120,7 @@ const navigationItems = [
     route: 'doctor-assistants',
     icon: 'UserPlusIcon',
     permission: 'doctor.view-assistants',
+    feature: 'assistants',
   },
   {
     title: 'menu.reports',
@@ -121,6 +128,7 @@ const navigationItems = [
     route: 'doctor-reports',
     icon: 'BarChart2Icon',
     permission: 'doctor.view-reports',
+    feature: 'reports',
   },
   {
     header: 'menu.adminMenu',

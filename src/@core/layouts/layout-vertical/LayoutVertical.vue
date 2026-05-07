@@ -111,6 +111,7 @@ export default {
     },
     filteredNavItems() {
     const role = this.$store.getters['auth/userRole']
+    const hasFeature = this.$store.getters['auth/hasFeature']
     console.log('Current role:', role)
 
     function filterByRole(items) {
@@ -127,10 +128,14 @@ export default {
             !item.resource ||
             item.resource.toLowerCase() === role.toLowerCase()
 
+          // Check specialization feature restriction (only for doctor items)
+          const featureAllowed = !item.feature || hasFeature(item.feature)
+
           // Keep this item only if:
           //  - user is allowed
+          //  - feature is allowed
           //  - OR it has allowed children
-          if (allowed) {
+          if (allowed && featureAllowed) {
             return { ...item, children: children.filter(Boolean) }
           }
           if (children.length > 0) {
