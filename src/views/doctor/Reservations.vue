@@ -624,10 +624,120 @@
             <p v-if="selectedReservation.lab_notes" class="mt-50 text-muted small">{{ selectedReservation.lab_notes }}</p>
           </div>
         </div>
+
+        <!-- Additional Services -->
+        <hr>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <h6 class="mb-0">{{ $t('services.additionalServices') }}</h6>
+          <b-button v-permission="['reservation-services.create','doctor.create-reservation-services','assistant.create-reservation-services']" size="sm" variant="outline-primary" @click="openAddServiceModal">
+            <feather-icon icon="PlusIcon" size="14" class="mr-25" />
+            {{ $t('services.addService') }}
+          </b-button>
+        </div>
+
+        <div v-if="loadingResServices" class="text-center py-1">
+          <b-spinner small />
+        </div>
+        <div v-else-if="reservationServices.length === 0" class="text-muted small text-center py-1">
+          {{ $t('services.noServicesOnReservation') }}
+        </div>
+        <b-table
+          v-else
+          :items="reservationServices"
+          :fields="servicesTableFields"
+          small
+          responsive
+          striped
+        >
+          <template #cell(service_name)="data">
+            {{ data.item.service_name }}
+            <span v-if="data.item.notes" class="text-muted d-block small">{{ data.item.notes }}</span>
+          </template>
+          <template #cell(total_price)="data">
+            {{ Number(data.item.unit_price).toFixed(2) }} × {{ data.item.quantity }} = <strong>{{ Number(data.item.total_price).toFixed(2) }}</strong>
+          </template>
+          <template #cell(with_invoice)="data">
+            <b-badge :variant="data.item.with_invoice ? 'success' : 'secondary'">
+              {{ data.item.with_invoice ? $t('services.withInvoice') : $t('services.noInvoice') }}
+            </b-badge>
+          </template>
+          <template #cell(actions)="data">
+            <b-button v-permission="['reservation-services.delete','doctor.delete-reservation-services','assistant.delete-reservation-services']" size="sm" variant="flat-danger" class="btn-icon" @click="deleteReservationService(data.item)">
+              <feather-icon icon="TrashIcon" size="14" />
+            </b-button>
+          </template>
+        </b-table>
+
+        <div v-if="reservationServices.length" class="text-right mt-50">
+          <strong>{{ $t('services.totalServices') }}:
+            {{ reservationServices.reduce((sum, s) => sum + Number(s.total_price), 0).toFixed(2) }}
+          </strong>
+        </div>
       </div>
     </b-modal>
 
-    <!-- Edit Client Modal -->
+    <!-- Add Service to Reservation Modal -->
+    <b-modal
+      v-model="addServiceModalShow"
+      :title="$t('services.addService')"
+      no-close-on-backdrop
+      @hidden="resetServiceForm"
+    >
+      <b-form @submit.prevent="saveReservationService">
+        <b-form-group :label="$t('services.selectFromCatalog')" label-for="svc-catalog">
+          <b-form-select
+            id="svc-catalog"
+            v-model="serviceForm.doctor_service_id"
+            :options="doctorServiceOptions"
+            @change="onCatalogServiceChange"
+          />
+        </b-form-group>
+
+        <b-form-group :label="$t('services.name')" label-for="svc-rname">
+          <b-form-input id="svc-rname" v-model="serviceForm.service_name" required />
+        </b-form-group>
+
+        <b-row>
+          <b-col cols="6">
+            <b-form-group :label="$t('services.price')" label-for="svc-uprice">
+              <b-form-input id="svc-uprice" v-model="serviceForm.unit_price" type="number" step="0.01" min="0" required />
+            </b-form-group>
+          </b-col>
+          <b-col cols="6">
+            <b-form-group :label="$t('services.quantity')" label-for="svc-qty">
+              <b-form-input id="svc-qty" v-model="serviceForm.quantity" type="number" min="1" required />
+            </b-form-group>
+          </b-col>
+        </b-row>
+
+        <div class="mb-1 p-1 bg-light rounded text-center">
+          <strong>{{ $t('services.total') }}: {{ (Number(serviceForm.unit_price) * Number(serviceForm.quantity)).toFixed(2) }}</strong>
+        </div>
+
+        <b-form-group :label="$t('services.invoiceOption')" label-for="svc-invoice">
+          <div class="d-flex">
+            <b-form-radio v-model="serviceForm.with_invoice" :value="true" class="mr-2">
+              {{ $t('services.withInvoice') }}
+            </b-form-radio>
+            <b-form-radio v-model="serviceForm.with_invoice" :value="false">
+              {{ $t('services.noInvoice') }}
+            </b-form-radio>
+          </div>
+        </b-form-group>
+
+        <b-form-group :label="$t('services.notes')" label-for="svc-notes">
+          <b-form-input id="svc-notes" v-model="serviceForm.notes" :placeholder="$t('services.notesPlaceholder')" />
+        </b-form-group>
+      </b-form>
+
+      <template #modal-footer>
+        <b-button variant="secondary" @click="addServiceModalShow = false">{{ $t('actions.cancel') }}</b-button>
+        <b-button variant="primary" :disabled="savingService" @click="saveReservationService">
+          <b-spinner v-if="savingService" small class="mr-50" />
+          {{ $t('actions.add') }}
+        </b-button>
+      </template>
+    </b-modal>
     <b-modal
       v-model="editClientModalShow"
       :title="$t('client.editClient')"
@@ -739,6 +849,7 @@ import {
 import reservationsService from '@/services/reservations'
 import openfdaService from '@/services/openfda'
 import clientsService from '@/services/clients'
+import doctorServicesApi from '@/services/doctorServices'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
@@ -771,6 +882,8 @@ export default {
     BTab,
     BCardHeader: () => import('bootstrap-vue').then(m => m.BCardHeader),
     BCardBody: () => import('bootstrap-vue').then(m => m.BCardBody),
+    BFormRadio: () => import('bootstrap-vue').then(m => m.BFormRadio),
+    BFormSelect: () => import('bootstrap-vue').then(m => m.BFormSelect),
   },
   data() {
     return {
@@ -848,6 +961,21 @@ export default {
         medical_history: '',
         chronic_illnesses: [],
       },
+
+      // Reservation services (additional services)
+      doctorServicesCatalog: [],
+      reservationServices: [],
+      loadingResServices: false,
+      addServiceModalShow: false,
+      savingService: false,
+      serviceForm: {
+        doctor_service_id: null,
+        service_name: '',
+        quantity: 1,
+        unit_price: 0,
+        with_invoice: true,
+        notes: '',
+      },
     }
   },
   mounted() {
@@ -905,6 +1033,21 @@ export default {
     nonImageFiles() {
       if (!this.selectedReservation?.completion_files) return []
       return this.selectedReservation.completion_files.filter(f => !this.isImageFile(f))
+    },
+    servicesTableFields() {
+      return [
+        { key: 'service_name', label: this.$t('services.name') },
+        { key: 'total_price',  label: this.$t('services.priceQty') },
+        { key: 'with_invoice', label: this.$t('services.invoice') },
+        { key: 'actions',      label: '' },
+      ]
+    },
+    doctorServiceOptions() {
+      const opts = [{ value: null, text: `— ${this.$t('services.customService')} —` }]
+      this.doctorServicesCatalog.forEach(s => {
+        if (s.is_active) opts.push({ value: s.id, text: `${s.name}${s.name_en ? ' / ' + s.name_en : ''} (${Number(s.price).toFixed(2)})` })
+      })
+      return opts
     },
   },
   methods: {
@@ -1004,6 +1147,9 @@ export default {
       }
       this.viewModalShow = true
       this.$nextTick(() => this.loadFilePreviewUrls())
+      // Load reservation services and doctor catalog
+      this.fetchReservationServices(reservation.id)
+      this.fetchDoctorServicesCatalog()
     },
     async completeReservation() {
       this.completing = true
@@ -1351,6 +1497,86 @@ export default {
       } finally {
         this.savingClient = false
       }
+    },
+
+    // ── Doctor Services ───────────────────────────────────────────
+    async fetchDoctorServicesCatalog() {
+      try {
+        const { data } = await doctorServicesApi.getAll()
+        this.doctorServicesCatalog = data
+      } catch { /* silent */ }
+    },
+
+    async fetchReservationServices(reservationId) {
+      this.loadingResServices = true
+      try {
+        const { data } = await doctorServicesApi.getReservationServices(reservationId)
+        this.reservationServices = data
+      } catch { /* silent */ } finally {
+        this.loadingResServices = false
+      }
+    },
+
+    openAddServiceModal() {
+      this.resetServiceForm()
+      this.addServiceModalShow = true
+    },
+
+    onCatalogServiceChange(id) {
+      if (!id) return
+      const svc = this.doctorServicesCatalog.find(s => s.id === id)
+      if (svc) {
+        this.serviceForm.service_name = svc.name
+        this.serviceForm.unit_price = svc.price
+      }
+    },
+
+    async saveReservationService() {
+      this.savingService = true
+      try {
+        const reservationId = this.selectedReservation.id
+        const { data } = await doctorServicesApi.addToReservation(reservationId, {
+          ...this.serviceForm,
+          quantity: Number(this.serviceForm.quantity),
+          unit_price: Number(this.serviceForm.unit_price),
+        })
+        this.reservationServices.push(data)
+        this.addServiceModalShow = false
+        this.resetServiceForm()
+        this.$toast({
+          component: ToastificationContent,
+          props: { title: this.$t('messages.success'), text: this.$t('services.serviceAdded'), variant: 'success' },
+        })
+      } catch (error) {
+        const errors = error.response?.data?.errors
+        const text = errors ? Object.values(errors).flat().join('\n') : (error.response?.data?.message || this.$t('services.saveError'))
+        this.$toast({
+          component: ToastificationContent,
+          props: { title: this.$t('messages.error'), text, variant: 'danger' },
+        })
+      } finally {
+        this.savingService = false
+      }
+    },
+
+    async deleteReservationService(rs) {
+      try {
+        await doctorServicesApi.deleteReservationService(this.selectedReservation.id, rs.id)
+        this.reservationServices = this.reservationServices.filter(s => s.id !== rs.id)
+        this.$toast({
+          component: ToastificationContent,
+          props: { title: this.$t('messages.success'), text: this.$t('services.serviceRemoved'), variant: 'success' },
+        })
+      } catch {
+        this.$toast({
+          component: ToastificationContent,
+          props: { title: this.$t('messages.error'), text: this.$t('services.deleteError'), variant: 'danger' },
+        })
+      }
+    },
+
+    resetServiceForm() {
+      this.serviceForm = { doctor_service_id: null, service_name: '', quantity: 1, unit_price: 0, with_invoice: true, notes: '' }
     },
   },
 }

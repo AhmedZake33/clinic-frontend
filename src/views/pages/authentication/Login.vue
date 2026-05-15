@@ -278,7 +278,7 @@ export default {
   },
   methods: {
     async login() {
-      
+      alert();
       try {
         const res = await api.post("/login", {
           email: this.userEmail,
@@ -290,17 +290,26 @@ export default {
         const token = res.data.token
         const user = res.data.user
 
-        // store state + localStorage
+        // store state + localStorage (including permissions so router guard works immediately)
         this.$store.commit('auth/SET_TOKEN', token)
         this.$store.commit('auth/SET_USER', user)
-        
-        // Redirect based on role
-        const role = user.role;
+        this.$store.commit('auth/SET_PERMISSIONS', res.data.permissions || [])
+        this.$store.commit('auth/SET_ROLES', res.data.roles || [])
+
+        // Redirect based on role (tolerant to different role string formats)
+        const rawRole = user.role || '';
+        const role = String(rawRole).toLowerCase().replace(/[_\s]/g, '-');
+        console.log('Logged in user role:', rawRole, 'Normalized role:', role)
         if (role === 'doctor') {
           this.$router.push({ name: 'doctor-dashboard' });
         } else if (role === 'assistant') {
           this.$router.push({ name: 'assistant-dashboard' });
+        } else if (role === 'sub-doctor' || role === 'subdoctor' || role.includes('sub-doctor') || role.includes('subdoctor') || role.startsWith('sub')) {
+          // Sub-doctors should land on the reservations page
+          this.$router.push({ name: 'doctor-reservations' });
         } else {
+          // alert();
+          console.log('Unknown role, redirecting to default dashboard');
           this.$router.push({ name: 'dashboard' });
         }
 

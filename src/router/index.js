@@ -56,30 +56,31 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'login' })
   }
 
-  // Redirect to role-specific dashboard if already logged in and trying to access login
+  // Helper: get the home route name for a given role
+  const homeForRole = role => {
+    if (role === 'doctor') return 'doctor-dashboard'
+    if (role === 'assistant') return 'assistant-dashboard'
+    if (role === 'sub-doctor') return 'doctor-reservations'
+    return 'dashboard'
+  }
+
+  // Redirect to role-specific home if already logged in and trying to access login
   if (token && to.name === 'login') {
-    if (user && user.role === 'doctor') {
-      return next({ name: 'doctor-dashboard' })
-    } else if (user && user.role === 'assistant') {
-      return next({ name: 'assistant-dashboard' })
-    } else {
-      return next({ name: 'dashboard' })
-    }
+    return next({ name: homeForRole(user && user.role) })
   }
 
   // Check permission-based access
   if (to.meta.permissions && user) {
     const userPermissions = JSON.parse(localStorage.getItem('permissions') || '[]')
-    const requiredPerms = to.meta.permissions
-    const hasPermission = requiredPerms.some(p => userPermissions.includes(p))
-    
-    if (!hasPermission) {
-      if (user.role === 'doctor') {
-        return next({ name: 'doctor-dashboard' })
-      } else if (user.role === 'assistant') {
-        return next({ name: 'assistant-dashboard' })
-      } else {
-        return next({ name: 'dashboard' })
+    const role = user.role || ''
+
+    // Admin bypasses all permission checks
+    if (role !== 'admin') {
+      const requiredPerms = to.meta.permissions
+      const hasPermission = requiredPerms.some(p => userPermissions.includes(p))
+
+      if (!hasPermission) {
+        return next({ name: 'error-404' })
       }
     }
   }

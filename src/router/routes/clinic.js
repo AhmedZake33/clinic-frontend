@@ -122,6 +122,20 @@ export default [
     },
   },
   {
+    path: '/assistant/transactions',
+    name: 'assistant-transactions',
+    component: () => import('@/views/assistant/Transactions.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['assistant.view-financials'],
+      pageTitle: 'transaction.transactions',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'transaction.transactions', active: true, i18n: true },
+      ],
+    },
+  },
+  {
     path: '/assistant/purchases',
     name: 'assistant-purchases',
     component: () => import('@/views/assistant/Purchases.vue'),
@@ -319,6 +333,20 @@ export default [
     },
   },
   {
+    path: '/doctor/transactions',
+    name: 'doctor-transactions',
+    component: () => import('@/views/doctor/Transactions.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-financials'],
+      pageTitle: 'transaction.transactions',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'transaction.transactions', active: true, i18n: true },
+      ],
+    },
+  },
+  {
     path: '/doctor/purchases',
     name: 'doctor-purchases',
     component: () => import('@/views/assistant/Purchases.vue'),
@@ -381,6 +409,20 @@ export default [
     },
   },
   {
+    path: '/doctor/sub-doctors',
+    name: 'doctor-sub-doctors',
+    component: () => import('@/views/doctor/SubDoctors.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-assistants'],
+      pageTitle: 'subDoctors.title',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'subDoctors.title', active: true, i18n: true },
+      ],
+    },
+  },
+  {
     path: '/doctor/reports',
     name: 'doctor-reports',
     component: () => import('@/views/shared/Reports.vue'),
@@ -413,6 +455,34 @@ export default [
           active: true,
           i18n: true,
         },
+      ],
+    },
+  },
+  {
+    path: '/doctor/services',
+    name: 'doctor-services',
+    component: () => import('@/views/doctor/Services.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-services'],
+      pageTitle: 'services.myServices',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'services.myServices', active: true, i18n: true },
+      ],
+    },
+  },
+  {
+    path: '/assistant/services',
+    name: 'assistant-services',
+    component: () => import('@/views/doctor/Services.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['assistant.view-dashboard'],
+      pageTitle: 'services.myServices',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'services.myServices', active: true, i18n: true },
       ],
     },
   },

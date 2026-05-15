@@ -24,4 +24,25 @@ export default {
   deleteFinancial(id) {
     return apiClient.delete(`/financials/${id}`)
   },
+
+  // Transactions
+  getAllTransactions(params = {}) {
+    return apiClient.get('/transactions', { params })
+  },
+
+  getTransactions(financialId) {
+    return apiClient.get(`/financials/${financialId}/transactions`)
+  },
+
+  createTransaction(financialId, data) {
+    return apiClient.post(`/financials/${financialId}/transactions`, data)
+  },
+
+  createTransactionBatch(financialId, transactions) {
+    return apiClient.post(`/financials/${financialId}/transactions/batch`, { transactions })
+  },
+
+  deleteTransaction(financialId, transactionId) {
+    return apiClient.delete(`/financials/${financialId}/transactions/${transactionId}`)
+  },
 }

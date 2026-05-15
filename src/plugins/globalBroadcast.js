@@ -170,7 +170,7 @@ function subscribe(vm) {
     },
   }
 
-  if (user.role === 'doctor') {
+  if (user.role === 'doctor' || user.role === 'sub-doctor') {
     subscribedChannelName = `private-doctor.${user.id}`
     channel = subscribeToDoctorChannel(user.id, handlers)
     console.log(`[WS] Global: subscribed to doctor.${user.id}`)

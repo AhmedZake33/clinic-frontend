@@ -118,8 +118,11 @@
           {{ $t('financial.' + data.value) }}
         </template>
         <template #cell(actions)="data">
-          <b-button v-b-tooltip.hover :title="$t('actions.view')" variant="info" size="sm" @click="viewFinancial(data.item)">
+          <b-button v-b-tooltip.hover :title="$t('actions.view')" variant="info" size="sm" class="mr-1" @click="viewFinancial(data.item)">
             <feather-icon icon="EyeIcon" />
+          </b-button>
+          <b-button v-if="parseFloat(data.item.remaining) > 0" v-b-tooltip.hover :title="$t('financial.pay')" variant="success" size="sm" @click="viewFinancial(data.item); $nextTick(() => { activeTab = 1 })">
+            <feather-icon icon="CreditCardIcon" />
           </b-button>
         </template>
 
@@ -149,42 +152,140 @@
       :title="$t('financial.financialDetails')"
       ok-only
       size="lg"
+      @hide="onViewModalHide"
     >
       <div v-if="selectedFinancial">
-        <b-row>
-          <b-col cols="12" md="6">
-            <p v-if="selectedFinancial.client">
-              <strong>{{ $t('table.client') }}:</strong> {{ selectedFinancial.client.name }}
+        <b-tabs v-model="activeTab" @activate-tab="onActivateTab">
+          <!-- Details Tab -->
+          <b-tab :title="$t('financial.details')" active>
+            <b-row class="mt-1">
+              <b-col cols="12" md="6">
+                <p v-if="selectedFinancial.client">
+                  <strong>{{ $t('table.client') }}:</strong> {{ selectedFinancial.client.name }}
+                </p>
+                <p v-if="selectedFinancial.reservation">
+                  <strong>{{ $t('reservation.appointment') }}:</strong> {{ formatDateTime(selectedFinancial.reservation.appointment_date) }}
+                </p>
+                <p>
+                  <strong>{{ $t('financial.paymentMethod') }}:</strong> {{ $t('financial.' + selectedFinancial.payment_method) }}
+                </p>
+              </b-col>
+              <b-col cols="12" md="6">
+                <p><strong>{{ $t('financial.amount') }}:</strong> {{ formatCurrency(selectedFinancial.amount) }}</p>
+                <p><strong>{{ $t('financial.paid') }}:</strong> <span class="text-success">{{ formatCurrency(selectedFinancial.paid) }}</span></p>
+                <p><strong>{{ $t('financial.remaining') }}:</strong>
+                  <span :class="parseFloat(selectedFinancial.remaining) > 0 ? 'text-danger' : 'text-success'">
+                    {{ formatCurrency(selectedFinancial.remaining) }}
+                  </span>
+                </p>
+                <p><strong>{{ $t('financial.paymentStatus') }}:</strong>
+                  <b-badge :variant="getStatusVariant(selectedFinancial.payment_status)">
+                    {{ $t('financial.' + selectedFinancial.payment_status) }}
+                  </b-badge>
+                </p>
+              </b-col>
+            </b-row>
+            <hr>
+            <p><strong>{{ $t('reservation.notes') }}:</strong></p>
+            <p>{{ selectedFinancial.notes || $t('reservation.na') }}</p>
+            <p v-if="selectedFinancial.creator">
+              <strong>{{ $t('financial.createdBy') }}:</strong> {{ selectedFinancial.creator.name }}
             </p>
-            <p v-if="selectedFinancial.reservation">
-              <strong>{{ $t('reservation.appointment') }}:</strong> {{ formatDateTime(selectedFinancial.reservation.appointment_date) }}
-            </p>
-            <p>
-              <strong>{{ $t('financial.paymentMethod') }}:</strong> {{ $t('financial.' + selectedFinancial.payment_method) }}
-            </p>
-          </b-col>
-          <b-col cols="12" md="6">
-            <p><strong>{{ $t('financial.amount') }}:</strong> {{ formatCurrency(selectedFinancial.amount) }}</p>
-            <p><strong>{{ $t('financial.paid') }}:</strong> <span class="text-success">{{ formatCurrency(selectedFinancial.paid) }}</span></p>
-            <p><strong>{{ $t('financial.remaining') }}:</strong>
-              <span :class="parseFloat(selectedFinancial.remaining) > 0 ? 'text-danger' : 'text-success'">
-                {{ formatCurrency(selectedFinancial.remaining) }}
-              </span>
-            </p>
-            <p><strong>{{ $t('financial.paymentStatus') }}:</strong>
-              <b-badge :variant="getStatusVariant(selectedFinancial.payment_status)">
-                {{ $t('financial.' + selectedFinancial.payment_status) }}
-              </b-badge>
-            </p>
-          </b-col>
-        </b-row>
-        <hr>
-        <p><strong>{{ $t('reservation.notes') }}:</strong></p>
-        <p>{{ selectedFinancial.notes || $t('reservation.na') }}</p>
-        <p v-if="selectedFinancial.creator">
-          <strong>{{ $t('financial.createdBy') }}:</strong> {{ selectedFinancial.creator.name }}
-        </p>
-        <p><strong>{{ $t('reservation.created') }}:</strong> {{ formatDateTime(selectedFinancial.created_at) }}</p>
+            <p><strong>{{ $t('reservation.created') }}:</strong> {{ formatDateTime(selectedFinancial.created_at) }}</p>
+            <div v-if="parseFloat(selectedFinancial.remaining) > 0" class="text-right mt-1">
+              <b-button variant="success" @click="goToPayTab">
+                <feather-icon icon="CreditCardIcon" class="mr-50" />
+                {{ $t('financial.pay') }}
+              </b-button>
+            </div>
+          </b-tab>
+
+          <!-- Transactions Tab -->
+          <b-tab :title="$t('transaction.transactions')" lazy>
+            <div class="mt-1">
+              <!-- Summary bar -->
+              <b-alert show variant="info" class="mb-1 py-1 px-2">
+                {{ $t('financial.paid') }}: <strong>{{ formatCurrency(selectedFinancial.paid) }}</strong>
+                &nbsp;|&nbsp;
+                {{ $t('financial.remaining') }}: <strong :class="parseFloat(selectedFinancial.remaining)>0?'text-danger':''">{{ formatCurrency(selectedFinancial.remaining) }}</strong>
+              </b-alert>
+
+              <!-- Add transaction form -->
+              <b-card v-if="parseFloat(selectedFinancial.remaining) > 0" class="mb-1" bg-variant="light">
+                <b-form @submit.prevent="addTransactions">
+                  <b-row v-for="(row, idx) in txRows" :key="idx" align-v="end" class="mb-50">
+                    <b-col cols="12" sm="4">
+                      <b-form-group :label="idx === 0 ? $t('transaction.amount') : ''" label-size="sm">
+                        <b-form-input v-model="row.amount" type="number" step="0.01" min="0.01" size="sm" required />
+                      </b-form-group>
+                    </b-col>
+                    <b-col cols="12" sm="4">
+                      <b-form-group :label="idx === 0 ? $t('financial.paymentMethod') : ''" label-size="sm">
+                        <b-form-select v-model="row.payment_method" :options="txPaymentMethodOptions" size="sm" required />
+                      </b-form-group>
+                    </b-col>
+                    <b-col cols="10" sm="3">
+                      <b-form-group :label="idx === 0 ? $t('reservation.notes') : ''" label-size="sm">
+                        <b-form-input v-model="row.notes" size="sm" />
+                      </b-form-group>
+                    </b-col>
+                    <b-col cols="2" sm="1" class="mb-1">
+                      <b-button v-if="txRows.length > 1" variant="outline-danger" size="sm" @click="removeTxRow(idx)">
+                        <feather-icon icon="XIcon" />
+                      </b-button>
+                    </b-col>
+                  </b-row>
+                  <b-row>
+                    <b-col cols="12" sm="6">
+                      <b-button variant="outline-primary" size="sm" @click="addTxRow">
+                        <feather-icon icon="PlusIcon" class="mr-50" />
+                        {{ $t('transaction.addRow') }}
+                      </b-button>
+                    </b-col>
+                    <b-col cols="12" sm="6" class="text-right">
+                      <small class="text-muted mr-1">
+                        {{ $t('transaction.total') }}: <strong>{{ formatCurrency(txRowsTotal) }}</strong>
+                        <span v-if="txRowsTotal > parseFloat(selectedFinancial.remaining)" class="text-danger ml-1">
+                          ({{ $t('transaction.exceedsRemaining') }})
+                        </span>
+                      </small>
+                      <b-button type="submit" variant="success" size="sm"
+                        :disabled="txSaving || txRowsTotal <= 0 || txRowsTotal > parseFloat(selectedFinancial.remaining)">
+                        <b-spinner v-if="txSaving" small class="mr-50" />
+                        <feather-icon v-else icon="SaveIcon" class="mr-50" />
+                        {{ $t('transaction.addPayment') }}
+                      </b-button>
+                    </b-col>
+                  </b-row>
+                </b-form>
+              </b-card>
+
+              <!-- Transactions list -->
+              <div v-if="txLoading" class="text-center py-2">
+                <b-spinner variant="primary" small />
+              </div>
+              <b-table v-else :items="transactions" :fields="txFields" small responsive show-empty>
+                <template #cell(amount)="data">
+                  <strong class="text-success">{{ formatCurrency(data.value) }}</strong>
+                </template>
+                <template #cell(payment_method)="data">
+                  {{ $t('financial.' + data.value) }}
+                </template>
+                <template #cell(created_at)="data">
+                  {{ formatDateTime(data.value) }}
+                </template>
+                <template #cell(actions)="data">
+                  <b-button variant="danger" size="sm" @click="deleteTransaction(data.item)">
+                    <feather-icon icon="TrashIcon" />
+                  </b-button>
+                </template>
+                <template #empty>
+                  <div class="text-center text-muted py-2">{{ $t('transaction.noTransactions') }}</div>
+                </template>
+              </b-table>
+            </div>
+          </b-tab>
+        </b-tabs>
       </div>
     </b-modal>
     </div>
@@ -202,13 +303,18 @@ import {
   BPagination,
   BModal,
   BForm,
+  BFormGroup,
   BFormInput,
   BFormSelect,
   BSpinner,
   BBadge,
+  BTabs,
+  BTab,
+  BAlert,
   VBTooltip,
 } from 'bootstrap-vue'
 import financialsService from '@/services/financials'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   directives: {
@@ -224,10 +330,14 @@ export default {
     BPagination,
     BModal,
     BForm,
+    BFormGroup,
     BFormInput,
     BFormSelect,
     BSpinner,
     BBadge,
+    BTabs,
+    BTab,
+    BAlert,
   },
   data() {
     return {
@@ -254,6 +364,12 @@ export default {
         payment_method: '',
         date: '',
       },
+      // Transactions
+      transactions: [],
+      txLoading: false,
+      txSaving: false,
+      txRows: [{ amount: '', payment_method: 'cash', notes: '' }],
+      activeTab: 0,
     }
   },
   watch: {
@@ -302,6 +418,36 @@ export default {
         { value: 'other', text: this.$t('financial.other') },
       ]
     },
+    paymentMethodFormOptions() {
+      return [
+        { value: 'cash', text: this.$t('financial.cash') },
+        { value: 'card', text: this.$t('financial.card') },
+        { value: 'transfer', text: this.$t('financial.transfer') },
+        { value: 'other', text: this.$t('financial.other') },
+      ]
+    },
+    txPaymentMethodOptions() {
+      return [
+        { value: 'cash', text: this.$t('financial.cash') },
+        { value: 'card', text: this.$t('financial.card') },
+        { value: 'transfer', text: this.$t('financial.transfer') },
+        { value: 'other', text: this.$t('financial.other') },
+        { value: 'instapay', text: this.$t('financial.instapay') },
+      ]
+    },
+    txFields() {
+      return [
+        { key: 'amount', label: this.$t('transaction.amount') },
+        { key: 'payment_method', label: this.$t('financial.paymentMethod') },
+        { key: 'creator.name', label: this.$t('financial.createdBy') },
+        { key: 'notes', label: this.$t('reservation.notes') },
+        { key: 'created_at', label: this.$t('reservation.created') },
+        { key: 'actions', label: '' },
+      ]
+    },
+    txRowsTotal() {
+      return this.txRows.reduce((sum, r) => sum + (parseFloat(r.amount) || 0), 0)
+    },
   },
   methods: {
     async fetchFinancials() {
@@ -325,7 +471,7 @@ export default {
         }
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: { title: this.$t('messages.error'), text: this.$t('financial.loadError'), variant: 'danger' },
         })
       } finally {
@@ -361,8 +507,80 @@ export default {
       this.fetchFinancials()
     },
     viewFinancial(item) {
-      this.selectedFinancial = item
+      this.selectedFinancial = { ...item }
+      this.transactions = []
+      this.txRows = [{ amount: '', payment_method: 'cash', notes: '' }]
+      this.activeTab = 0
       this.viewModalShow = true
+      this.fetchTransactions()
+    },
+    onViewModalHide() {
+      this.transactions = []
+      this.txRows = [{ amount: '', payment_method: 'cash', notes: '' }]
+      this.activeTab = 0
+    },
+    goToPayTab() {
+      this.activeTab = 1
+    },
+    onActivateTab(newIndex) {
+      if (newIndex === 1) this.fetchTransactions()
+    },
+    addTxRow() {
+      this.txRows.push({ amount: '', payment_method: 'cash', notes: '' })
+    },
+    removeTxRow(idx) {
+      this.txRows.splice(idx, 1)
+    },
+    async fetchTransactions() {
+      if (!this.selectedFinancial) return
+      this.txLoading = true
+      try {
+        const res = await financialsService.getTransactions(this.selectedFinancial.id)
+        this.transactions = res.data
+      } catch (e) {
+        // silent
+      } finally {
+        this.txLoading = false
+      }
+    },
+    async addTransactions() {
+      this.txSaving = true
+      try {
+        const res = await financialsService.createTransactionBatch(this.selectedFinancial.id, this.txRows)
+        this.selectedFinancial = res.data
+        this.txRows = [{ amount: '', payment_method: 'cash', notes: '' }]
+        await this.fetchTransactions()
+        await this.fetchFinancials()
+        await this.fetchSummary()
+        this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.success'), text: this.$t('transaction.addSuccess'), variant: 'success' } })
+      } catch (error) {
+        const msg = error.response?.data?.message || this.$t('messages.saveError')
+        this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.error'), text: msg, variant: 'danger' } })
+      } finally {
+        this.txSaving = false
+      }
+    },
+    async deleteTransaction(tx) {
+      const result = await this.$swal({
+        title: this.$t('messages.deleteConfirm'),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: this.$t('actions.confirm'),
+        cancelButtonText: this.$t('actions.cancel'),
+        customClass: { confirmButton: 'btn btn-danger', cancelButton: 'btn btn-outline-secondary ml-1' },
+        buttonsStyling: false,
+      })
+      if (!result.isConfirmed) return
+      try {
+        const res = await financialsService.deleteTransaction(this.selectedFinancial.id, tx.id)
+        this.selectedFinancial = res.data
+        await this.fetchTransactions()
+        await this.fetchFinancials()
+        await this.fetchSummary()
+        this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.success'), text: this.$t('messages.deleteSuccess'), variant: 'success' } })
+      } catch (e) {
+        this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.error'), text: this.$t('messages.deleteError'), variant: 'danger' } })
+      }
     },
     getStatusVariant(status) {
       const map = { paid: 'success', partial: 'warning', unpaid: 'danger' }
@@ -370,7 +588,6 @@ export default {
     },
     formatDateTime(value) {
       if (!value) return ''
-      // Parse as local time since backend returns Y-m-d H:i:s format
       const date = new Date(value + (value.includes(' ') ? '' : ''))
       return date.toLocaleString()
     },
@@ -386,5 +603,3 @@ export default {
   },
 }
 </script>
-
-

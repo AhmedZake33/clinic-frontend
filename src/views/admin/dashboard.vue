@@ -211,6 +211,22 @@
         >
           {{ $t('admin.isActive') }}
         </b-form-checkbox>
+
+        <b-row>
+          <b-col cols="12" md="6">
+            <b-form-group :label="$t('admin.maxSubDoctors')" label-for="max_sub_doctors">
+              <b-form-input
+                id="max_sub_doctors"
+                v-model="form.max_sub_doctors"
+                type="number"
+                min="0"
+                max="255"
+                :placeholder="$t('admin.maxSubDoctorsPlaceholder')"
+              />
+              <small class="text-muted">{{ $t('admin.maxSubDoctorsHint') }}</small>
+            </b-form-group>
+          </b-col>
+        </b-row>
       </b-form>
 
       <template #modal-footer>
@@ -295,6 +311,18 @@
           </ul>
         </div>
 
+        <b-row class="mb-2">
+          <b-col cols="12" md="6">
+            <strong>{{ $t('admin.maxSubDoctors') }}:</strong>
+            <b-badge :variant="(selectedDoctor.max_sub_doctors || 0) > 0 ? 'success' : 'secondary'" class="ml-50">
+              {{ selectedDoctor.max_sub_doctors || 0 }}
+            </b-badge>
+            <span v-if="(selectedDoctor.max_sub_doctors || 0) > 0" class="text-muted small ml-50">
+              ({{ $t('admin.subDoctorsUsed') }}: {{ selectedDoctor.sub_doctors_count || 0 }} / {{ selectedDoctor.max_sub_doctors }})
+            </span>
+          </b-col>
+        </b-row>
+
         <div v-if="selectedDoctor.notes">
           <strong>{{ $t('admin.notes') }}:</strong>
           <p class="mt-50">{{ selectedDoctor.notes }}</p>
@@ -361,6 +389,7 @@ export default {
         subscription_end: '',
         is_active: true,
         notes: '',
+        max_sub_doctors: 0,
       },
       fields: [
         { key: 'name', label: this.$t('client.name'), sortable: true },
@@ -443,6 +472,7 @@ export default {
         subscription_end: this.formatDateForInput(doctor.subscription_end),
         is_active: doctor.is_active,
         notes: doctor.notes || '',
+        max_sub_doctors: doctor.max_sub_doctors ?? 0,
       }
       this.isEditing = true
       this.selectedDoctor = doctor

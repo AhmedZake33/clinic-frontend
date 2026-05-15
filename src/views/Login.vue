@@ -101,13 +101,11 @@ export default {
 
         // Redirect to role-specific dashboards
         const role = response.data.user.role
-        if (role === 'doctor') {
-          this.$router.push('/doctor/dashboard')
-        } else if (role === 'assistant') {
-          this.$router.push('/assistant/dashboard')
-        } else {
-          this.$router.push('/dashboard')
-        }
+        let target = '/dashboard'
+        if (role === 'doctor') target = '/doctor/dashboard'
+        else if (role === 'assistant') target = '/assistant/dashboard'
+        else if (role === 'sub-doctor') target = '/doctor/dashboard'
+        this.$router.push(target).catch(() => {})
       } catch (error) {
         const data = error.response?.data
         this.error = data?.errors?.email?.[0] || data?.message || 'Login failed. Please try again.'

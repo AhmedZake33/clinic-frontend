@@ -41,6 +41,21 @@ const navigationItems = [
     permission: 'assistant.view-financials',
   },
   {
+    title: 'transaction.transactions',
+    i18n: true,
+    route: 'assistant-transactions',
+    icon: 'CreditCardIcon',
+    permission: 'assistant.view-financials',
+  },
+  {
+    title: 'services.myServices',
+    i18n: true,
+    route: 'assistant-services',
+    icon: 'GridIcon',
+    permission: 'assistant.view-dashboard',
+    feature: 'services',
+  },
+  {
     title: 'purchases.purchases',
     i18n: true,
     route: 'assistant-purchases',
@@ -102,6 +117,13 @@ const navigationItems = [
     permission: 'doctor.view-financials',
   },
   {
+    title: 'transaction.transactions',
+    i18n: true,
+    route: 'doctor-transactions',
+    icon: 'CreditCardIcon',
+    permission: 'doctor.view-financials',
+  },
+  {
     title: 'purchases.purchases',
     i18n: true,
     route: 'doctor-purchases',
@@ -116,12 +138,29 @@ const navigationItems = [
     permission: 'doctor.view-assistants',
   },
   {
+    title: 'subDoctors.title',
+    i18n: true,
+    route: 'doctor-sub-doctors',
+    icon: 'UsersIcon',
+    permission: 'doctor.view-assistants',
+  },
+  {
+    title: 'services.myServices',
+    i18n: true,
+    route: 'doctor-services',
+    icon: 'GridIcon',
+    permission: 'doctor.view-services',
+    feature: 'services',
+  },
+  {
     title: 'menu.reports',
     i18n: true,
     route: 'doctor-reports',
     icon: 'BarChart2Icon',
     permission: 'doctor.view-reports',
+    feature: 'reports',
   },
+  
   {
     header: 'menu.adminMenu',
     i18n: true,

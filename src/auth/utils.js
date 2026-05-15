@@ -24,5 +24,6 @@ export const getHomeRouteForLoggedInUser = userRole => {
   if (userRole === 'admin') return 'dashboard'
   if (userRole === 'teacher') return { name: 'teacher' }
   if (userRole === 'student') return { name: 'student' }
+  if (userRole === 'sub-doctor' || String(userRole).toLowerCase().replace(/[_\s]/g,'-') === 'sub-doctor') return { name: 'doctor-reservations' }
   return { name: 'auth-login' }
 }
