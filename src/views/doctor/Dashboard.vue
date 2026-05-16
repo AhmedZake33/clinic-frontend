@@ -227,16 +227,18 @@ export default {
   methods: {
     async fetchStats() {
       try {
-        const [allRes, pendingRes, confirmedRes, completedRes] = await Promise.all([
-          reservationsService.getReservations(),
+        const [pendingRes, confirmedRes, completedRes] = await Promise.all([
           reservationsService.getReservations({ status: 'pending' }),
           reservationsService.getReservations({ status: 'confirmed' }),
           reservationsService.getReservations({ status: 'completed' }),
         ])
 
-        this.stats.totalReservations = allRes.data.total || 0
-        this.stats.pendingReservations = (pendingRes.data.total || 0) + (confirmedRes.data.total || 0)
-        this.stats.completedReservations = completedRes.data.total || 0
+        const pending = pendingRes.data.total || 0
+        const confirmed = confirmedRes.data.total || 0
+        const completed = completedRes.data.total || 0
+        this.stats.totalReservations = pending + confirmed + completed
+        this.stats.pendingReservations = pending + confirmed
+        this.stats.completedReservations = completed
       } catch (error) {
         console.error('Failed to fetch stats', error)
       }
