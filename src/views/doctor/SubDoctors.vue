@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-card>
-      <b-card-header>
+      <!-- <b-card-header>
         <div class="d-flex justify-content-between align-items-center">
           <div>
             <h4 class="mb-0">{{ $t('subDoctors.title') }}</h4>
@@ -17,7 +17,24 @@
             {{ $t('subDoctors.add') }}
           </b-button>
         </div>
-      </b-card-header>
+      </b-card-header> -->
+
+      <b-row class="mb-2">
+        <b-col cols="12" md="4">
+          <h4>
+            <small v-if="maxAllowed > 0" class="text-muted">
+              {{ $t('subDoctors.usage', { current: subs.length, max: maxAllowed }) }}
+            </small>
+          </h4>
+        </b-col>
+        <b-col cols="12" md="8" class="text-right">
+          <b-button variant="primary" :disabled="maxAllowed <= 0 || subs.length >= maxAllowed" @click="openAdd">
+            <feather-icon icon="PlusIcon" class="mr-50" />
+            {{ $t('subDoctors.add') }}
+          </b-button>
+        </b-col>
+      </b-row>
+
 
       <b-table :items="subs" :fields="fields" :busy="loading" responsive>
         <template #cell(permissions)="data">
@@ -63,6 +80,7 @@
 
 <script>
 import subDoctorsApi from '@/services/subDoctors'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   data() {
@@ -103,14 +121,14 @@ export default {
       try {
         if (this.isEditing) {
           await subDoctorsApi.update(this.selected.id, this.form)
-          this.$toast(this.$t('messages.updateSuccess'))
+          this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.success'), text: this.$t('messages.updateSuccess'), variant: 'success' } })
         } else {
           const { data } = await subDoctorsApi.create(this.form)
           // show generated or provided password so doctor can share it
           if (data.plain_password) {
-            this.$toast({ title: this.$t('messages.success'), text: this.$t('subDoctors.createdWithPassword', { password: data.plain_password }), variant: 'success' })
+            this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.success'), text: this.$t('subDoctors.createdWithPassword', { password: data.plain_password }), variant: 'success' } })
           } else {
-            this.$toast(this.$t('messages.addSuccess'))
+            this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.success'), text: this.$t('messages.addSuccess'), variant: 'success' } })
           }
         }
         this.showModal = false
@@ -121,9 +139,28 @@ export default {
       }
     },
     async remove(item) {
-      if (!confirm(this.$t('actions.confirm'))) return
-      await subDoctorsApi.delete(item.id)
-      this.fetch()
+      const result = await this.$swal({
+        title: this.$t('messages.deleteConfirm'),
+        text: item.name,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: this.$t('actions.confirm'),
+        cancelButtonText: this.$t('actions.cancel'),
+        customClass: {
+          confirmButton: 'btn btn-danger',
+          cancelButton: 'btn btn-outline-secondary ml-1',
+        },
+        buttonsStyling: false,
+      })
+      if (!result.isConfirmed) return
+      try {
+        await subDoctorsApi.delete(item.id)
+        this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.success'), text: this.$t('messages.deleteSuccess'), variant: 'success' } })
+        this.fetch()
+      } catch (e) {
+        const msg = e.response?.data?.message || this.$t('messages.saveError')
+        this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.error'), text: msg, variant: 'danger' } })
+      }
     },
     reset() { this.isEditing = false; this.selected = null; this.form = { name: '', email: '', permissions: [] } }
   }
