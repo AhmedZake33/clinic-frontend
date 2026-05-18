@@ -796,5 +796,21 @@
     "loadError": "Failed to load services",
     "serviceAdded": "Service added to reservation",
     "serviceRemoved": "Service removed from reservation"
+  },
+  "auth": {
+    "forgotPassword": "Forgot Password?",
+    "forgotPasswordTitle": "Forgot Password",
+    "forgotPasswordDesc": "Enter your email to receive a password reset link",
+    "sendResetLink": "Send Reset Link",
+    "resetPassword": "Reset Password",
+    "resetPasswordDesc": "Enter your new password below",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "passwordChangedSuccess": "Password changed successfully",
+    "passwordResetSuccess": "Password reset successfully. Redirecting to login...",
+    "resetLinkSent": "A password reset link has been sent to your email. If you don't see it, please check your spam or junk folder.",
+    "backToLogin": "Back to Login"
   }
 }

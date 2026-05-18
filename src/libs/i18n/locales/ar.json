@@ -7,6 +7,13 @@
     "login": "تسجيل الدخول",
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
+    "dashboard": "لوحة التحكم",
+    "clients": "العملاء",
+    "reservations": "الحجوزات",
+    "logout": "تسجيل الخروج",
+    "profile": "الملف الشخصي",
+    "brandText": "نظام العيادة"
+  },
   "subDoctors": {
     "title": "أطباء فرعيون",
     "add": "إضافة طبيب فرعي",
@@ -17,13 +24,6 @@
     "createdWithPassword": "تم إنشاء الطبيب الفرعي. كلمة المرور: {password}",
     "usage": "{current} / {max} طبيب فرعي",
     "notAllowed": "خطتك لا تسمح بإضافة أطباء فرعيين. تواصل مع المسؤول."
-  },
-    "dashboard": "لوحة التحكم",
-    "clients": "العملاء",
-    "reservations": "الحجوزات",
-    "logout": "تسجيل الخروج",
-    "profile": "الملف الشخصي",
-    "brandText": "نظام العيادة"
   },
   "navigation": {
     "dashboard": "لوحة التحكم",
@@ -630,5 +630,21 @@
     "loadError": "فشل في تحميل الخدمات",
     "serviceAdded": "تم إضافة الخدمة للحجز بنجاح",
     "serviceRemoved": "تم حذف الخدمة من الحجز"
+  },
+  "auth": {
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "forgotPasswordTitle": "نسيت كلمة المرور",
+    "forgotPasswordDesc": "أدخل بريدك الإلكتروني لاستلام رابط إعادة تعيين كلمة المرور",
+    "sendResetLink": "إرسال رابط الاستعادة",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "resetPasswordDesc": "أدخل كلمة المرور الجديدة",
+    "changePassword": "تغيير كلمة المرور",
+    "currentPassword": "كلمة المرور الحالية",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "passwordChangedSuccess": "تم تغيير كلمة المرور بنجاح",
+    "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح. جارٍ التوجيه لتسجيل الدخول...",
+    "resetLinkSent": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. إذا لم تجده، يرجى التحقق من مجلد البريد العشوائي (Spam).",
+    "backToLogin": "العودة لتسجيل الدخول"
   }
 }

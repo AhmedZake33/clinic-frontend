@@ -34,6 +34,12 @@
             />
           </b-form-group>
 
+          <div class="d-flex justify-content-end mb-1">
+            <b-link :to="{ name: 'forgot-password' }" class="small">
+              {{ $t('auth.forgotPassword') }}
+            </b-link>
+          </div>
+
           <b-button type="submit" variant="primary" block :disabled="loading">
             <b-spinner v-if="loading" small class="mr-1" />
             {{ $t('actions.signIn') }}

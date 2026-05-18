@@ -9,6 +9,41 @@ export default [
     },
   },
   {
+    path: '/forgot-password',
+    name: 'forgot-password',
+    component: () => import('@/views/ForgotPassword.vue'),
+    meta: {
+      layout: 'full',
+      requiresAuth: false,
+    },
+  },
+  {
+    path: '/reset-password',
+    name: 'reset-password',
+    component: () => import('@/views/ResetPassword.vue'),
+    meta: {
+      layout: 'full',
+      requiresAuth: false,
+    },
+  },
+  {
+    path: '/change-password',
+    name: 'change-password',
+    component: () => import('@/views/ChangePassword.vue'),
+    meta: {
+      requiresAuth: true,
+      pageTitle: 'auth.changePassword',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'auth.changePassword',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('@/views/Dashboard.vue'),

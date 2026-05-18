@@ -25,9 +25,8 @@ function cleanNumber(n) {
 function combineWithPrefix(prefix, number) {
   const p = cleanPrefix(prefix)
   const num = cleanNumber(number)
-  if (!p && !num) return ''
+  if (!num) return ''
   if (!p) return num
-  if (!num) return p
   // if number already contains the prefix (e.g., +96650123), just return cleaned
   if (String(number).includes(p)) {
     return (p + num).replace(/\+\+/, '+')

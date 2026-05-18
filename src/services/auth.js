@@ -23,5 +23,17 @@ export default {
    */
   getMyPermissions() {
     return apiClient.get('/my-permissions')
-  }
+  },
+
+  forgotPassword(data) {
+    return apiClient.post('/forgot-password', data)
+  },
+
+  resetPassword(data) {
+    return apiClient.post('/reset-password', data)
+  },
+
+  changePassword(data) {
+    return apiClient.post('/change-password', data)
+  },
 }

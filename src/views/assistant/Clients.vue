@@ -617,8 +617,8 @@ export default {
 }
 
 .country-col {
-  flex: 0 0 140px;
-  max-width: 140px;
+  flex: 0 0 200px;
+  max-width: 200px;
 }
 
 .number-col {
@@ -742,8 +742,8 @@ export default {
 
 @media (max-width: 575.98px) {
   .country-col {
-    flex-basis: 124px;
-    max-width: 124px;
+    flex-basis: 160px;
+    max-width: 160px;
   }
 }
 </style>

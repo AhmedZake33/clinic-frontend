@@ -192,6 +192,12 @@ const navigationItems = [
     icon: 'HomeIcon',
     permission: 'client.view-dashboard',
   },
+  {
+    title: 'auth.changePassword',
+    i18n: true,
+    route: 'change-password',
+    icon: 'LockIcon',
+  },
 ]
 
 export default navigationItems
