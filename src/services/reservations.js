@@ -46,6 +46,18 @@ export default {
       responseType: 'blob'
     })
   },
+
+  generateMedicinesPrescription(id) {
+    return apiClient.get(`/reservations/${id}/medicines-prescription`, {
+      responseType: 'blob'
+    })
+  },
+
+  generateReservationDetailsPdf(id) {
+    return apiClient.get(`/reservations/${id}/details-pdf`, {
+      responseType: 'blob'
+    })
+  },
   
   deleteReservation(id) {
     return apiClient.delete(`/reservations/${id}`)

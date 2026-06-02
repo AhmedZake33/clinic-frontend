@@ -219,24 +219,6 @@ export default [
     },
   },
   {
-    path: '/assistant/reports',
-    name: 'assistant-reports',
-    component: () => import('@/views/shared/Reports.vue'),
-    meta: {
-      requiresAuth: true,
-      permissions: ['assistant.view-reports'],
-      pageTitle: 'menu.reports',
-      pageI18n: true,
-      breadcrumb: [
-        {
-          text: 'menu.reports',
-          active: true,
-          i18n: true,
-        },
-      ],
-    },
-  },
-  {
     path: '/assistant/waiting-queue',
     name: 'assistant-waiting-queue',
     component: () => import('@/views/shared/WaitingQueue.vue'),

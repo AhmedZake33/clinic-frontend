@@ -153,12 +153,21 @@
         </b-form-group>
 
         <b-form-group :label="$t('client.whatsappNumber')" label-for="whatsapp-number">
+          <div class="mb-2">
+            <b-form-checkbox
+              v-model="form.useSameMobile"
+              @change="handleUseSameMobileChange"
+            >
+              {{ $t('client.useSameMobile') }}
+            </b-form-checkbox>
+          </div>
           <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
             <div class="country-col">
               <b-form-select
                 class="phone-country-select"
                 v-model="form.whatsapp_country_code"
                 :options="countrySelectOptions"
+                :disabled="form.useSameMobile"
               />
             </div>
             <div class="number-col">
@@ -167,6 +176,7 @@
                 class="phone-number-input"
                 v-model="form.whatsapp_number"
                 :placeholder="$t('client.whatsappPlaceholder')"
+                :disabled="form.useSameMobile"
               />
             </div>
           </div>
@@ -319,10 +329,11 @@ import {
   BFormTextarea,
   BSpinner,
 } from 'bootstrap-vue'
+import vSelect from 'vue-select'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import clientsService, { splitPhoneNumber } from '@/services/clients'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
-import vSelect from 'vue-select'
 import countryList from '@/utils/countries'
 
 export default {
@@ -393,6 +404,7 @@ export default {
         phone_country_code: '',
         whatsapp_country_code: '',
         whatsapp_number: '',
+        useSameMobile: false,
         blood_type: '',
         date_of_birth: '',
         height: '',
@@ -452,7 +464,7 @@ export default {
         }
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: this.$t('messages.loadError'),
@@ -489,6 +501,7 @@ export default {
         phone_country_code: '',
         whatsapp_country_code: '',
         whatsapp_number: '',
+        useSameMobile: false,
         blood_type: '',
         date_of_birth: '',
         height: '',
@@ -505,12 +518,14 @@ export default {
       this.selectedClient = client
       const ph = splitPhoneNumber(client.phone)
       const wa = splitPhoneNumber(client.whatsapp_number)
+      const useSame = client.phone === client.whatsapp_number && client.phone_country_code === client.whatsapp_country_code
       this.form = {
         ...client,
         phone: ph.number,
         phone_country_code: ph.prefix,
         whatsapp_number: wa.number,
         whatsapp_country_code: wa.prefix,
+        useSameMobile: useSame,
         chronic_illnesses: [...(client.chronic_illnesses || [])],
       }
       this.modalShow = true
@@ -525,7 +540,7 @@ export default {
         if (this.editMode) {
           await clientsService.updateClient(this.selectedClient.id, this.form)
           this.$toast({
-            component: 'ToastificationContent',
+            component: ToastificationContent,
             props: {
               title: this.$t('messages.success'),
               text: this.$t('messages.updateSuccess'),
@@ -535,7 +550,7 @@ export default {
         } else {
           await clientsService.createClient(this.form)
           this.$toast({
-            component: 'ToastificationContent',
+            component: ToastificationContent,
             props: {
               title: this.$t('messages.success'),
               text: this.$t('messages.addSuccess'),
@@ -547,7 +562,7 @@ export default {
         this.fetchClients()
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: error.response?.data?.message || this.$t('messages.saveError'),
@@ -564,7 +579,7 @@ export default {
       try {
         await clientsService.deleteClient(id)
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.success'),
             text: this.$t('messages.deleteSuccess'),
@@ -574,7 +589,7 @@ export default {
         this.fetchClients()
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: this.$t('messages.deleteError'),
@@ -598,6 +613,12 @@ export default {
       const from = ((paginationState.current_page - 1) * paginationState.per_page) + 1
       const to = Math.min(paginationState.current_page * paginationState.per_page, paginationState.total)
       return `${from}-${to} / ${paginationState.total}`
+    },
+    handleUseSameMobileChange() {
+      if (this.form.useSameMobile) {
+        this.form.whatsapp_number = this.form.phone
+        this.form.whatsapp_country_code = this.form.phone_country_code
+      }
     },
   },
 }

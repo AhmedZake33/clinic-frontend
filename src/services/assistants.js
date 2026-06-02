@@ -1,4 +1,5 @@
 import apiClient from './api'
+import { preparePhonePayload } from '@/utils/phoneNumbers'
 
 export default {
   getAssistants() {
@@ -6,11 +7,11 @@ export default {
   },
 
   createAssistant(data) {
-    return apiClient.post('/assistants', data)
+    return apiClient.post('/assistants', preparePhonePayload(data))
   },
 
   updateAssistant(id, data) {
-    return apiClient.put(`/assistants/${id}`, data)
+    return apiClient.put(`/assistants/${id}`, preparePhonePayload(data))
   },
 
   deleteAssistant(id) {

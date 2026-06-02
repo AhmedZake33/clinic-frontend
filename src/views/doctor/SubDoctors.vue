@@ -56,14 +56,37 @@
 
     <b-modal v-model="showModal" :title="isEditing ? $t('subDoctors.edit') : $t('subDoctors.add')" @hidden="reset">
       <b-form @submit.prevent="save">
-        <b-form-group :label="$t('services.name')">
+        <b-form-group :label="$t('subDoctors.name')">
           <b-form-input v-model="form.name" required />
         </b-form-group>
-        <b-form-group :label="$t('services.nameEn')">
+        <b-form-group :label="$t('subDoctors.nameEn')">
           <b-form-input v-model="form.name_en" />
         </b-form-group>
         <b-form-group :label="$t('subDoctors.email')">
           <b-form-input v-model="form.email" type="email" :required="!isEditing" />
+        </b-form-group>
+        <b-form-group :label="$t('client.phone')">
+          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+            <div class="country-col">
+              <b-form-select class="phone-country-select" v-model="form.phone_country_code" :options="countrySelectOptions" />
+            </div>
+            <div class="number-col">
+              <b-form-input class="phone-number-input" v-model="form.phone" :placeholder="$t('client.phone')" />
+            </div>
+          </div>
+        </b-form-group>
+        <b-form-group :label="$t('client.whatsappNumber')">
+          <b-form-checkbox v-model="form.useSameMobile" class="mb-50" @change="handleUseSameMobileChange">
+            {{ $t('client.useSameMobile') }}
+          </b-form-checkbox>
+          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+            <div class="country-col">
+              <b-form-select class="phone-country-select" v-model="form.whatsapp_country_code" :options="countrySelectOptions" :disabled="form.useSameMobile" />
+            </div>
+            <div class="number-col">
+              <b-form-input class="phone-number-input" v-model="form.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="form.useSameMobile" />
+            </div>
+          </div>
         </b-form-group>
         <b-form-group :label="$t('subDoctors.password')">
           <b-form-input v-model="form.password" type="password" :required="!isEditing" />
@@ -80,6 +103,8 @@
 
 <script>
 import subDoctorsApi from '@/services/subDoctors'
+import countryList from '@/utils/countries'
+import { splitPhoneNumber } from '@/utils/phoneNumbers'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
@@ -91,14 +116,28 @@ export default {
       showModal: false,
       isEditing: false,
       selected: null,
-      form: { name: '', email: '', password: '' },
+      form: {
+        name: '',
+        email: '',
+        phone: '',
+        phone_country_code: '',
+        whatsapp_number: '',
+        whatsapp_country_code: '',
+        useSameMobile: false,
+        password: '',
+      },
     }
   },
   computed: {
+    countrySelectOptions() {
+      return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(country => ({ value: country.value, text: country.label })))
+    },
     fields() {
       return [
-        { key: 'name', label: this.$t('services.name') },
+        { key: 'name', label: this.$t('subDoctors.name') },
         { key: 'email', label: this.$t('subDoctors.email') },
+        { key: 'phone', label: this.$t('client.phone') },
+        { key: 'whatsapp_number', label: this.$t('client.whatsappNumber') },
         { key: 'actions', label: this.$t('table.actions') },
       ]
     }
@@ -116,7 +155,23 @@ export default {
       } finally { this.loading = false }
     },
     openAdd() { this.reset(); this.showModal = true },
-    edit(item) { this.selected = item; this.isEditing = true; this.form = { name: item.name, email: item.email, password: '' }; this.showModal = true },
+    edit(item) {
+      const phone = splitPhoneNumber(item.phone)
+      const whatsapp = splitPhoneNumber(item.whatsapp_number)
+      this.selected = item
+      this.isEditing = true
+      this.form = {
+        name: item.name,
+        email: item.email,
+        phone: phone.number,
+        phone_country_code: phone.prefix,
+        whatsapp_number: whatsapp.number,
+        whatsapp_country_code: whatsapp.prefix,
+        useSameMobile: item.phone && item.phone === item.whatsapp_number,
+        password: '',
+      }
+      this.showModal = true
+    },
     async save() {
       try {
         if (this.isEditing) {
@@ -162,7 +217,60 @@ export default {
         this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.error'), text: msg, variant: 'danger' } })
       }
     },
-    reset() { this.isEditing = false; this.selected = null; this.form = { name: '', email: '', permissions: [] } }
+    reset() { this.isEditing = false; this.selected = null; this.form = this.emptyForm() },
+    emptyForm() {
+      return {
+        name: '',
+        email: '',
+        phone: '',
+        phone_country_code: '',
+        whatsapp_number: '',
+        whatsapp_country_code: '',
+        useSameMobile: false,
+        password: '',
+      }
+    },
+    handleUseSameMobileChange() {
+      if (this.form.useSameMobile) {
+        this.form.whatsapp_number = this.form.phone
+        this.form.whatsapp_country_code = this.form.phone_country_code
+      }
+    },
   }
 }
 </script>
+
+<style scoped>
+.phone-combined-control {
+  display: flex;
+  width: 100%;
+}
+
+.country-col {
+  flex: 0 0 150px;
+  max-width: 150px;
+}
+
+.number-col {
+  flex: 1;
+  min-width: 0;
+}
+
+::v-deep .phone-country-select.custom-select {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.phone-number-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.phone-combined-control--rtl ::v-deep .phone-country-select.custom-select {
+  border-radius: 0 0.357rem 0.357rem 0;
+}
+
+.phone-combined-control--rtl .phone-number-input {
+  border-radius: 0.357rem 0 0 0.357rem;
+}
+</style>

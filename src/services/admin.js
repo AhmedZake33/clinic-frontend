@@ -1,4 +1,5 @@
 import axios from '@axios'
+import { preparePhonePayload } from '@/utils/phoneNumbers'
 
 export default {
   // Get all doctors
@@ -8,7 +9,7 @@ export default {
 
   // Create a new doctor
   createDoctor(doctorData) {
-    return axios.post('/admin/doctors', doctorData)
+    return axios.post('/admin/doctors', preparePhonePayload(doctorData))
   },
 
   // Get a specific doctor
@@ -18,7 +19,7 @@ export default {
 
   // Update a doctor
   updateDoctor(doctorId, doctorData) {
-    return axios.put(`/admin/doctors/${doctorId}`, doctorData)
+    return axios.put(`/admin/doctors/${doctorId}`, preparePhonePayload(doctorData))
   },
 
   // Delete a doctor

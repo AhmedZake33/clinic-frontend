@@ -5,6 +5,12 @@ export default {
   getAll() {
     return axios.get('/doctor-services')
   },
+  getAllForReservation(reservationId) {
+    return axios.get(`/reservations/${reservationId}/doctor-services`)
+  },
+  getAllForDoctor(doctorId) {
+    return axios.get(`/doctors/${doctorId}/doctor-services`)
+  },
   create(data) {
     return axios.post('/doctor-services', data)
   },

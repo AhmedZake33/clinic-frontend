@@ -63,13 +63,6 @@ const navigationItems = [
     permission: 'assistant.view-purchases',
   },
   {
-    title: 'menu.reports',
-    i18n: true,
-    route: 'assistant-reports',
-    icon: 'BarChart2Icon',
-    permission: 'assistant.view-reports',
-  },
-  {
     header: 'menu.doctorMenu',
     i18n: true,
     permission: 'doctor.view-dashboard',

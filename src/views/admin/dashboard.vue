@@ -130,6 +130,49 @@
           </b-col>
         </b-row>
 
+        <b-row>
+          <b-col cols="12">
+            <b-form-group :label="$t('client.phone')" label-for="doctor-phone">
+              <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+                <div class="country-col">
+                  <b-form-select
+                    id="doctor-country-code"
+                    class="phone-country-select"
+                    v-model="form.phone_country_code"
+                    :options="countrySelectOptions"
+                  />
+                </div>
+                <div class="number-col">
+                  <b-form-input id="doctor-phone" class="phone-number-input" v-model="form.phone" :placeholder="$t('client.phone')" />
+                </div>
+              </div>
+            </b-form-group>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col cols="12">
+            <b-form-group :label="$t('client.whatsappNumber')" label-for="doctor-whatsapp-number">
+              <b-form-checkbox v-model="form.useSameMobile" class="mb-50" @change="handleUseSameMobileChange">
+                {{ $t('client.useSameMobile') }}
+              </b-form-checkbox>
+              <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+                <div class="country-col">
+                  <b-form-select
+                    class="phone-country-select"
+                    v-model="form.whatsapp_country_code"
+                    :options="countrySelectOptions"
+                    :disabled="form.useSameMobile"
+                  />
+                </div>
+                <div class="number-col">
+                  <b-form-input id="doctor-whatsapp-number" class="phone-number-input" v-model="form.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="form.useSameMobile" />
+                </div>
+              </div>
+            </b-form-group>
+          </b-col>
+        </b-row>
+
         <b-row v-if="!isEditing">
           <b-col cols="12" md="6">
             <b-form-group :label="$t('clinic.password')" label-for="password">
@@ -263,6 +306,15 @@
 
         <b-row class="mb-2">
           <b-col cols="12" md="6">
+            <strong>{{ $t('client.phone') }}:</strong> {{ selectedDoctor.phone || 'N/A' }}
+          </b-col>
+          <b-col cols="12" md="6">
+            <strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedDoctor.whatsapp_number || 'N/A' }}
+          </b-col>
+        </b-row>
+
+        <b-row class="mb-2">
+          <b-col cols="12" md="6">
             <strong>{{ $t('admin.subscriptionStatus') }}:</strong>
             <b-badge :variant="getStatusVariant(selectedDoctor.subscription_status)" class="ml-50">
               {{ $t(`admin.status.${selectedDoctor.subscription_status}`) }}
@@ -335,11 +387,13 @@
 <script>
 import {
   BCard, BCardHeader, BTable, BButton, BModal, BForm, BFormGroup,
-  BFormInput, BFormTextarea, BFormCheckbox, BRow, BCol, BDropdown,
+  BFormInput, BFormTextarea, BFormCheckbox, BFormSelect, BRow, BCol, BDropdown,
   BDropdownItem, BBadge, BSpinner,
 } from 'bootstrap-vue'
 import StatisticCardVertical from '@core/components/statistics-cards/StatisticCardVertical.vue'
 import adminService from '@/services/admin'
+import countryList from '@/utils/countries'
+import { splitPhoneNumber } from '@/utils/phoneNumbers'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
@@ -354,6 +408,7 @@ export default {
     BFormInput,
     BFormTextarea,
     BFormCheckbox,
+    BFormSelect,
     BRow,
     BCol,
     BDropdown,
@@ -381,6 +436,11 @@ export default {
       form: {
         name: '',
         email: '',
+        phone: '',
+        phone_country_code: '',
+        whatsapp_number: '',
+        whatsapp_country_code: '',
+        useSameMobile: false,
         password: '',
         password_confirmation: '',
         subscription_plan: '',
@@ -394,6 +454,7 @@ export default {
       fields: [
         { key: 'name', label: this.$t('client.name'), sortable: true },
         { key: 'email', label: this.$t('clinic.email'), sortable: true },
+        { key: 'phone', label: this.$t('client.phone'), sortable: true },
         { key: 'subscription_status', label: this.$t('admin.subscriptionStatus') },
         { key: 'subscription_plan', label: this.$t('admin.subscriptionPlan') },
         { key: 'assistants_count', label: this.$t('admin.assistants'), sortable: true },
@@ -404,6 +465,9 @@ export default {
     }
   },
   computed: {
+    countrySelectOptions() {
+      return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(country => ({ value: country.value, text: country.label })))
+    },
     showModal: {
       get() {
         return this.showAddModal || this.isEditing
@@ -461,9 +525,16 @@ export default {
     },
 
     editDoctor(doctor) {
+      const phone = splitPhoneNumber(doctor.phone)
+      const whatsapp = splitPhoneNumber(doctor.whatsapp_number)
       this.form = {
         name: doctor.name,
         email: doctor.email,
+        phone: phone.number,
+        phone_country_code: phone.prefix,
+        whatsapp_number: whatsapp.number,
+        whatsapp_country_code: whatsapp.prefix,
+        useSameMobile: doctor.phone && doctor.phone === doctor.whatsapp_number,
         password: '',
         password_confirmation: '',
         subscription_plan: doctor.subscription_plan || '',
@@ -596,8 +667,21 @@ export default {
         subscription_end: '',
         is_active: true,
         notes: '',
+        phone: '',
+        phone_country_code: '',
+        whatsapp_number: '',
+        whatsapp_country_code: '',
+        useSameMobile: false,
+        max_sub_doctors: 0,
       }
       this.selectedDoctor = null
+    },
+
+    handleUseSameMobileChange() {
+      if (this.form.useSameMobile) {
+        this.form.whatsapp_number = this.form.phone
+        this.form.whatsapp_country_code = this.form.phone_country_code
+      }
     },
 
     getStatusVariant(status) {
@@ -618,4 +702,36 @@ export default {
 </script>
 
 <style scoped>
+.phone-combined-control {
+  display: flex;
+  width: 100%;
+}
+
+.country-col {
+  flex: 0 0 150px;
+  max-width: 150px;
+}
+
+.number-col {
+  flex: 1;
+  min-width: 0;
+}
+
+::v-deep .phone-country-select .custom-select {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.phone-number-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.phone-combined-control--rtl ::v-deep .phone-country-select .custom-select {
+  border-radius: 0 0.357rem 0.357rem 0;
+}
+
+.phone-combined-control--rtl .phone-number-input {
+  border-radius: 0.357rem 0 0 0.357rem;
+}
 </style>

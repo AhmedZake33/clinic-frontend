@@ -62,6 +62,86 @@
           </b-card>
         </b-col>
       </b-row>
+
+      <b-row>
+        <b-col cols="12" lg="6">
+          <b-card :title="$t('reports.incomeByInvoiceType')">
+            <b-table small responsive :items="incomeTypeRows" :fields="breakdownFields" show-empty>
+              <template #empty>
+                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+              </template>
+              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+            </b-table>
+          </b-card>
+        </b-col>
+        <b-col cols="12" lg="6">
+          <b-card :title="$t('reports.incomeByPaymentMethod')">
+            <b-table small responsive :items="paymentMethodRows" :fields="breakdownFields" show-empty>
+              <template #empty>
+                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+              </template>
+              <template #cell(label)="data">{{ formatPaymentMethod(data.item.key, data.value) }}</template>
+              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+            </b-table>
+          </b-card>
+        </b-col>
+      </b-row>
+
+      <b-row>
+        <b-col cols="12" lg="6">
+          <b-card :title="$t('reports.reservationPaymentsByMethod')">
+            <b-table small responsive :items="reservationPaymentMethodRows" :fields="breakdownFields" show-empty>
+              <template #empty>
+                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+              </template>
+              <template #cell(label)="data">{{ formatPaymentMethod(data.item.key, data.value) }}</template>
+              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+            </b-table>
+          </b-card>
+        </b-col>
+        <b-col cols="12" lg="6">
+          <b-card :title="$t('reports.additionalServicesPaymentsByMethod')">
+            <b-table small responsive :items="additionalServicesPaymentMethodRows" :fields="breakdownFields" show-empty>
+              <template #empty>
+                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+              </template>
+              <template #cell(label)="data">{{ formatPaymentMethod(data.item.key, data.value) }}</template>
+              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+            </b-table>
+          </b-card>
+        </b-col>
+      </b-row>
+
+      <b-row>
+        <b-col cols="12" md="4">
+          <b-card :title="$t('reports.purchasesSummary')">
+            <p><strong>{{ $t('financial.totalAmount') }}:</strong> {{ formatCurrency(summary.purchases.total_amount) }}</p>
+            <p><strong>{{ $t('financial.totalRecords') }}:</strong> {{ summary.purchases.total_records }}</p>
+          </b-card>
+        </b-col>
+        <b-col cols="12" md="4">
+          <b-card :title="$t('reports.purchasesByCategory')">
+            <b-table small responsive :items="purchaseCategoryRows" :fields="breakdownFields" show-empty>
+              <template #empty>
+                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+              </template>
+              <template #cell(label)="data">{{ formatPurchaseCategory(data.item.key, data.value) }}</template>
+              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+            </b-table>
+          </b-card>
+        </b-col>
+        <b-col cols="12" md="4">
+          <b-card :title="$t('reports.purchasesByPaymentMethod')">
+            <b-table small responsive :items="purchasePaymentMethodRows" :fields="breakdownFields" show-empty>
+              <template #empty>
+                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+              </template>
+              <template #cell(label)="data">{{ formatPurchasePaymentMethod(data.item.key, data.value) }}</template>
+              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+            </b-table>
+          </b-card>
+        </b-col>
+      </b-row>
     </template>
   </div>
 </template>
@@ -77,6 +157,7 @@ import {
   BFormSelect,
   BButton,
   BSpinner,
+  BTable,
 } from 'bootstrap-vue'
 import reportsService from '@/services/reports'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
@@ -92,6 +173,7 @@ export default {
     BFormSelect,
     BButton,
     BSpinner,
+    BTable,
   },
   data() {
     return {
@@ -117,6 +199,20 @@ export default {
           total_paid: 0,
           total_remaining: 0,
           total_records: 0,
+          payments: {
+            total: { amount: 0, count: 0 },
+            reservation_invoices: { amount: 0, count: 0 },
+            additional_services: { amount: 0, count: 0 },
+            by_payment_method: [],
+            reservation_by_payment_method: [],
+            additional_services_by_payment_method: [],
+          },
+        },
+        purchases: {
+          total_amount: 0,
+          total_records: 0,
+          by_category: [],
+          by_payment_method: [],
         },
       },
     }
@@ -127,6 +223,45 @@ export default {
     },
     isAssistant() {
       return this.currentUser?.role === 'assistant'
+    },
+    breakdownFields() {
+      return [
+        { key: 'label', label: this.$t('reports.breakdown'), thClass: 'text-center', tdClass: 'text-center' },
+        { key: 'amount', label: this.$t('financial.amount'), thClass: 'text-center', tdClass: 'text-center' },
+        { key: 'count', label: this.$t('financial.totalRecords'), thClass: 'text-center', tdClass: 'text-center' },
+      ]
+    },
+    incomeTypeRows() {
+      const payments = this.summary.financials.payments || {}
+      return [
+        {
+          key: 'reservation_invoices',
+          label: this.$t('financial.reservationInvoice'),
+          amount: payments.reservation_invoices?.amount || 0,
+          count: payments.reservation_invoices?.count || 0,
+        },
+        {
+          key: 'additional_services',
+          label: this.$t('financial.additionalServicesInvoice'),
+          amount: payments.additional_services?.amount || 0,
+          count: payments.additional_services?.count || 0,
+        },
+      ]
+    },
+    paymentMethodRows() {
+      return this.summary.financials.payments?.by_payment_method || []
+    },
+    reservationPaymentMethodRows() {
+      return this.summary.financials.payments?.reservation_by_payment_method || []
+    },
+    additionalServicesPaymentMethodRows() {
+      return this.summary.financials.payments?.additional_services_by_payment_method || []
+    },
+    purchaseCategoryRows() {
+      return this.summary.purchases?.by_category || []
+    },
+    purchasePaymentMethodRows() {
+      return this.summary.purchases?.by_payment_method || []
     },
   },
   async mounted() {
@@ -213,6 +348,31 @@ export default {
     },
     formatCurrency(value) {
       return Number(value || 0).toFixed(2)
+    },
+    formatPaymentMethod(key, fallback) {
+      const normalized = String(key || '').toLowerCase().replace(/\s+/g, '_')
+      const map = {
+        bank_transfer: this.$t('financial.transfer'),
+        transfer: this.$t('financial.transfer'),
+        cash: this.$t('financial.cash'),
+        card: this.$t('financial.card'),
+        other: this.$t('financial.other'),
+        instapay: this.$t('financial.instapay'),
+      }
+      return map[normalized] || fallback || key || ''
+    },
+    formatPurchasePaymentMethod(key, fallback) {
+      return this.formatPaymentMethod(key, fallback)
+    },
+    formatPurchaseCategory(key, fallback) {
+      const map = {
+        'Medical Supplies': this.$t('categoryOptions.medicalSupplies'),
+        Equipment: this.$t('categoryOptions.equipment'),
+        Services: this.$t('categoryOptions.services'),
+        Maintenance: this.$t('categoryOptions.maintenance'),
+        Other: this.$t('categoryOptions.other'),
+      }
+      return map[key] || fallback || key || ''
     },
   },
 }

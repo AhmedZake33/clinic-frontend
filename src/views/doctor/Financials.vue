@@ -109,6 +109,11 @@
             {{ formatCurrency(data.value) }}
           </span>
         </template>
+        <template #cell(invoice_type)="data">
+          <b-badge :variant="getInvoiceTypeVariant(data.item)">
+            {{ getInvoiceTypeLabel(data.item) }}
+          </b-badge>
+        </template>
         <template #cell(payment_status)="data">
           <b-badge :variant="getStatusVariant(data.value)">
             {{ $t('financial.' + data.value) }}
@@ -167,6 +172,12 @@
                   <strong>{{ $t('reservation.appointment') }}:</strong> {{ formatDateTime(selectedFinancial.reservation.appointment_date) }}
                 </p>
                 <p>
+                  <strong>{{ $t('financial.invoiceType') }}:</strong>
+                  <b-badge :variant="getInvoiceTypeVariant(selectedFinancial)">
+                    {{ getInvoiceTypeLabel(selectedFinancial) }}
+                  </b-badge>
+                </p>
+                <p>
                   <strong>{{ $t('financial.paymentMethod') }}:</strong> {{ $t('financial.' + selectedFinancial.payment_method) }}
                 </p>
               </b-col>
@@ -187,7 +198,7 @@
             </b-row>
             <hr>
             <p><strong>{{ $t('reservation.notes') }}:</strong></p>
-            <p>{{ selectedFinancial.notes || $t('reservation.na') }}</p>
+            <p>{{ getFinancialNotes(selectedFinancial) }}</p>
             <p v-if="selectedFinancial.creator">
               <strong>{{ $t('financial.createdBy') }}:</strong> {{ selectedFinancial.creator.name }}
             </p>
@@ -393,6 +404,7 @@ export default {
       return [
         { key: 'client.name', label: this.$t('table.client'), sortable: true },
         { key: 'reservation.appointment_date', label: this.$t('reservation.appointment'), formatter: this.formatDateTime, sortable: true },
+        { key: 'invoice_type', label: this.$t('financial.invoiceType') },
         { key: 'amount', label: this.$t('financial.amount'), sortable: true },
         { key: 'paid', label: this.$t('financial.paid'), sortable: true },
         { key: 'remaining', label: this.$t('financial.remaining'), sortable: true },
@@ -505,6 +517,26 @@ export default {
     onPageChange(page) {
       this.pagination.current_page = page
       this.fetchFinancials()
+    },
+    isAdditionalServicesInvoice(item) {
+      return item && item.notes && item.notes.startsWith('Additional services invoice')
+    },
+    getInvoiceTypeLabel(item) {
+      return this.isAdditionalServicesInvoice(item)
+        ? this.$t('financial.additionalServicesInvoice')
+        : this.$t('financial.reservationInvoice')
+    },
+    getInvoiceTypeVariant(item) {
+      return this.isAdditionalServicesInvoice(item) ? 'light-info' : 'light-primary'
+    },
+    getFinancialNotes(item) {
+      if (!item || !item.notes) return this.$t('reservation.na')
+      if (!this.isAdditionalServicesInvoice(item)) return item.notes
+
+      const serviceNames = item.notes.replace('Additional services invoice', '').replace(/^:\s*/, '')
+      return serviceNames
+        ? `${this.$t('financial.additionalServicesInvoice')}: ${serviceNames}`
+        : this.$t('financial.additionalServicesInvoice')
     },
     viewFinancial(item) {
       this.selectedFinancial = { ...item }

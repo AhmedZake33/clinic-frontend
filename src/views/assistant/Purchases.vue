@@ -76,7 +76,7 @@
           {{ (Number(data.item.amount_paid) || 0).toFixed(2) }}
         </template>
         <template #cell(actions)="data">
-          <router-link :to="{ name: 'assistant-purchase-edit', params: { id: data.item.id } }">{{ $t('actions.edit') }}</router-link>
+          <router-link :to="{ name: editRouteName, params: { id: data.item.id } }">{{ $t('actions.edit') }}</router-link>
         </template>
       </b-table>
       <b-pagination
@@ -125,6 +125,7 @@ export default {
         { key: 'category', label: 'purchases.category' },
         { key: 'amount_paid', label: 'purchases.amountPaid' },
         { key: 'supplier', label: 'purchases.supplier' },
+        { key: 'payment_method', label: 'purchases.paymentMethod' },
         { key: 'actions', label: 'table.actions' },
       ],
     }
@@ -142,6 +143,9 @@ export default {
         { value: 'Maintenance', text: this.$t('categoryOptions.maintenance') },
         { value: 'Other', text: this.$t('categoryOptions.other') },
       ]
+    },
+    editRouteName() {
+      return this.$route.name === 'doctor-purchases' ? 'doctor-purchase-edit' : 'assistant-purchase-edit'
     },
   },
   async created() {

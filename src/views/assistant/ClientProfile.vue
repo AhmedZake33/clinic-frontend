@@ -156,16 +156,25 @@
         </b-form-group>
 
         <b-form-group :label="$t('client.whatsappNumber')" label-for="profile-client-whatsapp-number">
+          <div class="mb-2">
+            <b-form-checkbox
+              v-model="clientForm.useSameMobile"
+              @change="handleUseSameMobileChange"
+            >
+              {{ $t('client.useSameMobile') }}
+            </b-form-checkbox>
+          </div>
           <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
             <div class="country-col">
               <b-form-select
                 class="phone-country-select"
                 v-model="clientForm.whatsapp_country_code"
                 :options="countrySelectOptions"
+                :disabled="clientForm.useSameMobile"
               />
             </div>
             <div class="number-col">
-              <b-form-input id="profile-client-whatsapp-number" class="phone-number-input" v-model="clientForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" />
+              <b-form-input id="profile-client-whatsapp-number" class="phone-number-input" v-model="clientForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="clientForm.useSameMobile" />
             </div>
           </div>
         </b-form-group>
@@ -248,11 +257,12 @@ import {
   BFormTextarea,
   BSpinner,
 } from 'bootstrap-vue'
+import vSelect from 'vue-select'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import clientsService, { splitPhoneNumber } from '@/services/clients'
 import reservationsService from '@/services/reservations'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
-import vSelect from 'vue-select'
 import countryList from '@/utils/countries'
 
 export default {
@@ -301,6 +311,7 @@ export default {
         phone_country_code: '',
         whatsapp_country_code: '',
         whatsapp_number: '',
+        useSameMobile: false,
         blood_type: '',
         date_of_birth: '',
         height: '',
@@ -358,7 +369,7 @@ export default {
         this.client = data
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: this.$t('messages.loadError'),
@@ -370,6 +381,7 @@ export default {
     openEditModal() {
       const ph = splitPhoneNumber(this.client.phone)
       const wa = splitPhoneNumber(this.client.whatsapp_number)
+      const useSame = this.client.phone === this.client.whatsapp_number && this.client.phone_country_code === this.client.whatsapp_country_code
       this.clientForm = {
         name: this.client.name || '',
         email: this.client.email || '',
@@ -377,6 +389,7 @@ export default {
         phone_country_code: ph.prefix,
         whatsapp_country_code: wa.prefix,
         whatsapp_number: wa.number,
+        useSameMobile: useSame,
         blood_type: this.client.blood_type || '',
         date_of_birth: this.client.date_of_birth ? this.client.date_of_birth.substring(0, 10) : '',
         height: this.client.height || '',
@@ -399,7 +412,7 @@ export default {
         }
         this.editModalShow = false
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.success'),
             text: this.$t('messages.updateSuccess'),
@@ -408,7 +421,7 @@ export default {
         })
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: error.response?.data?.message || this.$t('messages.saveError'),
@@ -448,6 +461,12 @@ export default {
         default: return 'warning'
       }
     },
+    handleUseSameMobileChange() {
+      if (this.clientForm.useSameMobile) {
+        this.clientForm.whatsapp_number = this.clientForm.phone
+        this.clientForm.whatsapp_country_code = this.clientForm.phone_country_code
+      }
+    },
     viewReservation(item) {
       this.selectedReservation = item
       this.reservationModal = true
@@ -465,7 +484,7 @@ export default {
         document.body.removeChild(link)
         window.URL.revokeObjectURL(url)
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.success'),
             text: this.$t('messages.prescriptionDownloaded'),
@@ -474,7 +493,7 @@ export default {
         })
       } catch (error) {
         this.$toast({
-          component: 'ToastificationContent',
+          component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
             text: error.response?.data?.message || this.$t('messages.generatePrescriptionError'),

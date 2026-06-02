@@ -70,12 +70,14 @@
           </b-button>
           <b-button
             v-if="data.item.status === 'completed' && data.item.treatment"
+            v-b-tooltip.hover
+            :title="$t('reservation.printMedicinesPrescription')"
             variant="primary"
             size="sm"
-            @click="printPrescription(data.item)"
+            @click="printMedicinesPrescription(data.item)"
           >
             <feather-icon icon="PrinterIcon" class="mr-50" />
-            {{ $t('reservation.printPrescription') }}
+            {{ $t('reservation.printMedicinesPrescription') }}
           </b-button>
         </template>
 
@@ -467,6 +469,28 @@
       size="lg"
     >
       <div v-if="selectedReservation">
+        <div class="d-flex flex-wrap justify-content-end mb-2">
+          <b-button
+            v-if="selectedReservation.status === 'completed'"
+            variant="primary"
+            size="sm"
+            class="mr-1 mb-50"
+            @click="printMedicinesPrescription(selectedReservation)"
+          >
+            <feather-icon icon="PrinterIcon" class="mr-50" />
+            {{ $t('reservation.printMedicinesPrescription') }}
+          </b-button>
+          <b-button
+            variant="outline-primary"
+            size="sm"
+            class="mb-50"
+            @click="printReservationDetails(selectedReservation)"
+          >
+            <feather-icon icon="FileTextIcon" class="mr-50" />
+            {{ $t('reservation.printReservationDetails') }}
+          </b-button>
+        </div>
+
         <!-- Client Details Card -->
         <b-card v-if="selectedReservation.client" class="mb-2" no-body>
           <b-card-header class="d-flex justify-content-between align-items-center">
@@ -625,11 +649,42 @@
           </div>
         </div>
 
+        <hr>
+        <h6 class="mb-1">{{ $t('reservation.activityLog') }}</h6>
+        <div v-if="selectedReservation.logs && selectedReservation.logs.length">
+          <div
+            v-for="log in selectedReservation.logs"
+            :key="log.id"
+            class="d-flex justify-content-between align-items-start border-bottom py-50"
+          >
+            <div>
+              <b-badge :variant="getReservationLogVariant(log.action)" class="mr-50">
+                {{ getReservationLogLabel(log.action) }}
+              </b-badge>
+              <span>{{ getReservationLogDescription(log) }}</span>
+              <div class="small text-muted">
+                {{ log.actor ? log.actor.name : $t('reservation.na') }}
+                <span v-if="log.actor && log.actor.role">({{ log.actor.role }})</span>
+              </div>
+            </div>
+            <small class="text-muted text-nowrap ml-1">{{ formatDateTime(log.created_at) }}</small>
+          </div>
+        </div>
+        <div v-else class="text-muted small text-center py-1">
+          {{ $t('reservation.noActivityLog') }}
+        </div>
+
         <!-- Additional Services -->
         <hr>
         <div class="d-flex justify-content-between align-items-center mb-1">
           <h6 class="mb-0">{{ $t('services.additionalServices') }}</h6>
-          <b-button v-permission="['reservation-services.create','doctor.create-reservation-services','assistant.create-reservation-services']" size="sm" variant="outline-primary" @click="openAddServiceModal">
+          <b-button
+            v-if="selectedReservation.status !== 'completed' && selectedReservation.status !== 'cancelled'"
+            v-permission="['reservation-services.create','doctor.create-reservation-services','assistant.create-reservation-services']"
+            size="sm"
+            variant="outline-primary"
+            @click="openAddServiceModal"
+          >
             <feather-icon icon="PlusIcon" size="14" class="mr-25" />
             {{ $t('services.addService') }}
           </b-button>
@@ -1250,25 +1305,46 @@ export default {
       this.filePreviewUrls = {}
     },
     async printPrescription(reservation) {
+      await this.printReservationPdf(
+        () => reservationsService.generatePrescription(reservation.id),
+        `prescription_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`,
+        this.$t('messages.prescriptionDownloaded'),
+        this.$t('messages.generatePrescriptionError')
+      )
+    },
+    async printMedicinesPrescription(reservation) {
+      await this.printReservationPdf(
+        () => reservationsService.generateMedicinesPrescription(reservation.id),
+        `medicines_prescription_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`,
+        this.$t('messages.prescriptionDownloaded'),
+        this.$t('messages.generatePrescriptionError')
+      )
+    },
+    async printReservationDetails(reservation) {
+      await this.printReservationPdf(
+        () => reservationsService.generateReservationDetailsPdf(reservation.id),
+        `reservation_details_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`,
+        this.$t('messages.reservationDetailsDownloaded'),
+        this.$t('messages.generateReservationDetailsError')
+      )
+    },
+    async printReservationPdf(requestPdf, filename, successText, errorText) {
       try {
-        const response = await reservationsService.generatePrescription(reservation.id)
-        
-        // Create blob URL and download
+        const response = await requestPdf()
         const blob = new Blob([response.data], { type: 'application/pdf' })
         const url = window.URL.createObjectURL(blob)
         const link = document.createElement('a')
         link.href = url
-        link.download = `prescription_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`
+        link.download = filename
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
         window.URL.revokeObjectURL(url)
-        
         this.$toast({
           component: ToastificationContent,
           props: {
             title: this.$t('messages.success'),
-            text: this.$t('messages.prescriptionDownloaded'),
+            text: successText,
             variant: 'success',
           },
         })
@@ -1277,7 +1353,7 @@ export default {
           component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
-            text: error.response?.data?.message || this.$t('messages.generatePrescriptionError'),
+            text: error.response?.data?.message || errorText,
             variant: 'danger',
           },
         })
@@ -1426,6 +1502,33 @@ export default {
       }
       return variants[status] || 'secondary'
     },
+    getReservationLogLabel(action) {
+      const key = `reservation.log_${action}`
+      const translated = this.$t(key)
+      return translated === key ? action : translated
+    },
+    getReservationLogVariant(action) {
+      const variants = {
+        created: 'light-primary',
+        updated: 'light-warning',
+        status_changed: 'light-warning',
+        confirmed: 'light-info',
+        completed: 'light-success',
+        checked_in: 'light-success',
+        check_in_undone: 'light-secondary',
+        service_added: 'light-primary',
+        service_updated: 'light-warning',
+        service_deleted: 'light-danger',
+      }
+      return variants[action] || 'light-secondary'
+    },
+    getReservationLogDescription(log) {
+      const label = this.getReservationLogLabel(log.action)
+      const meta = log.meta || {}
+      if (meta.service_name) return `${label}: ${meta.service_name}`
+      if (meta.waiting_number) return `${label}: #${meta.waiting_number}`
+      return label
+    },
     formatDateTime(value) {
       if (!value) return 'N/A'
       // Parse as local time since backend returns Y-m-d H:i:s format
@@ -1518,6 +1621,10 @@ export default {
     },
 
     openAddServiceModal() {
+      if (!this.selectedReservation || this.selectedReservation.status === 'completed' || this.selectedReservation.status === 'cancelled') {
+        return
+      }
+
       this.resetServiceForm()
       this.addServiceModalShow = true
     },

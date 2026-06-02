@@ -39,6 +39,8 @@
           <option>Cash</option>
           <option>Card</option>
           <option>Bank Transfer</option>
+          <option>Other</option>
+          <option>InstaPay</option>
         </select>
       </div>
 
@@ -107,8 +109,11 @@ export default {
       if (this.modalMode) {
         this.$emit('saved', res.data)
       } else {
-        this.$router.push({ name: 'assistant-purchases' })
+        this.$router.push({ name: this.isDoctorRoute() ? 'doctor-purchases' : 'assistant-purchases' })
       }
+    },
+    isDoctorRoute() {
+      return this.$route && this.$route.name && String(this.$route.name).startsWith('doctor-')
     },
   },
 }

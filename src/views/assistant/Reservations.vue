@@ -107,6 +107,17 @@
           <b-button
             v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
             v-b-tooltip.hover
+            :title="$t('reservation.completeReservation')"
+            variant="success"
+            size="sm"
+            class="mr-1"
+            @click="completeReservation(data.item)"
+          >
+            <feather-icon icon="CheckIcon" />
+          </b-button>
+          <b-button
+            v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
+            v-b-tooltip.hover
             :title="$t('actions.edit')"
             variant="warning"
             size="sm"
@@ -128,11 +139,11 @@
           <b-button
             v-if="data.item.status === 'completed' && data.item.treatment"
             v-b-tooltip.hover
-            :title="$t('reservation.printPrescription')"
+            :title="$t('reservation.printMedicinesPrescription')"
             variant="primary"
             size="sm"
             class="ml-1"
-            @click="printPrescription(data.item)"
+            @click="printMedicinesPrescription(data.item)"
           >
             <feather-icon icon="PrinterIcon" />
           </b-button>
@@ -255,6 +266,130 @@
         </b-form-group>
 
         <hr>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <h6 class="mb-0">{{ $t('services.additionalServices') }}</h6>
+          <small v-if="!form.doctor_id" class="text-muted">{{ $t('reservation.selectDoctor') }}</small>
+        </div>
+
+        <div>
+          <b-form-group :label="$t('services.selectFromCatalog')" label-for="create-svc-catalog">
+            <b-form-select
+              id="create-svc-catalog"
+              v-model="createServiceForm.doctor_service_id"
+              :options="doctorServiceOptions"
+              :disabled="!form.doctor_id"
+              @change="onCreateCatalogServiceChange"
+            />
+          </b-form-group>
+
+          <b-form-group :label="$t('services.name')" label-for="create-service-name">
+            <b-form-input
+              id="create-service-name"
+              v-model="createServiceForm.service_name"
+              :disabled="!form.doctor_id"
+            />
+          </b-form-group>
+
+          <b-row>
+            <b-col cols="6">
+              <b-form-group :label="$t('services.price')" label-for="create-service-price">
+                <b-form-input
+                  id="create-service-price"
+                  v-model="createServiceForm.unit_price"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  :disabled="!form.doctor_id"
+                />
+              </b-form-group>
+            </b-col>
+            <b-col cols="6">
+              <b-form-group :label="$t('services.quantity')" label-for="create-service-quantity">
+                <b-form-input
+                  id="create-service-quantity"
+                  v-model="createServiceForm.quantity"
+                  type="number"
+                  min="1"
+                  :disabled="!form.doctor_id"
+                />
+              </b-form-group>
+            </b-col>
+          </b-row>
+
+          <div class="mb-1 p-1 bg-light rounded text-center">
+            <strong>{{ $t('services.total') }}: {{ createServiceTotal.toFixed(2) }}</strong>
+          </div>
+
+          <b-form-group :label="$t('services.invoiceOption')" label-for="create-service-invoice">
+            <div class="d-flex">
+              <b-form-radio v-model="createServiceForm.with_invoice" :value="true" class="mr-2" :disabled="!form.doctor_id">
+                {{ $t('services.withInvoice') }}
+              </b-form-radio>
+              <b-form-radio v-model="createServiceForm.with_invoice" :value="false" :disabled="!form.doctor_id">
+                {{ $t('services.noInvoice') }}
+              </b-form-radio>
+            </div>
+          </b-form-group>
+
+          <b-form-group :label="$t('services.notes')" label-for="create-service-notes">
+            <b-form-input
+              id="create-service-notes"
+              v-model="createServiceForm.notes"
+              :placeholder="$t('services.notesPlaceholder')"
+              :disabled="!form.doctor_id"
+            />
+          </b-form-group>
+
+          <div class="text-right mb-1">
+            <b-button type="button" size="sm" variant="outline-primary" :disabled="!form.doctor_id || !createServiceForm.service_name" @click="addPendingReservationService">
+              <feather-icon icon="PlusIcon" size="14" class="mr-25" />
+              {{ $t('services.addService') }}
+            </b-button>
+          </div>
+        </div>
+
+        <div v-if="pendingReservationServices.length === 0" class="text-muted small text-center py-1">
+          {{ $t('services.noServicesOnReservation') }}
+        </div>
+        <b-table
+          v-else
+          :items="pendingReservationServices"
+          :fields="createServicesTableFields"
+          small
+          responsive
+          striped
+        >
+          <template #cell(service_name)="data">
+            {{ data.item.service_name }}
+            <span v-if="data.item.notes" class="text-muted d-block small">{{ data.item.notes }}</span>
+          </template>
+          <template #cell(total_price)="data">
+            {{ Number(data.item.unit_price).toFixed(2) }} × {{ data.item.quantity }} = <strong>{{ Number(data.item.total_price).toFixed(2) }}</strong>
+          </template>
+          <template #cell(with_invoice)="data">
+            <b-badge :variant="data.item.with_invoice ? 'success' : 'secondary'">
+              {{ data.item.with_invoice ? $t('services.withInvoice') : $t('services.noInvoice') }}
+            </b-badge>
+          </template>
+          <template #cell(actions)="data">
+            <b-button
+              v-b-tooltip.hover
+              :title="$t('actions.delete')"
+              size="sm"
+              variant="flat-danger"
+              class="btn-icon"
+              @click="removePendingReservationService(data.index)"
+            >
+              <feather-icon icon="TrashIcon" />
+            </b-button>
+          </template>
+        </b-table>
+
+        <div v-if="pendingReservationServices.length" class="text-right mt-50">
+          <strong>{{ $t('services.totalServices') }}: {{ pendingServicesTotal.toFixed(2) }}</strong>
+        </div>
+
+        <hr>
         <h6 class="mb-1">{{ $t('financial.financial') }}</h6>
 
         <b-row>
@@ -294,7 +429,7 @@
         </b-row>
 
         <div class="text-right">
-          <b-button variant="secondary" class="mr-1" @click="modalShow = false">
+          <b-button type="button" variant="secondary" class="mr-1" @click="modalShow = false">
             {{ $t('actions.cancel') }}
           </b-button>
           <b-button type="submit" variant="primary" :disabled="saving">
@@ -313,6 +448,28 @@
       size="lg"
     >
       <div v-if="selectedReservation">
+        <div class="d-flex flex-wrap justify-content-end mb-2">
+          <b-button
+            v-if="selectedReservation.status === 'completed'"
+            variant="primary"
+            size="sm"
+            class="mr-1 mb-50"
+            @click="printMedicinesPrescription(selectedReservation)"
+          >
+            <feather-icon icon="PrinterIcon" class="mr-50" />
+            {{ $t('reservation.printMedicinesPrescription') }}
+          </b-button>
+          <b-button
+            variant="outline-primary"
+            size="sm"
+            class="mb-50"
+            @click="printReservationDetails(selectedReservation)"
+          >
+            <feather-icon icon="FileTextIcon" class="mr-50" />
+            {{ $t('reservation.printReservationDetails') }}
+          </b-button>
+        </div>
+
         <!-- Client Details -->
         <b-card v-if="selectedReservation.client" class="mb-2" no-body>
           <b-card-header>
@@ -425,7 +582,163 @@
             <p v-if="selectedReservation.lab_notes" class="mt-50 text-muted small">{{ selectedReservation.lab_notes }}</p>
           </div>
         </div>
+
+        <hr>
+        <h6 class="mb-1">{{ $t('reservation.activityLog') }}</h6>
+        <div v-if="selectedReservation.logs && selectedReservation.logs.length">
+          <div
+            v-for="log in selectedReservation.logs"
+            :key="log.id"
+            class="d-flex justify-content-between align-items-start border-bottom py-50"
+          >
+            <div>
+              <b-badge :variant="getReservationLogVariant(log.action)" class="mr-50">
+                {{ getReservationLogLabel(log.action) }}
+              </b-badge>
+              <span>{{ getReservationLogDescription(log) }}</span>
+              <div class="small text-muted">
+                {{ log.actor ? log.actor.name : $t('reservation.na') }}
+                <span v-if="log.actor && log.actor.role">({{ log.actor.role }})</span>
+              </div>
+            </div>
+            <small class="text-muted text-nowrap ml-1">{{ formatDateTime(log.created_at) }}</small>
+          </div>
+        </div>
+        <div v-else class="text-muted small text-center py-1">
+          {{ $t('reservation.noActivityLog') }}
+        </div>
+
+        <hr>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <h6 class="mb-0">{{ $t('services.additionalServices') }}</h6>
+          <b-button
+            v-if="selectedReservation.status !== 'completed' && selectedReservation.status !== 'cancelled'"
+            size="sm"
+            variant="outline-primary"
+            @click="openAddServiceModal"
+          >
+            <feather-icon icon="PlusIcon" size="14" class="mr-25" />
+            {{ $t('services.addService') }}
+          </b-button>
+        </div>
+
+        <div v-if="loadingResServices" class="text-center py-1">
+          <b-spinner small />
+        </div>
+        <div v-else-if="reservationServices.length === 0" class="text-muted small text-center py-1">
+          {{ $t('services.noServicesOnReservation') }}
+        </div>
+        <b-table
+          v-else
+          :items="reservationServices"
+          :fields="servicesTableFields"
+          small
+          responsive
+          striped
+        >
+          <template #cell(service_name)="data">
+            {{ data.item.service_name }}
+            <span v-if="data.item.notes" class="text-muted d-block small">{{ data.item.notes }}</span>
+          </template>
+          <template #cell(total_price)="data">
+            {{ Number(data.item.unit_price).toFixed(2) }} × {{ data.item.quantity }} = <strong>{{ Number(data.item.total_price).toFixed(2) }}</strong>
+          </template>
+          <template #cell(with_invoice)="data">
+            <b-badge :variant="data.item.with_invoice ? 'success' : 'secondary'">
+              {{ data.item.with_invoice ? $t('services.withInvoice') : $t('services.noInvoice') }}
+            </b-badge>
+          </template>
+        </b-table>
+
+        <div v-if="reservationServices.length" class="text-right mt-50">
+          <strong>{{ $t('services.totalServices') }}:
+            {{ reservationServices.reduce((sum, s) => sum + Number(s.total_price), 0).toFixed(2) }}
+          </strong>
+        </div>
       </div>
+    </b-modal>
+
+    <b-modal
+      v-model="addServiceModalShow"
+      :title="$t('services.addService')"
+      no-close-on-backdrop
+      @hidden="resetServiceForm"
+    >
+      <b-form @submit.prevent="saveReservationService">
+        <b-form-group :label="$t('services.selectFromCatalog')" label-for="svc-catalog-assistant">
+          <b-form-select
+            id="svc-catalog-assistant"
+            v-model="serviceForm.doctor_service_id"
+            :options="doctorServiceOptions"
+            @change="onCatalogServiceChange"
+          />
+        </b-form-group>
+
+        <b-form-group :label="$t('services.name')" label-for="assistant-service-name">
+          <b-form-input
+            id="assistant-service-name"
+            v-model="serviceForm.service_name"
+            required
+          />
+        </b-form-group>
+
+        <b-row>
+          <b-col cols="6">
+            <b-form-group :label="$t('services.price')" label-for="assistant-service-price">
+              <b-form-input
+                id="assistant-service-price"
+                v-model="serviceForm.unit_price"
+                type="number"
+                step="0.01"
+                min="0"
+                required
+              />
+            </b-form-group>
+          </b-col>
+          <b-col cols="6">
+            <b-form-group :label="$t('services.quantity')" label-for="assistant-service-quantity">
+              <b-form-input
+                id="assistant-service-quantity"
+                v-model="serviceForm.quantity"
+                type="number"
+                min="1"
+                required
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+
+        <div class="mb-1 p-1 bg-light rounded text-center">
+          <strong>{{ $t('services.total') }}: {{ serviceTotal.toFixed(2) }}</strong>
+        </div>
+
+        <b-form-group :label="$t('services.invoiceOption')" label-for="assistant-service-invoice">
+          <div class="d-flex">
+            <b-form-radio v-model="serviceForm.with_invoice" :value="true" class="mr-2">
+              {{ $t('services.withInvoice') }}
+            </b-form-radio>
+            <b-form-radio v-model="serviceForm.with_invoice" :value="false">
+              {{ $t('services.noInvoice') }}
+            </b-form-radio>
+          </div>
+        </b-form-group>
+
+        <b-form-group :label="$t('services.notes')" label-for="assistant-service-notes">
+          <b-form-input
+            id="assistant-service-notes"
+            v-model="serviceForm.notes"
+            :placeholder="$t('services.notesPlaceholder')"
+          />
+        </b-form-group>
+      </b-form>
+
+      <template #modal-footer>
+        <b-button variant="secondary" @click="addServiceModalShow = false">{{ $t('actions.cancel') }}</b-button>
+        <b-button variant="primary" :disabled="savingService" @click="saveReservationService">
+          <b-spinner v-if="savingService" small class="mr-50" />
+          {{ $t('actions.add') }}
+        </b-button>
+      </template>
     </b-modal>
 
     <!-- Edit Reservation Modal -->
@@ -518,6 +831,7 @@ import {
 import reservationsService from '@/services/reservations'
 import clientsService from '@/services/clients'
 import scheduleService from '@/services/schedule'
+import doctorServicesApi from '@/services/doctorServices'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
@@ -542,6 +856,7 @@ export default {
     BAlert,
     BCardHeader: () => import('bootstrap-vue').then(m => m.BCardHeader),
     BCardBody: () => import('bootstrap-vue').then(m => m.BCardBody),
+    BFormRadio: () => import('bootstrap-vue').then(m => m.BFormRadio),
   },
   directives: {
     'b-tooltip': VBTooltip,
@@ -570,6 +885,28 @@ export default {
       availableTimeSlots: [],
       timeSlotsMessage: '',
       timeSlotsMessageVariant: 'warning',
+      reservationServices: [],
+      loadingResServices: false,
+      doctorServicesCatalog: [],
+      pendingReservationServices: [],
+      addServiceModalShow: false,
+      savingService: false,
+      createServiceForm: {
+        doctor_service_id: null,
+        service_name: '',
+        quantity: 1,
+        unit_price: 0,
+        with_invoice: true,
+        notes: '',
+      },
+      serviceForm: {
+        doctor_service_id: null,
+        service_name: '',
+        quantity: 1,
+        unit_price: 0,
+        with_invoice: true,
+        notes: '',
+      },
       filters: {
         search: '',
         status: '',
@@ -605,8 +942,11 @@ export default {
     }
   },
   watch: {
-    'form.doctor_id': function () {
+    'form.doctor_id': function (doctorId) {
       this.fetchAvailableTimes()
+      this.pendingReservationServices = []
+      this.resetCreateServiceForm()
+      this.fetchDoctorServicesCatalogForDoctor(doctorId)
     },
     'form.appointment_date_only': function () {
       this.fetchAvailableTimes()
@@ -680,6 +1020,37 @@ export default {
           value: s.time,
           text: s.label,
         }))
+    },
+    servicesTableFields() {
+      return [
+        { key: 'service_name', label: this.$t('services.name') },
+        { key: 'total_price', label: this.$t('services.priceQty') },
+        { key: 'with_invoice', label: this.$t('services.invoice') },
+      ]
+    },
+    createServicesTableFields() {
+      return [
+        { key: 'service_name', label: this.$t('services.name') },
+        { key: 'total_price', label: this.$t('services.priceQty') },
+        { key: 'with_invoice', label: this.$t('services.invoice') },
+        { key: 'actions', label: this.$t('table.actions') },
+      ]
+    },
+    doctorServiceOptions() {
+      const opts = [{ value: null, text: `— ${this.$t('services.customService')} —` }]
+      this.doctorServicesCatalog.forEach(s => {
+        if (s.is_active) opts.push({ value: s.id, text: `${s.name}${s.name_en ? ' / ' + s.name_en : ''} (${Number(s.price).toFixed(2)})` })
+      })
+      return opts
+    },
+    serviceTotal() {
+      return Number(this.serviceForm.quantity || 0) * Number(this.serviceForm.unit_price || 0)
+    },
+    createServiceTotal() {
+      return Number(this.createServiceForm.quantity || 0) * Number(this.createServiceForm.unit_price || 0)
+    },
+    pendingServicesTotal() {
+      return this.pendingReservationServices.reduce((sum, s) => sum + Number(s.total_price || 0), 0)
     },
   },
   mounted() {
@@ -832,7 +1203,77 @@ export default {
       this.timeSlotsMessageVariant = 'warning'
       this.clientSearch = ''
       this.clientDropdownOpen = false
+      this.doctorServicesCatalog = []
+      this.pendingReservationServices = []
+      this.resetCreateServiceForm()
       this.modalShow = true
+    },
+    async fetchDoctorServicesCatalogForDoctor(doctorId) {
+      this.doctorServicesCatalog = []
+      if (!doctorId) return
+
+      try {
+        const { data } = await doctorServicesApi.getAllForDoctor(doctorId)
+        this.doctorServicesCatalog = data
+      } catch (error) {
+        this.doctorServicesCatalog = []
+      }
+    },
+    onCreateCatalogServiceChange(id) {
+      if (!id) return
+      const svc = this.doctorServicesCatalog.find(s => s.id === id)
+      if (svc) {
+        this.createServiceForm.service_name = svc.name
+        this.createServiceForm.unit_price = svc.price
+      }
+    },
+    addPendingReservationService() {
+      if (!this.form.doctor_id || !this.createServiceForm.service_name) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: this.$t('services.saveError'),
+            variant: 'danger',
+          },
+        })
+        return
+      }
+
+      const quantity = Number(this.createServiceForm.quantity || 0)
+      const unitPrice = Number(this.createServiceForm.unit_price || 0)
+      if (quantity < 1 || unitPrice < 0) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: this.$t('services.saveError'),
+            variant: 'danger',
+          },
+        })
+        return
+      }
+
+      this.pendingReservationServices.push({
+        ...this.createServiceForm,
+        quantity,
+        unit_price: unitPrice,
+        total_price: quantity * unitPrice,
+      })
+      this.resetCreateServiceForm()
+    },
+    removePendingReservationService(index) {
+      this.pendingReservationServices.splice(index, 1)
+    },
+    resetCreateServiceForm() {
+      this.createServiceForm = {
+        doctor_service_id: null,
+        service_name: '',
+        quantity: 1,
+        unit_price: 0,
+        with_invoice: true,
+        notes: '',
+      }
     },
     showEditModal(reservation) {
       this.selectedReservation = reservation
@@ -854,6 +1295,91 @@ export default {
         this.selectedReservation = reservation
       }
       this.viewModalShow = true
+      this.fetchReservationServices(reservation.id)
+      this.fetchDoctorServicesCatalog()
+    },
+    async fetchReservationServices(reservationId) {
+      this.loadingResServices = true
+      try {
+        const { data } = await doctorServicesApi.getReservationServices(reservationId)
+        this.reservationServices = data
+      } catch (error) {
+        this.reservationServices = []
+      } finally {
+        this.loadingResServices = false
+      }
+    },
+    async openAddServiceModal() {
+      if (!this.selectedReservation || this.selectedReservation.status === 'completed' || this.selectedReservation.status === 'cancelled') {
+        return
+      }
+
+      this.resetServiceForm()
+      if (this.selectedReservation && this.selectedReservation.id) {
+        await this.fetchDoctorServicesCatalog()
+      }
+      this.addServiceModalShow = true
+    },
+    onCatalogServiceChange(id) {
+      if (!id) return
+      const svc = this.doctorServicesCatalog.find(s => s.id === id)
+      if (svc) {
+        this.serviceForm.service_name = svc.name
+        this.serviceForm.unit_price = svc.price
+      }
+    },
+    async fetchDoctorServicesCatalog() {
+      try {
+        if (this.selectedReservation && this.selectedReservation.id) {
+          const { data } = await doctorServicesApi.getAllForReservation(this.selectedReservation.id)
+          this.doctorServicesCatalog = data
+        }
+      } catch { /* silent */ }
+    },
+    async saveReservationService() {
+      this.savingService = true
+      try {
+        const reservationId = this.selectedReservation.id
+        const { data } = await doctorServicesApi.addToReservation(reservationId, {
+          ...this.serviceForm,
+          quantity: Number(this.serviceForm.quantity),
+          unit_price: Number(this.serviceForm.unit_price),
+        })
+        this.reservationServices.push(data)
+        this.addServiceModalShow = false
+        this.resetServiceForm()
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.success'),
+            text: this.$t('services.serviceAdded'),
+            variant: 'success',
+          },
+        })
+      } catch (error) {
+        const errors = error.response?.data?.errors
+        const text = errors ? Object.values(errors).flat().join('\n') : (error.response?.data?.message || this.$t('services.saveError'))
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text,
+            variant: 'danger',
+          },
+        })
+      } finally {
+        this.savingService = false
+      }
+    },
+    resetServiceForm() {
+      this.serviceForm = {
+        doctor_service_id: null,
+        service_name: '',
+        quantity: 1,
+        unit_price: 0,
+        with_invoice: true,
+        notes: '',
+      }
     },
     async downloadCompletionFile(file) {
       try {
@@ -922,9 +1448,26 @@ export default {
         delete payload.appointment_date_only
         delete payload.selected_time
         const res = await reservationsService.createReservation(payload)
+        let serviceSaveFailed = false
+        if (this.pendingReservationServices.length) {
+          try {
+            await Promise.all(this.pendingReservationServices.map(service => doctorServicesApi.addToReservation(res.data.id, {
+              doctor_service_id: service.doctor_service_id,
+              service_name: service.service_name,
+              quantity: Number(service.quantity),
+              unit_price: Number(service.unit_price),
+              with_invoice: service.with_invoice,
+              notes: service.notes,
+            })))
+          } catch (serviceError) {
+            serviceSaveFailed = true
+          }
+        }
         const queuePosition = res.data.queue_position || '?'
         const reservationsBefore = res.data.reservations_before || 0
         this.modalShow = false
+        this.pendingReservationServices = []
+        this.resetCreateServiceForm()
         this.fetchReservations()
         this.$swal({
           icon: 'success',
@@ -939,6 +1482,16 @@ export default {
           },
           buttonsStyling: false,
         })
+        if (serviceSaveFailed) {
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: this.$t('messages.error'),
+              text: this.$t('services.saveError'),
+              variant: 'warning',
+            },
+          })
+        }
       } catch (error) {
         this.$toast({
           component: ToastificationContent,
@@ -1029,6 +1582,44 @@ export default {
         })
       }
     },
+    async completeReservation(reservation) {
+      const result = await this.$swal({
+        title: this.$t('reservation.completeReservation'),
+        text: this.$t('messages.completeReservationConfirm', { client: reservation.client?.name || '' }),
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: this.$t('reservation.completeReservation'),
+        cancelButtonText: this.$t('actions.cancel'),
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-outline-secondary ml-1',
+        },
+        buttonsStyling: false,
+      })
+      if (!result.isConfirmed) return
+
+      try {
+        await reservationsService.completeReservation(reservation.id, {})
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.success'),
+            text: this.$t('messages.reservationCompleted'),
+            variant: 'success',
+          },
+        })
+        this.fetchReservations()
+      } catch (error) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: error.response?.data?.message || error.response?.data?.error || this.$t('messages.completeReservationError'),
+            variant: 'danger',
+          },
+        })
+      }
+    },
     async cancelReservation(reservation) {
       const result = await this.$swal({
         title: this.$t('messages.cancelReservationConfirm'),
@@ -1075,13 +1666,37 @@ export default {
       }
     },
     async printPrescription(reservation) {
+      await this.printReservationPdf(
+        () => reservationsService.generatePrescription(reservation.id),
+        `prescription_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`,
+        this.$t('messages.prescriptionDownloaded'),
+        this.$t('messages.generatePrescriptionError')
+      )
+    },
+    async printMedicinesPrescription(reservation) {
+      await this.printReservationPdf(
+        () => reservationsService.generateMedicinesPrescription(reservation.id),
+        `medicines_prescription_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`,
+        this.$t('messages.prescriptionDownloaded'),
+        this.$t('messages.generatePrescriptionError')
+      )
+    },
+    async printReservationDetails(reservation) {
+      await this.printReservationPdf(
+        () => reservationsService.generateReservationDetailsPdf(reservation.id),
+        `reservation_details_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`,
+        this.$t('messages.reservationDetailsDownloaded'),
+        this.$t('messages.generateReservationDetailsError')
+      )
+    },
+    async printReservationPdf(requestPdf, filename, successText, errorText) {
       try {
-        const response = await reservationsService.generatePrescription(reservation.id)
+        const response = await requestPdf()
         const blob = new Blob([response.data], { type: 'application/pdf' })
         const url = window.URL.createObjectURL(blob)
         const link = document.createElement('a')
         link.href = url
-        link.download = `prescription_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`
+        link.download = filename
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -1090,7 +1705,7 @@ export default {
           component: ToastificationContent,
           props: {
             title: this.$t('messages.success'),
-            text: this.$t('messages.prescriptionDownloaded'),
+            text: successText,
             variant: 'success',
           },
         })
@@ -1099,7 +1714,7 @@ export default {
           component: ToastificationContent,
           props: {
             title: this.$t('messages.error'),
-            text: error.response?.data?.message || this.$t('messages.generatePrescriptionError'),
+            text: error.response?.data?.message || errorText,
             variant: 'danger',
           },
         })
@@ -1113,6 +1728,33 @@ export default {
         cancelled: 'danger',
       }
       return variants[status] || 'secondary'
+    },
+    getReservationLogLabel(action) {
+      const key = `reservation.log_${action}`
+      const translated = this.$t(key)
+      return translated === key ? action : translated
+    },
+    getReservationLogVariant(action) {
+      const variants = {
+        created: 'light-primary',
+        updated: 'light-warning',
+        status_changed: 'light-warning',
+        confirmed: 'light-info',
+        completed: 'light-success',
+        checked_in: 'light-success',
+        check_in_undone: 'light-secondary',
+        service_added: 'light-primary',
+        service_updated: 'light-warning',
+        service_deleted: 'light-danger',
+      }
+      return variants[action] || 'light-secondary'
+    },
+    getReservationLogDescription(log) {
+      const label = this.getReservationLogLabel(log.action)
+      const meta = log.meta || {}
+      if (meta.service_name) return `${label}: ${meta.service_name}`
+      if (meta.waiting_number) return `${label}: #${meta.waiting_number}`
+      return label
     },
     formatClientChronicIllnesses(values) {
       return formatChronicIllnesses(values, key => this.$t(key), this.$t('reservation.na'))
