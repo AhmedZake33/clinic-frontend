@@ -460,6 +460,7 @@
             {{ $t('reservation.printMedicinesPrescription') }}
           </b-button>
           <b-button
+            v-if="selectedReservation.status !== 'cancelled'"
             variant="outline-primary"
             size="sm"
             class="mb-50"

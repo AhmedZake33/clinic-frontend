@@ -110,7 +110,7 @@
 
             <template #cell(actions)="data">
               <b-button
-                v-if="data.item.status !== 'completed'"
+                v-if="canCompleteReservation(data.item)"
                 v-b-tooltip.hover
                 :title="$t('reservation.completeReservation')"
                 variant="success"
@@ -228,9 +228,9 @@ export default {
     async fetchStats() {
       try {
         const [pendingRes, confirmedRes, completedRes] = await Promise.all([
-          reservationsService.getReservations({ status: 'pending' }),
-          reservationsService.getReservations({ status: 'confirmed' }),
-          reservationsService.getReservations({ status: 'completed' }),
+          reservationsService.getReservations({ status: 'pending', own_only: 1 }),
+          reservationsService.getReservations({ status: 'confirmed', own_only: 1 }),
+          reservationsService.getReservations({ status: 'completed', own_only: 1 }),
         ])
 
         const pending = pendingRes.data.total || 0
@@ -247,7 +247,7 @@ export default {
       this.loading = true
       try {
         const today = this.getTodayDate()
-        const response = await reservationsService.getReservations({ date_from: today, date_to: today })
+        const response = await reservationsService.getReservations({ date_from: today, date_to: today, own_only: 1 })
         this.todayReservations = response.data.data || []
         this.stats.currentReservations = response.data.total || this.todayReservations.length
       } catch (error) {
@@ -266,7 +266,7 @@ export default {
     },
     async fetchCompletedReservations() {
       try {
-        const response = await reservationsService.getReservations({ status: 'completed' })
+        const response = await reservationsService.getReservations({ status: 'completed', own_only: 1 })
         this.completedReservations = (response.data.data || []).slice(0, 5)
       } catch (error) {
         console.error('Failed to fetch completed reservations', error)
@@ -280,6 +280,9 @@ export default {
         cancelled: 'danger',
       }
       return variants[status] || 'secondary'
+    },
+    canCompleteReservation(reservation) {
+      return reservation && !['completed', 'cancelled'].includes(reservation.status)
     },
     formatDateTime(value) {
       if (!value) return 'N/A'

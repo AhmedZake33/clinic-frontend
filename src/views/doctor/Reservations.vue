@@ -481,6 +481,7 @@
             {{ $t('reservation.printMedicinesPrescription') }}
           </b-button>
           <b-button
+            v-if="selectedReservation.status !== 'cancelled'"
             variant="outline-primary"
             size="sm"
             class="mb-50"
@@ -1122,6 +1123,7 @@ export default {
       try {
         const params = {
           page: this.pagination.current_page,
+          own_only: 1,
         }
         if (this.filters.search) params.search = this.filters.search
         if (this.filters.status) params.status = this.filters.status
