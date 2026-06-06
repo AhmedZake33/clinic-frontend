@@ -119,6 +119,9 @@
     "endTime": "End Time",
     "reason": "Reason",
     "appointmentTime": "Appointment Time",
+    "futureReservation": "Future Reservation",
+    "createFutureReservation": "Create Future Reservation",
+    "futureAppointmentDate": "Future Appointment Date & Time",
     "appointmentDuration": "Appointment Duration",
     "minutes": "minutes",
     "oneTimeHoliday": "One-time holiday",
@@ -157,7 +160,8 @@
     "log_check_in_undone": "Check-in Undone",
     "log_service_added": "Service Added",
     "log_service_updated": "Service Updated",
-    "log_service_deleted": "Service Deleted"
+    "log_service_deleted": "Service Deleted",
+    "log_future_reservation_created": "Future Reservation Created"
   },
   "filters": {
     "all": "All",
@@ -223,6 +227,7 @@
     "saveReservationError": "Failed to save reservation",
     "deleteReservationError": "Failed to delete reservation",
     "reservationCreated": "Reservation created successfully",
+    "futureReservationCreated": "Future reservation created successfully",
     "reservationUpdated": "Reservation updated successfully",
     "reservationCancelled": "Reservation cancelled successfully",
     "reservationConfirmed": "Reservation confirmed successfully",

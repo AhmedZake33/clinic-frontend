@@ -471,6 +471,15 @@
       <div v-if="selectedReservation">
         <div class="d-flex flex-wrap justify-content-end mb-2">
           <b-button
+            variant="success"
+            size="sm"
+            class="mr-1 mb-50"
+            @click="openFutureReservationModal"
+          >
+            <feather-icon icon="CalendarIcon" class="mr-50" />
+            {{ $t('reservation.createFutureReservation') }}
+          </b-button>
+          <b-button
             v-if="selectedReservation.status === 'completed'"
             variant="primary"
             size="sm"
@@ -794,6 +803,72 @@
         </b-button>
       </template>
     </b-modal>
+
+    <b-modal
+      v-model="futureReservationModalShow"
+      :title="$t('reservation.futureReservation')"
+      no-close-on-backdrop
+      @hidden="resetFutureReservationForm"
+    >
+      <b-form @submit.prevent="saveFutureReservation">
+        <b-alert v-if="selectedReservation && selectedReservation.client" variant="info" show>
+          <p class="mb-25"><strong>{{ $t('reservation.client') }}:</strong> {{ selectedReservation.client.name }}</p>
+          <p class="mb-0"><strong>{{ $t('reservation.doctor') }}:</strong> {{ selectedReservation.doctor ? selectedReservation.doctor.name : $t('reservation.na') }}</p>
+        </b-alert>
+
+        <b-form-group :label="$t('reservation.futureAppointmentDate')" label-for="future-appointment-date">
+          <b-form-input
+            id="future-appointment-date"
+            v-model="futureReservationForm.appointment_date"
+            type="datetime-local"
+            :min="getDatetimeLocalMin()"
+            required
+          />
+        </b-form-group>
+
+        <b-row>
+          <b-col cols="12" md="6">
+            <b-form-group :label="$t('financial.amount')" label-for="future-amount">
+              <b-form-input id="future-amount" v-model.number="futureReservationForm.amount" type="number" step="0.01" min="0" required />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12" md="6">
+            <b-form-group :label="$t('financial.paid')" label-for="future-paid">
+              <b-form-input id="future-paid" v-model.number="futureReservationForm.paid" type="number" step="0.01" min="0" />
+            </b-form-group>
+          </b-col>
+        </b-row>
+
+        <b-form-group :label="$t('financial.paymentMethod')" label-for="future-payment-method">
+          <b-form-select
+            id="future-payment-method"
+            v-model="futureReservationForm.payment_method"
+            :options="paymentMethodOptions"
+            required
+          />
+        </b-form-group>
+
+        <b-form-group :label="$t('reservation.notes')" label-for="future-notes">
+          <b-form-textarea
+            id="future-notes"
+            v-model="futureReservationForm.notes"
+            rows="3"
+            :placeholder="$t('reservation.notes')"
+          />
+        </b-form-group>
+      </b-form>
+
+      <template #modal-footer>
+        <b-button variant="secondary" @click="futureReservationModalShow = false">
+          {{ $t('actions.cancel') }}
+        </b-button>
+        <b-button variant="primary" :disabled="savingFutureReservation" @click="saveFutureReservation">
+          <b-spinner v-if="savingFutureReservation" small class="mr-50" />
+          {{ $t('reservation.createFutureReservation') }}
+        </b-button>
+      </template>
+    </b-modal>
+
     <b-modal
       v-model="editClientModalShow"
       :title="$t('client.editClient')"
@@ -1024,6 +1099,15 @@ export default {
       loadingResServices: false,
       addServiceModalShow: false,
       savingService: false,
+      futureReservationModalShow: false,
+      savingFutureReservation: false,
+      futureReservationForm: {
+        appointment_date: '',
+        amount: 0,
+        paid: 0,
+        payment_method: 'cash',
+        notes: '',
+      },
       serviceForm: {
         doctor_service_id: null,
         service_name: '',
@@ -1105,6 +1189,14 @@ export default {
       })
       return opts
     },
+    paymentMethodOptions() {
+      return [
+        { value: 'cash', text: this.$t('financial.cash') },
+        { value: 'card', text: this.$t('financial.card') },
+        { value: 'transfer', text: this.$t('financial.transfer') },
+        { value: 'other', text: this.$t('financial.other') },
+      ]
+    },
   },
   methods: {
     formatDate(value) {
@@ -1117,6 +1209,15 @@ export default {
       const month = String(d.getMonth() + 1).padStart(2, '0')
       const day = String(d.getDate()).padStart(2, '0')
       return `${year}-${month}-${day}`
+    },
+    getDatetimeLocalMin() {
+      const d = new Date()
+      d.setMinutes(d.getMinutes() - d.getTimezoneOffset())
+      return d.toISOString().slice(0, 16)
+    },
+    formatDateTimeForApi(value) {
+      if (!value) return ''
+      return value.length === 16 ? `${value.replace('T', ' ')}:00` : value.replace('T', ' ')
     },
     async fetchReservations() {
       this.loading = true
@@ -1207,6 +1308,72 @@ export default {
       // Load reservation services and doctor catalog
       this.fetchReservationServices(reservation.id)
       this.fetchDoctorServicesCatalog()
+    },
+    openFutureReservationModal() {
+      if (!this.selectedReservation) return
+      this.futureReservationForm = {
+        appointment_date: '',
+        amount: 0,
+        paid: 0,
+        payment_method: 'cash',
+        notes: '',
+      }
+      this.futureReservationModalShow = true
+    },
+    resetFutureReservationForm() {
+      this.savingFutureReservation = false
+      this.futureReservationForm = {
+        appointment_date: '',
+        amount: 0,
+        paid: 0,
+        payment_method: 'cash',
+        notes: '',
+      }
+    },
+    async saveFutureReservation() {
+      if (!this.selectedReservation) return
+      this.savingFutureReservation = true
+      try {
+        await reservationsService.createReservation({
+          client_id: this.selectedReservation.client_id,
+          doctor_id: this.selectedReservation.doctor_id,
+          source_reservation_id: this.selectedReservation.id,
+          appointment_date: this.formatDateTimeForApi(this.futureReservationForm.appointment_date),
+          amount: Number(this.futureReservationForm.amount || 0),
+          paid: Number(this.futureReservationForm.paid || 0),
+          payment_method: this.futureReservationForm.payment_method,
+          notes: this.futureReservationForm.notes,
+        })
+
+        this.futureReservationModalShow = false
+        this.fetchReservations()
+        if (this.selectedReservation.id) {
+          await this.viewReservation(this.selectedReservation)
+        }
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.success'),
+            text: this.$t('messages.futureReservationCreated'),
+            variant: 'success',
+          },
+        })
+      } catch (error) {
+        const errors = error.response?.data?.errors
+        const text = errors
+          ? Object.values(errors).flat().join('\n')
+          : (error.response?.data?.error || error.response?.data?.message || this.$t('messages.saveReservationError'))
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text,
+            variant: 'danger',
+          },
+        })
+      } finally {
+        this.savingFutureReservation = false
+      }
     },
     async completeReservation() {
       this.completing = true
@@ -1521,6 +1688,7 @@ export default {
         service_added: 'light-primary',
         service_updated: 'light-warning',
         service_deleted: 'light-danger',
+        future_reservation_created: 'light-primary',
       }
       return variants[action] || 'light-secondary'
     },
