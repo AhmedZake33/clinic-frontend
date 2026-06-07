@@ -15,16 +15,16 @@
 
       <b-form @submit.prevent="applyFilters" class="mb-2">
         <b-row>
-          <b-col md="3">
+        <b-col cols="12" sm="6" md="3" class="mb-1 mb-md-0">
             <b-form-input type="date" v-model="filters.from" :placeholder="$t('filters.from')"></b-form-input>
           </b-col>
-          <b-col md="3">
+          <b-col cols="12" sm="6" md="3" class="mb-1 mb-md-0">
             <b-form-input type="date" v-model="filters.to" :placeholder="$t('filters.to')"></b-form-input>
           </b-col>
-          <b-col md="3">
+          <b-col cols="12" sm="6" md="3" class="mb-1 mb-md-0">
             <b-form-select v-model="filters.category" :options="categoryOptions" />
           </b-col>
-          <b-col md="3" class="text-right">
+          <b-col cols="12" sm="6" md="3" class="purchase-filter-actions text-right">
             <b-button class="mr-1" type="submit" variant="primary">{{ $t('filters.apply') }}</b-button>
             <b-button variant="danger" @click="resetFilters">{{ $t('filters.reset') }}</b-button>
           </b-col>
@@ -51,7 +51,7 @@
       </div>
 
       <b-table
-        class="mt-3"
+        class="mt-3 d-none d-md-block"
         :items="purchases.data || []"
         :fields="translatedFields"
         responsive
@@ -79,6 +79,48 @@
           <router-link :to="{ name: editRouteName, params: { id: data.item.id } }">{{ $t('actions.edit') }}</router-link>
         </template>
       </b-table>
+
+      <div class="d-md-none mt-2">
+        <div v-if="!loading && !(purchases.data || []).length" class="text-center text-muted py-2">
+          {{ $t('purchases.noRecords') }}
+        </div>
+        <b-card
+          v-for="item in purchases.data || []"
+          :key="item.id"
+          no-body
+          class="purchase-mobile-card mb-1"
+        >
+          <div class="purchase-mobile-card__header">
+            <div>
+              <h6 class="mb-25">{{ item.item_name }}</h6>
+              <small class="text-muted">{{ formatDate(item.purchase_date) }}</small>
+            </div>
+            <strong class="text-primary">{{ formatCurrency(item.amount_paid) }}</strong>
+          </div>
+          <div class="purchase-mobile-card__body">
+            <div>
+              <small>{{ $t('purchases.category') }}</small>
+              <span>{{ categoryLabel(item) }}</span>
+            </div>
+            <div>
+              <small>{{ $t('purchases.supplier') }}</small>
+              <span>{{ item.supplier || '-' }}</span>
+            </div>
+            <div>
+              <small>{{ $t('purchases.paymentMethod') }}</small>
+              <span>{{ item.payment_method || '-' }}</span>
+            </div>
+          </div>
+          <div class="purchase-mobile-card__actions">
+            <router-link
+              class="btn btn-sm btn-outline-primary"
+              :to="{ name: editRouteName, params: { id: item.id } }"
+            >
+              {{ $t('actions.edit') }}
+            </router-link>
+          </div>
+        </b-card>
+      </div>
       <b-pagination
         v-model="pagination.current_page"
         :total-rows="pagination.total"
@@ -220,6 +262,13 @@ export default {
     formatCurrency(value) {
       return parseFloat(value || 0).toFixed(2)
     },
+    categoryLabel(item) {
+      if (!item) return ''
+      const labels = item.category_labels || {}
+      return this.$i18n.locale === 'en'
+        ? labels.en || item.category
+        : labels.ar || item.category
+    },
     onPageChange(page) {
       this.pagination.current_page = page
       this.load()
@@ -244,3 +293,62 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.purchase-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.purchase-mobile-card {
+  border: 1px solid #ebe9f1;
+}
+
+.purchase-mobile-card__header,
+.purchase-mobile-card__body,
+.purchase-mobile-card__actions {
+  padding: 0.85rem 1rem;
+}
+
+.purchase-mobile-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid #ebe9f1;
+}
+
+.purchase-mobile-card__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  background: #f8f8f8;
+}
+
+.purchase-mobile-card__body small {
+  display: block;
+  color: #6e6b7b;
+  margin-bottom: 0.2rem;
+}
+
+.purchase-mobile-card__body span {
+  display: block;
+  word-break: break-word;
+}
+
+.purchase-mobile-card__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 767.98px) {
+  .purchase-filter-actions {
+    gap: 0.5rem;
+  }
+
+  .purchase-filter-actions .btn {
+    flex: 1 1 0;
+  }
+}
+</style>

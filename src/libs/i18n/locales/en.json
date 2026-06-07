@@ -481,10 +481,14 @@
     "financials": "Financials",
     "purchases": "Purchases",
     "reports": "Reports",
+    "help": "Help",
     "waitingQueue": "Waiting Queue",
     "assistants": "My Assistants",
     "rolesPermissions": "Roles & Permissions",
     "total": "Total"
+  },
+  "help": {
+    "quickTips": "Quick Tips"
   },
   "roles": {
     "rolesManagement": "Roles Management",

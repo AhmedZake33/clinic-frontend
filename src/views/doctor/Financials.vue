@@ -90,6 +90,7 @@
       </b-form>
 
       <b-table
+        class="d-none d-md-block"
         :items="financials"
         :fields="fields"
         responsive
@@ -137,6 +138,67 @@
           </div>
         </template>
       </b-table>
+
+      <div class="d-md-none">
+        <div v-if="loading" class="text-center my-2">
+          <b-spinner class="align-middle" />
+        </div>
+        <div v-else-if="!financials.length" class="text-center text-muted py-2">
+          {{ $t('messages.noData') }}
+        </div>
+        <b-card
+          v-for="item in financials"
+          v-else
+          :key="item.id"
+          no-body
+          class="financial-mobile-card mb-1"
+        >
+          <div class="financial-mobile-card__header">
+            <div>
+              <h6 class="mb-25">{{ item.client ? item.client.name : '-' }}</h6>
+              <small v-if="item.reservation" class="text-muted">
+                {{ formatDateTime(item.reservation.appointment_date) }}
+              </small>
+            </div>
+            <b-badge :variant="getStatusVariant(item.payment_status)">
+              {{ $t('financial.' + item.payment_status) }}
+            </b-badge>
+          </div>
+          <div class="financial-mobile-card__meta">
+            <span>{{ getInvoiceTypeLabel(item) }}</span>
+            <span>{{ $t('financial.' + item.payment_method) }}</span>
+          </div>
+          <div class="financial-mobile-card__amounts">
+            <div>
+              <small>{{ $t('financial.amount') }}</small>
+              <strong>{{ formatCurrency(item.amount) }}</strong>
+            </div>
+            <div>
+              <small>{{ $t('financial.paid') }}</small>
+              <strong class="text-success">{{ formatCurrency(item.paid) }}</strong>
+            </div>
+            <div>
+              <small>{{ $t('financial.remaining') }}</small>
+              <strong :class="parseFloat(item.remaining) > 0 ? 'text-danger' : 'text-success'">
+                {{ formatCurrency(item.remaining) }}
+              </strong>
+            </div>
+          </div>
+          <div class="financial-mobile-card__actions">
+            <b-button variant="info" size="sm" @click="viewFinancial(item)">
+              <feather-icon icon="EyeIcon" />
+            </b-button>
+            <b-button
+              v-if="parseFloat(item.remaining) > 0"
+              variant="success"
+              size="sm"
+              @click="viewFinancial(item); $nextTick(() => { activeTab = 1 })"
+            >
+              <feather-icon icon="CreditCardIcon" />
+            </b-button>
+          </div>
+        </b-card>
+      </div>
 
       <b-pagination
         v-model="pagination.current_page"
@@ -635,3 +697,61 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.financial-mobile-card {
+  border: 1px solid #ebe9f1;
+}
+
+.financial-mobile-card__header,
+.financial-mobile-card__meta,
+.financial-mobile-card__amounts,
+.financial-mobile-card__actions {
+  padding: 0.85rem 1rem;
+}
+
+.financial-mobile-card__header,
+.financial-mobile-card__meta,
+.financial-mobile-card__amounts,
+.financial-mobile-card__actions {
+  display: flex;
+}
+
+.financial-mobile-card__header {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid #ebe9f1;
+}
+
+.financial-mobile-card__meta {
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #6e6b7b;
+  font-size: 0.85rem;
+}
+
+.financial-mobile-card__amounts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  background: #f8f8f8;
+}
+
+.financial-mobile-card__amounts small {
+  display: block;
+  color: #6e6b7b;
+  margin-bottom: 0.2rem;
+}
+
+.financial-mobile-card__amounts strong {
+  display: block;
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+.financial-mobile-card__actions {
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+</style>

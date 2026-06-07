@@ -63,6 +63,13 @@ const navigationItems = [
     permission: 'assistant.view-purchases',
   },
   {
+    title: 'menu.help',
+    i18n: true,
+    route: 'assistant-help',
+    icon: 'HelpCircleIcon',
+    permission: 'assistant.view-dashboard',
+  },
+  {
     header: 'menu.doctorMenu',
     i18n: true,
     permission: 'doctor.view-dashboard',
@@ -152,6 +159,13 @@ const navigationItems = [
     icon: 'BarChart2Icon',
     permission: 'doctor.view-reports',
     feature: 'reports',
+  },
+  {
+    title: 'menu.help',
+    i18n: true,
+    route: 'doctor-help',
+    icon: 'HelpCircleIcon',
+    permission: 'doctor.view-reservations',
   },
   
   {

@@ -25,7 +25,7 @@
             <b-col cols="6" md="3" class="mb-1 mb-md-0">
               <b-form-input v-model="filters.date_to" type="date" :placeholder="$t('transaction.dateTo')" />
             </b-col>
-            <b-col cols="12" md="3" class="text-right">
+            <b-col cols="12" md="3" class="transaction-filter-actions text-right">
               <b-button type="submit" variant="primary" class="mr-1" :disabled="loading">
                 {{ $t('filters.apply') }}
               </b-button>
@@ -37,6 +37,7 @@
         </b-form>
 
         <b-table
+          class="d-none d-md-block"
           :items="transactions"
           :fields="fields"
           responsive
@@ -70,6 +71,46 @@
             </div>
           </template>
         </b-table>
+
+        <div class="d-md-none">
+          <div v-if="loading" class="text-center my-2">
+            <b-spinner class="align-middle" />
+          </div>
+          <div v-else-if="!transactions.length" class="text-center text-muted py-3">
+            {{ $t('transaction.noTransactions') }}
+          </div>
+          <b-card
+            v-for="transaction in transactions"
+            v-else
+            :key="transaction.id"
+            no-body
+            class="transaction-mobile-card mb-1"
+          >
+            <div class="transaction-mobile-card__header">
+              <div>
+                <h6 class="mb-25">
+                  {{ transaction.financial && transaction.financial.client ? transaction.financial.client.name : '-' }}
+                </h6>
+                <small class="text-muted">{{ formatDateTime(transaction.created_at) }}</small>
+              </div>
+              <strong class="text-success">{{ formatCurrency(transaction.amount) }}</strong>
+            </div>
+            <div class="transaction-mobile-card__body">
+              <div>
+                <small>{{ $t('financial.paymentMethod') }}</small>
+                <span>{{ $t('financial.' + transaction.payment_method) }}</span>
+              </div>
+              <div>
+                <small>{{ $t('financial.createdBy') }}</small>
+                <span>{{ transaction.creator ? transaction.creator.name : '-' }}</span>
+              </div>
+              <div v-if="transaction.notes" class="transaction-mobile-card__notes">
+                <small>{{ $t('reservation.notes') }}</small>
+                <span>{{ transaction.notes }}</span>
+              </div>
+            </div>
+          </b-card>
+        </div>
 
         <b-pagination
           v-model="pagination.current_page"
@@ -219,3 +260,60 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.transaction-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.transaction-mobile-card {
+  border: 1px solid #ebe9f1;
+}
+
+.transaction-mobile-card__header,
+.transaction-mobile-card__body {
+  padding: 0.85rem 1rem;
+}
+
+.transaction-mobile-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid #ebe9f1;
+}
+
+.transaction-mobile-card__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  background: #f8f8f8;
+}
+
+.transaction-mobile-card__body small {
+  display: block;
+  color: #6e6b7b;
+  margin-bottom: 0.2rem;
+}
+
+.transaction-mobile-card__body span {
+  display: block;
+  word-break: break-word;
+}
+
+.transaction-mobile-card__notes {
+  padding-top: 0.25rem;
+}
+
+@media (max-width: 767.98px) {
+  .transaction-filter-actions {
+    gap: 0.5rem;
+  }
+
+  .transaction-filter-actions .btn {
+    flex: 1 1 0;
+  }
+}
+</style>

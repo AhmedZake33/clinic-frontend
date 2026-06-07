@@ -6,10 +6,21 @@
           <h4>{{ $t('services.myServices') }}</h4>
         </b-col>
         <b-col cols="12" md="8" class="text-right">
-          <b-button variant="primary" @click="openAddModal">
+          <b-button v-if="canManageServices" variant="primary" @click="openAddModal">
             <feather-icon icon="PlusIcon" class="mr-50" />
             {{ $t('services.addService') }}
           </b-button>
+        </b-col>
+      </b-row>
+
+      <b-row v-if="isAssistant" class="mb-2">
+        <b-col cols="12" md="4">
+          <b-form-select
+            v-model="selectedDoctorId"
+            :options="doctorOptions"
+            :disabled="loadingDoctors"
+            @change="fetchServices"
+          />
         </b-col>
       </b-row>
       
@@ -41,10 +52,10 @@
         </template>
 
         <template #cell(actions)="data">
-          <b-button size="sm" variant="flat-primary" class="btn-icon mr-25" @click="editService(data.item)">
+          <b-button v-if="canManageServices" size="sm" variant="flat-primary" class="btn-icon mr-25" @click="editService(data.item)">
             <feather-icon icon="EditIcon" />
           </b-button>
-          <b-button size="sm" variant="flat-danger" class="btn-icon" @click="confirmDelete(data.item)">
+          <b-button v-if="canManageServices" size="sm" variant="flat-danger" class="btn-icon" @click="confirmDelete(data.item)">
             <feather-icon icon="TrashIcon" />
           </b-button>
         </template>
@@ -103,25 +114,30 @@
 import {
   BCard, BCardHeader, BTable, BButton, BModal, BForm, BFormGroup,
   BFormInput, BFormTextarea, BFormCheckbox, BBadge, BSpinner,
-  BInputGroup,
+  BInputGroup, BRow, BCol, BFormSelect,
 } from 'bootstrap-vue'
 import doctorServicesApi from '@/services/doctorServices'
+import reservationsApi from '@/services/reservations'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   components: {
     BCard, BCardHeader, BTable, BButton, BModal, BForm, BFormGroup,
     BFormInput, BFormTextarea, BFormCheckbox, BBadge, BSpinner, BInputGroup,
+    BRow, BCol, BFormSelect,
   },
 
   data() {
     return {
       services: [],
       loading: false,
+      loadingDoctors: false,
       saving: false,
       showModal: false,
       isEditing: false,
       selectedService: null,
+      doctors: [],
+      selectedDoctorId: '',
       form: {
         name: '',
         name_en: '',
@@ -144,17 +160,59 @@ export default {
     isRtl() {
       return this.$i18n && this.$i18n.locale === 'ar'
     },
+    user() {
+      return JSON.parse(localStorage.getItem('user') || 'null') || {}
+    },
+    isAssistant() {
+      return this.user.role === 'assistant'
+    },
+    canManageServices() {
+      return !this.isAssistant
+    },
+    doctorOptions() {
+      return [
+        { value: '', text: this.$t('reservation.selectDoctor') },
+        ...this.doctors.map(doctor => ({
+          value: doctor.id,
+          text: doctor.name,
+        })),
+      ]
+    },
   },
 
-  mounted() {
+  async mounted() {
+    if (this.isAssistant) {
+      await this.fetchDoctors()
+      return
+    }
+
     this.fetchServices()
   },
 
   methods: {
+    async fetchDoctors() {
+      this.loadingDoctors = true
+      try {
+        const { data } = await reservationsApi.getDoctors()
+        this.doctors = data
+      } catch {
+        this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.error'), text: this.$t('messages.loadError'), variant: 'danger' } })
+      } finally {
+        this.loadingDoctors = false
+      }
+    },
+
     async fetchServices() {
+      if (this.isAssistant && !this.selectedDoctorId) {
+        this.services = []
+        return
+      }
+
       this.loading = true
       try {
-        const { data } = await doctorServicesApi.getAll()
+        const { data } = this.isAssistant
+          ? await doctorServicesApi.getAllForDoctor(this.selectedDoctorId)
+          : await doctorServicesApi.getAll()
         this.services = data
       } catch {
         this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.error'), text: this.$t('services.loadError'), variant: 'danger' } })

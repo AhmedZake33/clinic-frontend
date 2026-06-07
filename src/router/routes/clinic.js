@@ -237,6 +237,24 @@ export default [
     },
   },
   {
+    path: '/assistant/help',
+    name: 'assistant-help',
+    component: () => import('@/views/shared/Help.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['assistant.view-dashboard'],
+      pageTitle: 'menu.help',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.help',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/doctor/clients',
     name: 'doctor-clients',
     component: () => import('@/views/assistant/Clients.vue'),
@@ -486,6 +504,24 @@ export default [
       pageI18n: true,
       breadcrumb: [
         { text: 'services.myServices', active: true, i18n: true },
+      ],
+    },
+  },
+  {
+    path: '/doctor/help',
+    name: 'doctor-help',
+    component: () => import('@/views/shared/Help.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-dashboard', 'doctor.view-reservations'],
+      pageTitle: 'menu.help',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.help',
+          active: true,
+          i18n: true,
+        },
       ],
     },
   },

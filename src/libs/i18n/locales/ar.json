@@ -302,9 +302,13 @@
     "schedule": "الجدول",
     "financials": "المالية",
     "reports": "التقارير",
+    "help": "المساعدة",
     "waitingQueue": "قائمة الانتظار",
     "assistants": "مساعديّ",
     "rolesPermissions": "الأدوار والصلاحيات"
+  },
+  "help": {
+    "quickTips": "نصائح سريعة"
   },
   "roles": {
     "rolesManagement": "إدارة الأدوار",
