@@ -183,10 +183,15 @@
             v-model="clientSearch"
             :placeholder="$t('client.searchPlaceholder')"
             autocomplete="off"
-            @focus="clientDropdownOpen = true"
-            @input="clientDropdownOpen = true"
+            @focus="openClientSearch"
           />
-          <div v-if="clientDropdownOpen && filteredClients.length" class="client-search-dropdown">
+          <div v-if="clientDropdownOpen && clientsLoading" class="client-search-dropdown">
+            <div class="client-search-item text-muted">
+              <b-spinner small class="mr-50" />
+              {{ $t('messages.loading') }}
+            </div>
+          </div>
+          <div v-else-if="clientDropdownOpen && filteredClients.length" class="client-search-dropdown">
             <div
               v-for="client in filteredClients"
               :key="client.id"
@@ -194,10 +199,13 @@
               @mousedown.prevent="selectClient(client)"
             >
               <strong>{{ client.name }}</strong>
-              <small class="text-muted d-block">{{ client.phone }}</small>
+              <small class="text-muted d-block">
+                {{ client.phone }}
+                <span v-if="client.whatsapp_number"> | {{ client.whatsapp_number }}</span>
+              </small>
             </div>
           </div>
-          <div v-if="clientDropdownOpen && clientSearch && !filteredClients.length" class="client-search-dropdown">
+          <div v-else-if="clientDropdownOpen && clientSearch && !filteredClients.length" class="client-search-dropdown">
             <div class="client-search-item text-muted">{{ $t('messages.noData') }}</div>
           </div>
           <small v-if="form.client_id && selectedClientDisplay" class="text-success">
@@ -882,6 +890,9 @@ export default {
       selectedReservation: null,
       clientSearch: '',
       clientDropdownOpen: false,
+      clientsLoading: false,
+      clientSearchTimer: null,
+      suppressClientSearchWatch: false,
       availabilityLoading: false,
       availableTimeSlots: [],
       timeSlotsMessage: '',
@@ -952,6 +963,16 @@ export default {
     'form.appointment_date_only': function () {
       this.fetchAvailableTimes()
     },
+    clientSearch(search) {
+      if (this.suppressClientSearchWatch) {
+        this.suppressClientSearchWatch = false
+        return
+      }
+
+      this.clientDropdownOpen = true
+      this.form.client_id = null
+      this.queueClientSearch(search)
+    },
     '$store.state.broadcast.eventCounter'() {
       this.fetchReservations()
     },
@@ -970,11 +991,7 @@ export default {
       }))
     },
     filteredClients() {
-      if (!this.clientSearch) return this.clients
-      const q = this.clientSearch.toLowerCase()
-      return this.clients.filter(c =>
-        c.name.toLowerCase().includes(q) || (c.phone && c.phone.includes(q))
-      )
+      return this.clients
     },
     selectedClientDisplay() {
       const c = this.clients.find(cl => cl.id === this.form.client_id)
@@ -1068,6 +1085,9 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener('click', this.handleClickOutside)
+    if (this.clientSearchTimer) {
+      clearTimeout(this.clientSearchTimer)
+    }
   },
   methods: {
     handleClickOutside(e) {
@@ -1127,18 +1147,46 @@ export default {
       this.pagination.current_page = page
       this.fetchReservations()
     },
+    openClientSearch() {
+      this.clientDropdownOpen = true
+      if (!this.clients.length) {
+        this.fetchClients()
+      }
+    },
+    queueClientSearch(search) {
+      if (this.clientSearchTimer) {
+        clearTimeout(this.clientSearchTimer)
+      }
+
+      this.clientSearchTimer = setTimeout(() => {
+        this.fetchClients(search)
+      }, 300)
+    },
     selectClient(client) {
+      if (this.clientSearchTimer) {
+        clearTimeout(this.clientSearchTimer)
+      }
+
+      this.suppressClientSearchWatch = true
       this.form.client_id = client.id
       this.clientSearch = `${client.name} - ${client.phone}`
       this.clientDropdownOpen = false
     },
-    async fetchClients() {
+    async fetchClients(search = '') {
+      this.clientsLoading = true
       try {
-        const response = await clientsService.getClients()
+        const params = {}
+        if (search && search.trim()) {
+          params.search = search.trim()
+        }
+
+        const response = await clientsService.getClients(params)
         // Handle both paginated and non-paginated responses
         this.clients = Array.isArray(response.data) ? response.data : (response.data.data || [])
       } catch (error) {
         console.error('Failed to load clients', error)
+      } finally {
+        this.clientsLoading = false
       }
     },
     async fetchDoctors() {
