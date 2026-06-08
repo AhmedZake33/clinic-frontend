@@ -63,8 +63,8 @@ export const subscribeToDoctorChannel = (doctorId, { onCreated, onUpdated, onCom
  * @param {Function} onDeleted - Callback when reservation is deleted
  * @returns {Object} - Echo channel subscription
  */
-export const subscribeToAssistantChannel = ({ onCreated, onUpdated, onCompleted, onDeleted, onReordered }) => {
-  const ch = echo.private('assistant.reservations')
+export const subscribeToAssistantChannel = (doctorId, { onCreated, onUpdated, onCompleted, onDeleted, onReordered }) => {
+  const ch = echo.private(`assistant.reservations.${doctorId}`)
     .listen('.reservation.created', onCreated)
     .listen('.reservation.updated', onUpdated)
     .listen('.reservation.completed', onCompleted)

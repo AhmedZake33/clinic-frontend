@@ -175,9 +175,12 @@ function subscribe(vm) {
     channel = subscribeToDoctorChannel(user.id, handlers)
     console.log(`[WS] Global: subscribed to doctor.${user.id}`)
   } else if (user.role === 'assistant') {
-    subscribedChannelName = 'private-assistant.reservations'
-    channel = subscribeToAssistantChannel(handlers)
-    console.log('[WS] Global: subscribed to assistant.reservations')
+    const doctorId = user.doctor_id || user.doctor?.id
+    if (!doctorId) return
+
+    subscribedChannelName = `assistant.reservations.${doctorId}`
+    channel = subscribeToAssistantChannel(doctorId, handlers)
+    console.log(`[WS] Global: subscribed to assistant.reservations.${doctorId}`)
   }
 
   subscribed = true

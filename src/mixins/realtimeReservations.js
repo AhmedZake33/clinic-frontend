@@ -86,12 +86,15 @@ export default {
         onDeleted: this._onReservationDeleted,
       }
 
-      if (user.role === 'doctor') {
+      if (user.role === 'doctor' || user.role === 'sub-doctor') {
         this._wsChannel = subscribeToDoctorChannel(user.id, handlers)
         console.log(`[WS] Subscribed to doctor.${user.id}`)
       } else if (user.role === 'assistant') {
-        this._wsChannel = subscribeToAssistantChannel(handlers)
-        console.log('[WS] Subscribed to assistant.reservations')
+        const doctorId = user.doctor_id || user.doctor?.id
+        if (!doctorId) return
+
+        this._wsChannel = subscribeToAssistantChannel(doctorId, handlers)
+        console.log(`[WS] Subscribed to assistant.reservations.${doctorId}`)
       }
 
       this.wsConnected = true
@@ -103,10 +106,11 @@ export default {
     unsubscribeFromReservations() {
       const user = this.$store.state.auth?.user || JSON.parse(localStorage.getItem('user'))
       if (user) {
-        if (user.role === 'doctor') {
-          leaveChannel(`private-doctor.${user.id}`)
+        if (user.role === 'doctor' || user.role === 'sub-doctor') {
+          leaveChannel(`doctor.${user.id}`)
         } else if (user.role === 'assistant') {
-          leaveChannel('private-assistant.reservations')
+          const doctorId = user.doctor_id || user.doctor?.id
+          if (doctorId) leaveChannel(`assistant.reservations.${doctorId}`)
         }
       }
       this._wsChannel = null

@@ -114,8 +114,11 @@ export default function useRealtimeReservations() {
       channel = subscribeToDoctorChannel(user.id, eventHandlers)
       console.log(`📡 Subscribed to doctor.${user.id} channel`)
     } else if (user.role === 'assistant') {
-      channel = subscribeToAssistantChannel(eventHandlers)
-      console.log('📡 Subscribed to assistant.reservations channel')
+      const doctorId = user.doctor_id || user.doctor?.id
+      if (!doctorId) return
+
+      channel = subscribeToAssistantChannel(doctorId, eventHandlers)
+      console.log(`📡 Subscribed to assistant.reservations.${doctorId} channel`)
     }
 
     isConnected.value = true
@@ -130,7 +133,8 @@ export default function useRealtimeReservations() {
       if (user.role === 'doctor') {
         leaveChannel(`doctor.${user.id}`)
       } else if (user.role === 'assistant') {
-        leaveChannel('assistant.reservations')
+        const doctorId = user.doctor_id || user.doctor?.id
+        if (doctorId) leaveChannel(`assistant.reservations.${doctorId}`)
       }
     }
     channel = null
