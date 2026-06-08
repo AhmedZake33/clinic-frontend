@@ -132,6 +132,9 @@
     "endTime": "وقت النهاية",
     "reason": "السبب",
     "appointmentTime": "وقت الموعد",
+    "futureReservation": "حجز مستقبلي",
+    "createFutureReservation": "إنشاء حجز مستقبلي",
+    "futureAppointmentDate": "تاريخ ووقت الحجز المستقبلي",
     "appointmentDuration": "مدة الموعد",
     "minutes": "دقيقة",
     "oneTimeHoliday": "إجازة ليوم واحد",
@@ -170,7 +173,8 @@
     "log_check_in_undone": "إلغاء تسجيل الوصول",
     "log_service_added": "إضافة خدمة",
     "log_service_updated": "تعديل خدمة",
-    "log_service_deleted": "حذف خدمة"
+    "log_service_deleted": "حذف خدمة",
+    "log_future_reservation_created": "إنشاء حجز مستقبلي"
   },
   "filters": {
     "all": "الكل",
@@ -236,6 +240,7 @@
     "saveReservationError": "فشل في حفظ الحجز",
     "deleteReservationError": "فشل في حذف الحجز",
     "reservationCreated": "تم إنشاء الحجز بنجاح",
+    "futureReservationCreated": "تم إنشاء الحجز المستقبلي بنجاح",
     "reservationUpdated": "تم تحديث الحجز بنجاح",
     "reservationCancelled": "تم إلغاء الحجز بنجاح",
     "reservationConfirmed": "تم تأكيد الحجز بنجاح",
