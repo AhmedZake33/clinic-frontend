@@ -67,6 +67,10 @@
           </b-badge>
         </template>
 
+        <template #cell(specialization)="data">
+          {{ specializationLabel(data.value) || 'N/A' }}
+        </template>
+
         <template #cell(actions)="data">
           <b-dropdown
             variant="link"
@@ -169,6 +173,24 @@
                   <b-form-input id="doctor-whatsapp-number" class="phone-number-input" v-model="form.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="form.useSameMobile" />
                 </div>
               </div>
+            </b-form-group>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col cols="12" md="6">
+            <b-form-group :label="$t('admin.specialization')" label-for="specialization">
+              <b-form-select
+                id="specialization"
+                v-model="form.specialization"
+                :options="specializationOptions"
+              >
+                <template #first>
+                  <b-form-select-option value="">
+                    {{ $t('admin.specializationPlaceholder') }}
+                  </b-form-select-option>
+                </template>
+              </b-form-select>
             </b-form-group>
           </b-col>
         </b-row>
@@ -315,6 +337,12 @@
 
         <b-row class="mb-2">
           <b-col cols="12" md="6">
+            <strong>{{ $t('admin.specialization') }}:</strong> {{ specializationLabel(selectedDoctor.specialization) || 'N/A' }}
+          </b-col>
+        </b-row>
+
+        <b-row class="mb-2">
+          <b-col cols="12" md="6">
             <strong>{{ $t('admin.subscriptionStatus') }}:</strong>
             <b-badge :variant="getStatusVariant(selectedDoctor.subscription_status)" class="ml-50">
               {{ $t(`admin.status.${selectedDoctor.subscription_status}`) }}
@@ -420,6 +448,7 @@ export default {
   data() {
     return {
       doctors: [],
+      specializations: [],
       stats: {
         total_doctors: 0,
         active_subscriptions: 0,
@@ -441,6 +470,7 @@ export default {
         whatsapp_number: '',
         whatsapp_country_code: '',
         useSameMobile: false,
+        specialization: '',
         password: '',
         password_confirmation: '',
         subscription_plan: '',
@@ -455,6 +485,7 @@ export default {
         { key: 'name', label: this.$t('client.name'), sortable: true },
         { key: 'email', label: this.$t('clinic.email'), sortable: true },
         { key: 'phone', label: this.$t('client.phone'), sortable: true },
+        { key: 'specialization', label: this.$t('admin.specialization'), sortable: true },
         { key: 'subscription_status', label: this.$t('admin.subscriptionStatus') },
         { key: 'subscription_plan', label: this.$t('admin.subscriptionPlan') },
         { key: 'assistants_count', label: this.$t('admin.assistants'), sortable: true },
@@ -467,6 +498,15 @@ export default {
   computed: {
     countrySelectOptions() {
       return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(country => ({ value: country.value, text: country.label })))
+    },
+    specializationOptions() {
+      return this.specializations.map(specialization => ({
+        value: typeof specialization === 'string' ? specialization : specialization.value,
+        text: typeof specialization === 'string' ? specialization : (specialization.labels?.[this.currentLocale] || specialization.labels?.en || specialization.value),
+      }))
+    },
+    currentLocale() {
+      return (localStorage.getItem('locale') || this.$i18n?.locale || 'en').substring(0, 2)
     },
     showModal: {
       get() {
@@ -481,10 +521,22 @@ export default {
     },
   },
   async mounted() {
-    await this.fetchDoctors()
-    await this.fetchStats()
+    await Promise.all([
+      this.fetchDoctors(),
+      this.fetchStats(),
+      this.fetchSpecializations(),
+    ])
   },
   methods: {
+    async fetchSpecializations() {
+      try {
+        const response = await adminService.getSpecializations()
+        this.specializations = response.data || []
+      } catch (error) {
+        this.specializations = []
+      }
+    },
+
     async fetchDoctors() {
       this.loading = true
       try {
@@ -502,6 +554,21 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+
+    specializationLabel(value) {
+      if (!value) return ''
+
+      const specialization = this.specializations.find(item => {
+        const itemValue = typeof item === 'string' ? item : item.value
+        return itemValue === value
+      })
+
+      if (!specialization || typeof specialization === 'string') {
+        return value
+      }
+
+      return specialization.labels?.[this.currentLocale] || specialization.labels?.en || value
     },
 
     async fetchStats() {
@@ -535,6 +602,7 @@ export default {
         whatsapp_number: whatsapp.number,
         whatsapp_country_code: whatsapp.prefix,
         useSameMobile: doctor.phone && doctor.phone === doctor.whatsapp_number,
+        specialization: doctor.specialization || '',
         password: '',
         password_confirmation: '',
         subscription_plan: doctor.subscription_plan || '',
@@ -672,6 +740,7 @@ export default {
         whatsapp_number: '',
         whatsapp_country_code: '',
         useSameMobile: false,
+        specialization: '',
         max_sub_doctors: 0,
       }
       this.selectedDoctor = null

@@ -153,6 +153,20 @@ const navigationItems = [
     feature: 'services',
   },
   {
+    title: 'diagnoses.title',
+    i18n: true,
+    route: 'doctor-diagnoses',
+    icon: 'ActivityIcon',
+    permission: 'doctor.view-reservations',
+  },
+  {
+    title: 'printSettings.title',
+    i18n: true,
+    route: 'doctor-print-settings',
+    icon: 'PrinterIcon',
+    permission: 'doctor.view-dashboard',
+  },
+  {
     title: 'menu.reports',
     i18n: true,
     route: 'doctor-reports',

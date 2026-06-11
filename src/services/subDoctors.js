@@ -14,5 +14,8 @@ export default {
   delete(id) {
     return api.delete(`/doctor/sub-doctors/${id}`)
   },
+  getSpecializations() {
+    return api.get('/specializations')
+  },
   // permissions for sub-doctors are managed by admin
 }

@@ -31,4 +31,9 @@ export default {
   getSubscriptionStats() {
     return axios.get('/admin/subscription-stats')
   },
+
+  // Get doctor specialization options
+  getSpecializations() {
+    return axios.get('/specializations')
+  },
 }

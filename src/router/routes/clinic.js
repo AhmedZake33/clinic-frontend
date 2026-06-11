@@ -508,6 +508,34 @@ export default [
     },
   },
   {
+    path: '/doctor/diagnoses',
+    name: 'doctor-diagnoses',
+    component: () => import('@/views/doctor/Diagnoses.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-reservations'],
+      pageTitle: 'diagnoses.title',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'diagnoses.title', active: true, i18n: true },
+      ],
+    },
+  },
+  {
+    path: '/doctor/print-settings',
+    name: 'doctor-print-settings',
+    component: () => import('@/views/doctor/PrintSettings.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-dashboard'],
+      pageTitle: 'printSettings.title',
+      pageI18n: true,
+      breadcrumb: [
+        { text: 'printSettings.title', active: true, i18n: true },
+      ],
+    },
+  },
+  {
     path: '/doctor/help',
     name: 'doctor-help',
     component: () => import('@/views/shared/Help.vue'),

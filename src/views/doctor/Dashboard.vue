@@ -10,6 +10,9 @@
               <p class="mb-2">
                 {{ $t('dashboard.doctorOverview') }}
               </p>
+              <b-badge v-if="user && user.specialization" variant="light-primary">
+                {{ $t('admin.specialization') }}: {{ specializationLabel(user.specialization) }}
+              </b-badge>
             </b-col>
             <b-col cols="12" md="4" class="text-md-right mt-1 mt-md-0">
               <b-button
@@ -167,6 +170,8 @@ import {
   VBTooltip,
 } from 'bootstrap-vue'
 import reservationsService from '@/services/reservations'
+import subDoctorsApi from '@/services/subDoctors'
+import authService from '@/services/auth'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
@@ -195,6 +200,7 @@ export default {
       },
       todayReservations: [],
       completedReservations: [],
+      specializations: [],
       fields: [],
       completedFields: [],
     }
@@ -216,6 +222,8 @@ export default {
     this.fetchStats()
     this.fetchTodayReservations()
     this.fetchCompletedReservations()
+    this.fetchSpecializations()
+    this.fetchCurrentUser()
 
     // Watch broadcast events for real-time updates
     this.$watch('$store.state.broadcast.eventCounter', () => {
@@ -225,6 +233,40 @@ export default {
     })
   },
   methods: {
+    async fetchCurrentUser() {
+      try {
+        const { data } = await authService.getUser()
+        this.user = data.user || data
+        if (this.user) {
+          localStorage.setItem('user', JSON.stringify(this.user))
+        }
+      } catch {
+        this.user = JSON.parse(localStorage.getItem('user') || 'null')
+      }
+    },
+    async fetchSpecializations() {
+      try {
+        const { data } = await subDoctorsApi.getSpecializations()
+        this.specializations = data || []
+      } catch {
+        this.specializations = []
+      }
+    },
+    specializationLabel(value) {
+      if (!value) return ''
+
+      const locale = (localStorage.getItem('locale') || this.$i18n?.locale || 'en').substring(0, 2)
+      const specialization = this.specializations.find(item => {
+        const itemValue = typeof item === 'string' ? item : item.value
+        return itemValue === value
+      })
+
+      if (!specialization || typeof specialization === 'string') {
+        return value
+      }
+
+      return specialization.labels?.[locale] || specialization.labels?.en || value
+    },
     async fetchStats() {
       try {
         const [pendingRes, confirmedRes, completedRes] = await Promise.all([

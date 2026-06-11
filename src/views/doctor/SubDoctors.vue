@@ -36,7 +36,7 @@
       </b-row>
 
 
-      <b-table :items="subs" :fields="fields" :busy="loading" responsive>
+      <b-table :key="`sub-doctors-${currentLocale}`" :items="subs" :fields="fields" :busy="loading" responsive>
         <template #cell(permissions)="data">
           <div class="small text-muted">
             <div v-for="p in data.item.permissions" :key="p">{{ p }}</div>
@@ -88,6 +88,15 @@
             </div>
           </div>
         </b-form-group>
+        <b-form-group :label="$t('admin.specialization')">
+          <b-form-select v-model="form.specialization" :options="specializationOptions">
+            <template #first>
+              <b-form-select-option value="">
+                {{ $t('admin.specializationPlaceholder') }}
+              </b-form-select-option>
+            </template>
+          </b-form-select>
+        </b-form-group>
         <b-form-group :label="$t('subDoctors.password')">
           <b-form-input v-model="form.password" type="password" :required="!isEditing" />
         </b-form-group>
@@ -116,6 +125,7 @@ export default {
       showModal: false,
       isEditing: false,
       selected: null,
+      specializations: [],
       form: {
         name: '',
         email: '',
@@ -124,6 +134,7 @@ export default {
         whatsapp_number: '',
         whatsapp_country_code: '',
         useSameMobile: false,
+        specialization: '',
         password: '',
       },
     }
@@ -132,20 +143,48 @@ export default {
     countrySelectOptions() {
       return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(country => ({ value: country.value, text: country.label })))
     },
+    currentLocale() {
+      return (this.$i18n?.locale || localStorage.getItem('locale') || 'en').substring(0, 2)
+    },
+    specializationOptions() {
+      return this.specializations.map(specialization => ({
+        value: typeof specialization === 'string' ? specialization : specialization.value,
+        text: typeof specialization === 'string' ? specialization : (specialization.labels?.[this.currentLocale] || specialization.labels?.en || specialization.value),
+      }))
+    },
     fields() {
       return [
         { key: 'name', label: this.$t('subDoctors.name') },
         { key: 'email', label: this.$t('subDoctors.email') },
         { key: 'phone', label: this.$t('client.phone') },
         { key: 'whatsapp_number', label: this.$t('client.whatsappNumber') },
+        { key: 'specialization', label: this.$t('admin.specialization'), formatter: this.specializationLabel },
         { key: 'actions', label: this.$t('table.actions') },
       ]
     }
   },
   mounted() {
     this.fetch()
+    this.fetchSpecializations()
   },
   methods: {
+    async fetchSpecializations() {
+      try {
+        const { data } = await subDoctorsApi.getSpecializations()
+        this.specializations = data || []
+      } catch {
+        this.specializations = []
+      }
+    },
+    specializationLabel(value) {
+      if (!value) return 'N/A'
+      const specialization = this.specializations.find(item => {
+        const itemValue = typeof item === 'string' ? item : item.value
+        return itemValue === value
+      })
+      if (!specialization || typeof specialization === 'string') return value
+      return specialization.labels?.[this.currentLocale] || specialization.labels?.en || value
+    },
     async fetch() {
       this.loading = true
       try {
@@ -168,6 +207,7 @@ export default {
         whatsapp_number: whatsapp.number,
         whatsapp_country_code: whatsapp.prefix,
         useSameMobile: item.phone && item.phone === item.whatsapp_number,
+        specialization: item.specialization || '',
         password: '',
       }
       this.showModal = true
@@ -227,6 +267,7 @@ export default {
         whatsapp_number: '',
         whatsapp_country_code: '',
         useSameMobile: false,
+        specialization: '',
         password: '',
       }
     },

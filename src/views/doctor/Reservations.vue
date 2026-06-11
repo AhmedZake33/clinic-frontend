@@ -69,6 +69,16 @@
             {{ $t('reservation.completeReservation') }}
           </b-button>
           <b-button
+            v-if="data.item.status === 'completed'"
+            variant="warning"
+            size="sm"
+            class="mr-1"
+            @click="showCompleteModal(data.item)"
+          >
+            <feather-icon icon="EditIcon" class="mr-50" />
+            {{ $t('reservation.editCompletedData') }}
+          </b-button>
+          <b-button
             v-if="data.item.status === 'completed' && data.item.treatment"
             v-b-tooltip.hover
             :title="$t('reservation.printMedicinesPrescription')"
@@ -78,6 +88,18 @@
           >
             <feather-icon icon="PrinterIcon" class="mr-50" />
             {{ $t('reservation.printMedicinesPrescription') }}
+          </b-button>
+          <b-button
+            v-if="data.item.status !== 'cancelled'"
+            v-b-tooltip.hover
+            :title="$t('reservation.printReservationDetails')"
+            variant="outline-primary"
+            size="sm"
+            class="ml-1"
+            @click="printReservationDetails(data.item)"
+          >
+            <feather-icon icon="FileTextIcon" class="mr-50" />
+            {{ $t('reservation.printReservationDetails') }}
           </b-button>
         </template>
 
@@ -104,7 +126,7 @@
     <!-- Complete Modal -->
     <b-modal
       v-model="completeModalShow"
-      :title="$t('reservation.completeReservation')"
+      :title="isEditingCompletedReservation ? $t('reservation.editCompletedData') : $t('reservation.completeReservation')"
       hide-footer
       size="lg"
     >
@@ -125,6 +147,26 @@
           </div>
           <p v-if="selectedReservation" class="mb-0 mt-50"><strong>{{ $t('reservation.appointment') }}:</strong> {{ formatDateTime(selectedReservation.appointment_date) }}</p>
         </b-alert>
+
+        <b-form-group :label="$t('diagnoses.selectDiagnosis')" label-for="diagnosis-catalog">
+          <b-input-group>
+            <b-form-select
+              id="diagnosis-catalog"
+              v-model="selectedDiagnosisId"
+              :options="doctorDiagnosisOptions"
+            />
+            <b-input-group-append>
+              <b-button
+                variant="outline-primary"
+                :disabled="!selectedDiagnosisId"
+                @click="appendSelectedDiagnosis"
+              >
+                <feather-icon icon="PlusIcon" class="mr-50" />
+                {{ $t('diagnoses.addToReservation') }}
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
 
         <b-form-group :label="$t('reservation.diagnosis')" label-for="diagnosis">
           <b-form-textarea
@@ -455,7 +497,7 @@
           </b-button>
           <b-button type="submit" variant="success" :disabled="completing">
             <b-spinner v-if="completing" small class="mr-1" />
-            {{ $t('reservation.completeReservation') }}
+            {{ isEditingCompletedReservation ? $t('actions.saveChanges') : $t('reservation.completeReservation') }}
           </b-button>
         </div>
       </b-form>
@@ -981,6 +1023,7 @@ import reservationsService from '@/services/reservations'
 import openfdaService from '@/services/openfda'
 import clientsService from '@/services/clients'
 import doctorServicesApi from '@/services/doctorServices'
+import doctorDiagnosesApi from '@/services/doctorDiagnoses'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
@@ -1027,6 +1070,7 @@ export default {
       },
       loading: false,
       completeModalShow: false,
+      isEditingCompletedReservation: false,
       viewModalShow: false,
       completing: false,
       selectedReservation: null,
@@ -1094,6 +1138,8 @@ export default {
       },
 
       // Reservation services (additional services)
+      doctorDiagnosesCatalog: [],
+      selectedDiagnosisId: null,
       doctorServicesCatalog: [],
       reservationServices: [],
       loadingResServices: false,
@@ -1189,6 +1235,18 @@ export default {
       })
       return opts
     },
+    doctorDiagnosisOptions() {
+      const opts = [{ value: null, text: `— ${this.$t('diagnoses.selectDiagnosis')} —` }]
+      this.doctorDiagnosesCatalog.forEach(diagnosis => {
+        if (diagnosis.is_active) {
+          opts.push({
+            value: diagnosis.id,
+            text: `${diagnosis.name}${diagnosis.name_en ? ' / ' + diagnosis.name_en : ''}`,
+          })
+        }
+      })
+      return opts
+    },
     paymentMethodOptions() {
       return [
         { value: 'cash', text: this.$t('financial.cash') },
@@ -1266,16 +1324,17 @@ export default {
     },
     showCompleteModal(reservation) {
       this.selectedReservation = reservation
+      this.isEditingCompletedReservation = reservation.status === 'completed'
       this.completeForm = {
-        diagnosis: '',
-        treatment: '',
-        current_procedures: '',
-        procedure_notes: '',
-        next_procedures: '',
-        requires_xray: false,
-        xray_notes: '',
-        requires_lab: false,
-        lab_notes: '',
+        diagnosis: reservation.diagnosis || '',
+        treatment: reservation.treatment || '',
+        current_procedures: reservation.current_procedures || '',
+        procedure_notes: reservation.procedure_notes || '',
+        next_procedures: reservation.next_procedures || '',
+        requires_xray: !!reservation.requires_xray,
+        xray_notes: reservation.xray_notes || '',
+        requires_lab: !!reservation.requires_lab,
+        lab_notes: reservation.lab_notes || '',
       }
       this.completionFiles = []
       // Reset drug search state
@@ -1293,6 +1352,8 @@ export default {
       this.egyptCategoryFilter = ''
       this.egyptFormFilter = ''
       this.drugTabIndex = 0
+      this.selectedDiagnosisId = null
+      this.fetchDoctorDiagnosesCatalog(reservation.id)
       this.completeModalShow = true
     },
     async viewReservation(reservation) {
@@ -1395,6 +1456,14 @@ export default {
           this.selectedReservation.id,
           formData
         )
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.success'),
+            text: this.isEditingCompletedReservation ? this.$t('messages.reservationUpdated') : this.$t('messages.reservationCompleted'),
+            variant: 'success',
+          },
+        })
         // this.$toast({
         //   component: ToastificationContent,
         //   props: {
@@ -1404,6 +1473,7 @@ export default {
         //   },
         // })
         this.completeModalShow = false
+        this.isEditingCompletedReservation = false
         this.fetchReservations()
       } catch (error) {
         this.$toast({
@@ -1773,6 +1843,35 @@ export default {
     },
 
     // ── Doctor Services ───────────────────────────────────────────
+    async fetchDoctorDiagnosesCatalog(reservationId = null) {
+      try {
+        const { data } = reservationId
+          ? await doctorDiagnosesApi.getAllForReservation(reservationId)
+          : await doctorDiagnosesApi.getAll()
+        this.doctorDiagnosesCatalog = data
+      } catch {
+        this.doctorDiagnosesCatalog = []
+      }
+    },
+
+    appendSelectedDiagnosis() {
+      const diagnosis = this.doctorDiagnosesCatalog.find(item => item.id === this.selectedDiagnosisId)
+      if (!diagnosis) return
+
+      const parts = [diagnosis.name]
+      if (diagnosis.name_en) parts.push(diagnosis.name_en)
+      if (diagnosis.description) parts.push(diagnosis.description)
+      const entry = parts.join(' - ')
+
+      if (this.completeForm.diagnosis) {
+        this.completeForm.diagnosis += '\n' + entry
+      } else {
+        this.completeForm.diagnosis = entry
+      }
+
+      this.selectedDiagnosisId = null
+    },
+
     async fetchDoctorServicesCatalog() {
       try {
         const { data } = await doctorServicesApi.getAll()
