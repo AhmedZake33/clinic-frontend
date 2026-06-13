@@ -933,12 +933,36 @@
         <b-row>
           <b-col cols="12" md="6">
             <b-form-group :label="$t('client.phone')" label-for="client-phone">
-              <b-form-input id="client-phone" v-model="clientForm.phone" required />
+              <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+                <div class="country-col">
+                  <b-form-select
+                    class="phone-country-select"
+                    v-model="clientForm.phone_country_code"
+                    :options="countrySelectOptions"
+                    :required="!!clientForm.phone"
+                  />
+                </div>
+                <div class="number-col">
+                  <b-form-input id="client-phone" class="phone-number-input" v-model="clientForm.phone" required />
+                </div>
+              </div>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="6">
             <b-form-group :label="$t('client.whatsappNumber')" label-for="client-whatsapp-number">
-              <b-form-input id="client-whatsapp-number" v-model="clientForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" />
+              <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+                <div class="country-col">
+                  <b-form-select
+                    class="phone-country-select"
+                    v-model="clientForm.whatsapp_country_code"
+                    :options="countrySelectOptions"
+                    :required="!!clientForm.whatsapp_number"
+                  />
+                </div>
+                <div class="number-col">
+                  <b-form-input id="client-whatsapp-number" class="phone-number-input" v-model="clientForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" />
+                </div>
+              </div>
             </b-form-group>
           </b-col>
         </b-row>
@@ -1027,6 +1051,8 @@ import doctorDiagnosesApi from '@/services/doctorDiagnoses'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
+import countryList from '@/utils/countries'
+import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
 
 export default {
   directives: {
@@ -1127,7 +1153,9 @@ export default {
         name: '',
         email: '',
         phone: '',
+        phone_country_code: '',
         whatsapp_number: '',
+        whatsapp_country_code: '',
         date_of_birth: '',
         height: '',
         weight: '',
@@ -1212,6 +1240,9 @@ export default {
     },
     chronicIllnessOptions() {
       return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
+    },
+    countrySelectOptions() {
+      return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(country => ({ value: country.value, text: country.label })))
     },
     imageFiles() {
       if (!this.selectedReservation?.completion_files) return []
@@ -1796,12 +1827,16 @@ export default {
       return `${from}-${to} / ${paginationState.total}`
     },
     openEditClientModal(client) {
+      const phone = splitPhoneNumber(client.phone)
+      const whatsapp = splitPhoneNumber(client.whatsapp_number)
       this.editingClientId = client.id
       this.clientForm = {
         name: client.name || '',
         email: client.email || '',
-        phone: client.phone || '',
-        whatsapp_number: client.whatsapp_number || '',
+        phone: phone.number,
+        phone_country_code: phone.prefix,
+        whatsapp_number: whatsapp.number,
+        whatsapp_country_code: whatsapp.prefix,
         date_of_birth: client.date_of_birth ? client.date_of_birth.substring(0, 10) : '',
         height: client.height || '',
         weight: client.weight || '',
@@ -1813,6 +1848,7 @@ export default {
       this.editClientModalShow = true
     },
     async saveClientData() {
+      if (this.hasMissingPhoneCountryCode(this.clientForm)) return
       this.savingClient = true
       try {
         const { data } = await clientsService.updateClient(this.editingClientId, this.clientForm)
@@ -1841,6 +1877,18 @@ export default {
       } finally {
         this.savingClient = false
       }
+    },
+    hasMissingPhoneCountryCode(form) {
+      if (!hasMissingPhoneCountryCode(form)) return false
+      this.$toast({
+        component: ToastificationContent,
+        props: {
+          title: this.$t('messages.error'),
+          text: this.$t('client.selectCountryCode'),
+          variant: 'danger',
+        },
+      })
+      return true
     },
 
     // ── Doctor Services ───────────────────────────────────────────
@@ -1963,6 +2011,39 @@ export default {
 .drug-results-scroll {
   max-height: 300px;
   overflow-y: auto;
+}
+
+.phone-combined-control {
+  display: flex;
+  width: 100%;
+}
+
+.country-col {
+  flex: 0 0 150px;
+  max-width: 150px;
+}
+
+.number-col {
+  flex: 1;
+  min-width: 0;
+}
+
+::v-deep .phone-country-select.custom-select {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.phone-number-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.phone-combined-control--rtl ::v-deep .phone-country-select.custom-select {
+  border-radius: 0 0.357rem 0.357rem 0;
+}
+
+.phone-combined-control--rtl .phone-number-input {
+  border-radius: 0.357rem 0 0 0.357rem;
 }
 </style>
 

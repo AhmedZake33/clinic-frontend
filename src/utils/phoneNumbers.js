@@ -27,17 +27,19 @@ export function preparePhonePayload(data = {}) {
   const payload = { ...data }
 
   if ('phone' in payload) {
-    const combined = combineWithPhonePrefix(payload.phone_country_code || payload.country_code || '', payload.phone)
+    const prefix = payload.phone_country_code || payload.country_code || ''
+    const combined = combineWithPhonePrefix(prefix, payload.phone)
     payload.phone = combined || ''
+    payload.phone_country_code = cleanPhonePrefix(prefix)
   }
 
   if ('whatsapp_number' in payload) {
-    const combined = combineWithPhonePrefix(payload.whatsapp_country_code || payload.country_code || '', payload.whatsapp_number)
+    const prefix = payload.whatsapp_country_code || payload.country_code || ''
+    const combined = combineWithPhonePrefix(prefix, payload.whatsapp_number)
     payload.whatsapp_number = combined || ''
+    payload.whatsapp_country_code = cleanPhonePrefix(prefix)
   }
 
-  delete payload.phone_country_code
-  delete payload.whatsapp_country_code
   delete payload.country_code
   delete payload.useSameMobile
 
@@ -52,4 +54,14 @@ export function splitPhoneNumber(combined) {
   if (!value.startsWith('+')) return { prefix: '', number: value }
   const prefix = sortedPrefixes.find(item => value.startsWith(item))
   return prefix ? { prefix, number: value.slice(prefix.length) } : { prefix: '', number: value }
+}
+
+function needsCountryCode(number, prefix) {
+  const value = String(number || '').trim()
+  return !!value && !value.startsWith('+') && !cleanPhonePrefix(prefix)
+}
+
+export function hasMissingPhoneCountryCode(data = {}) {
+  return needsCountryCode(data.phone, data.phone_country_code)
+    || (!data.useSameMobile && needsCountryCode(data.whatsapp_number, data.whatsapp_country_code))
 }

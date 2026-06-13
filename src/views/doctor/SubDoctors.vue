@@ -68,7 +68,7 @@
         <b-form-group :label="$t('client.phone')">
           <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="form.phone_country_code" :options="countrySelectOptions" />
+              <b-form-select class="phone-country-select" v-model="form.phone_country_code" :options="countrySelectOptions" :required="!!form.phone" />
             </div>
             <div class="number-col">
               <b-form-input class="phone-number-input" v-model="form.phone" :placeholder="$t('client.phone')" />
@@ -81,7 +81,7 @@
           </b-form-checkbox>
           <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="form.whatsapp_country_code" :options="countrySelectOptions" :disabled="form.useSameMobile" />
+              <b-form-select class="phone-country-select" v-model="form.whatsapp_country_code" :options="countrySelectOptions" :disabled="form.useSameMobile" :required="!!form.whatsapp_number && !form.useSameMobile" />
             </div>
             <div class="number-col">
               <b-form-input class="phone-number-input" v-model="form.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="form.useSameMobile" />
@@ -113,7 +113,7 @@
 <script>
 import subDoctorsApi from '@/services/subDoctors'
 import countryList from '@/utils/countries'
-import { splitPhoneNumber } from '@/utils/phoneNumbers'
+import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
@@ -213,6 +213,7 @@ export default {
       this.showModal = true
     },
     async save() {
+      if (this.hasMissingPhoneCountryCode(this.form)) return
       try {
         if (this.isEditing) {
           await subDoctorsApi.update(this.selected.id, this.form)
@@ -276,6 +277,11 @@ export default {
         this.form.whatsapp_number = this.form.phone
         this.form.whatsapp_country_code = this.form.phone_country_code
       }
+    },
+    hasMissingPhoneCountryCode(form) {
+      if (!hasMissingPhoneCountryCode(form)) return false
+      this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.error'), text: this.$t('client.selectCountryCode'), variant: 'danger' } })
+      return true
     },
   }
 }

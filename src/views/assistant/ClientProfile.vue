@@ -147,6 +147,7 @@
                 class="phone-country-select"
                 v-model="clientForm.phone_country_code"
                 :options="countrySelectOptions"
+                :required="!!clientForm.phone"
               />
             </div>
             <div class="number-col">
@@ -171,6 +172,7 @@
                 v-model="clientForm.whatsapp_country_code"
                 :options="countrySelectOptions"
                 :disabled="clientForm.useSameMobile"
+                :required="!!clientForm.whatsapp_number && !clientForm.useSameMobile"
               />
             </div>
             <div class="number-col">
@@ -264,6 +266,7 @@ import reservationsService from '@/services/reservations'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
 import countryList from '@/utils/countries'
+import { hasMissingPhoneCountryCode } from '@/utils/phoneNumbers'
 
 export default {
   components: {
@@ -402,6 +405,7 @@ export default {
       this.editModalShow = true
     },
     async saveClient() {
+      if (this.hasMissingPhoneCountryCode(this.clientForm)) return
       this.savingClient = true
       try {
         const { data } = await clientsService.updateClient(this.client.id, this.clientForm)
@@ -466,6 +470,18 @@ export default {
         this.clientForm.whatsapp_number = this.clientForm.phone
         this.clientForm.whatsapp_country_code = this.clientForm.phone_country_code
       }
+    },
+    hasMissingPhoneCountryCode(form) {
+      if (!hasMissingPhoneCountryCode(form)) return false
+      this.$toast({
+        component: ToastificationContent,
+        props: {
+          title: this.$t('messages.error'),
+          text: this.$t('client.selectCountryCode'),
+          variant: 'danger',
+        },
+      })
+      return true
     },
     viewReservation(item) {
       this.selectedReservation = item

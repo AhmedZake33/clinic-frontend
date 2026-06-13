@@ -138,6 +138,7 @@
                 class="phone-country-select"
                 v-model="form.phone_country_code"
                 :options="countrySelectOptions"
+                :required="!!form.phone"
               />
             </div>
             <div class="number-col">
@@ -168,6 +169,7 @@
                 v-model="form.whatsapp_country_code"
                 :options="countrySelectOptions"
                 :disabled="form.useSameMobile"
+                :required="!!form.whatsapp_number && !form.useSameMobile"
               />
             </div>
             <div class="number-col">
@@ -336,6 +338,7 @@ import clientsService, { splitPhoneNumber } from '@/services/clients'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
 import countryList from '@/utils/countries'
+import { hasMissingPhoneCountryCode } from '@/utils/phoneNumbers'
 
 export default {
   components: {
@@ -537,6 +540,7 @@ export default {
       this.viewModalShow = true
     },
     async saveClient() {
+      if (this.hasMissingPhoneCountryCode(this.form)) return
       this.saving = true
       try {
         if (this.editMode) {
@@ -621,6 +625,18 @@ export default {
         this.form.whatsapp_number = this.form.phone
         this.form.whatsapp_country_code = this.form.phone_country_code
       }
+    },
+    hasMissingPhoneCountryCode(form) {
+      if (!hasMissingPhoneCountryCode(form)) return false
+      this.$toast({
+        component: ToastificationContent,
+        props: {
+          title: this.$t('messages.error'),
+          text: this.$t('client.selectCountryCode'),
+          variant: 'danger',
+        },
+      })
+      return true
     },
   },
 }

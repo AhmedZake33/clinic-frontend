@@ -144,6 +144,7 @@
                     class="phone-country-select"
                     v-model="form.phone_country_code"
                     :options="countrySelectOptions"
+                    :required="!!form.phone"
                   />
                 </div>
                 <div class="number-col">
@@ -167,6 +168,7 @@
                     v-model="form.whatsapp_country_code"
                     :options="countrySelectOptions"
                     :disabled="form.useSameMobile"
+                    :required="!!form.whatsapp_number && !form.useSameMobile"
                   />
                 </div>
                 <div class="number-col">
@@ -421,7 +423,7 @@ import {
 import StatisticCardVertical from '@core/components/statistics-cards/StatisticCardVertical.vue'
 import adminService from '@/services/admin'
 import countryList from '@/utils/countries'
-import { splitPhoneNumber } from '@/utils/phoneNumbers'
+import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
@@ -628,6 +630,7 @@ export default {
     },
 
     async saveDoctor() {
+      if (this.hasMissingPhoneCountryCode(this.form)) return
       this.saving = true
       try {
         if (this.isEditing) {
@@ -751,6 +754,19 @@ export default {
         this.form.whatsapp_number = this.form.phone
         this.form.whatsapp_country_code = this.form.phone_country_code
       }
+    },
+
+    hasMissingPhoneCountryCode(form) {
+      if (!hasMissingPhoneCountryCode(form)) return false
+      this.$toast({
+        component: ToastificationContent,
+        props: {
+          title: this.$t('messages.error'),
+          text: this.$t('client.selectCountryCode'),
+          variant: 'danger',
+        },
+      })
+      return true
     },
 
     getStatusVariant(status) {

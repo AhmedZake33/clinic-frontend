@@ -79,7 +79,7 @@
         <b-form-group :label="$t('client.phone')" label-for="add-phone">
           <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="form.phone_country_code" :options="countrySelectOptions" />
+              <b-form-select class="phone-country-select" v-model="form.phone_country_code" :options="countrySelectOptions" :required="!!form.phone" />
             </div>
             <div class="number-col">
               <b-form-input id="add-phone" class="phone-number-input" v-model="form.phone" :placeholder="$t('client.phone')" />
@@ -92,7 +92,7 @@
           </b-form-checkbox>
           <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="form.whatsapp_country_code" :options="countrySelectOptions" :disabled="form.useSameMobile" />
+              <b-form-select class="phone-country-select" v-model="form.whatsapp_country_code" :options="countrySelectOptions" :disabled="form.useSameMobile" :required="!!form.whatsapp_number && !form.useSameMobile" />
             </div>
             <div class="number-col">
               <b-form-input id="add-whatsapp-number" class="phone-number-input" v-model="form.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="form.useSameMobile" />
@@ -126,7 +126,7 @@
         <b-form-group :label="$t('client.phone')" label-for="edit-phone">
           <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="editForm.phone_country_code" :options="countrySelectOptions" />
+              <b-form-select class="phone-country-select" v-model="editForm.phone_country_code" :options="countrySelectOptions" :required="!!editForm.phone" />
             </div>
             <div class="number-col">
               <b-form-input id="edit-phone" class="phone-number-input" v-model="editForm.phone" :placeholder="$t('client.phone')" />
@@ -139,7 +139,7 @@
           </b-form-checkbox>
           <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="editForm.whatsapp_country_code" :options="countrySelectOptions" :disabled="editForm.useSameMobile" />
+              <b-form-select class="phone-country-select" v-model="editForm.whatsapp_country_code" :options="countrySelectOptions" :disabled="editForm.useSameMobile" :required="!!editForm.whatsapp_number && !editForm.useSameMobile" />
             </div>
             <div class="number-col">
               <b-form-input id="edit-whatsapp-number" class="phone-number-input" v-model="editForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="editForm.useSameMobile" />
@@ -164,7 +164,7 @@ import {
 } from 'bootstrap-vue'
 import assistantsService from '@/services/assistants'
 import countryList from '@/utils/countries'
-import { splitPhoneNumber } from '@/utils/phoneNumbers'
+import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
@@ -240,6 +240,7 @@ export default {
     },
 
     async saveAssistant() {
+      if (this.hasMissingPhoneCountryCode(this.form)) return
       try {
         await assistantsService.createAssistant(this.form)
         this.showAdd = false
@@ -276,6 +277,7 @@ export default {
     },
 
     async updateAssistant() {
+      if (this.hasMissingPhoneCountryCode(this.editForm)) return
       try {
         const data = {
           name: this.editForm.name,
@@ -362,6 +364,20 @@ export default {
         form.whatsapp_number = form.phone
         form.whatsapp_country_code = form.phone_country_code
       }
+    },
+
+    hasMissingPhoneCountryCode(form) {
+      if (!hasMissingPhoneCountryCode(form)) return false
+      this.$toast({
+        component: ToastificationContent,
+        props: {
+          title: this.$t('messages.error'),
+          text: this.$t('client.selectCountryCode'),
+          icon: 'AlertTriangleIcon',
+          variant: 'danger',
+        },
+      })
+      return true
     },
   },
 }
