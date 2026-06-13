@@ -1182,6 +1182,7 @@ export default {
   computed: {
     fields() {
       return [
+        { key: 'client.id', label: this.$t('client.clientId'), formatter: value => `#${value}`, sortable: true },
         { key: 'client.name', label: this.$t('table.client'), sortable: true },
         { key: 'appointment_date', label: this.$t('reservation.appointment'), formatter: this.formatDateTime, sortable: true },
         { key: 'status', label: this.$t('table.status'), sortable: true },

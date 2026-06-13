@@ -37,6 +37,7 @@
     "logout": "تسجيل الخروج"
   },
   "client": {
+    "clientId": "رقم العميل",
     "name": "اسم العميل",
     "phone": "رقم الهاتف",
     "whatsappNumber": "رقم واتساب",
@@ -61,7 +62,7 @@
     "clientDetails": "تفاصيل العميل",
     "bloodType": "فصيلة الدم",
     "clientsManagement": "إدارة العملاء",
-    "searchPlaceholder": "البحث في الاسم أو البريد الإلكتروني أو الهاتف",
+    "searchPlaceholder": "ابحث برقم العميل # أو الاسم أو البريد الإلكتروني أو الهاتف",
     "filter": "تصفية",
     "reset": "إعادة تعيين",
     "selectChronicIllnesses": "اختر مرضاً مزمناً واحداً أو أكثر",
@@ -102,7 +103,7 @@
     "printLastPrescription": "طباعة آخر وصفة طبية",
     "appointmentDate": "تاريخ ووقت الموعد",
     "notes": "الملاحظات",
-    "searchByClientOrNotes": "البحث عن العميل أو الملاحظات",
+    "searchByClientOrNotes": "ابحث برقم العميل # أو العميل أو الهاتف أو الملاحظات",
     "from": "من",
     "to": "إلى",
     "myReservations": "حجوزاتي",

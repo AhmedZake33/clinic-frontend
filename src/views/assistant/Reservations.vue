@@ -198,7 +198,7 @@
               class="client-search-item"
               @mousedown.prevent="selectClient(client)"
             >
-              <strong>{{ client.name }}</strong>
+              <strong>#{{ client.id }} - {{ client.name }}</strong>
               <small class="text-muted d-block">
                 {{ client.phone }}
                 <span v-if="client.whatsapp_number"> | {{ client.whatsapp_number }}</span>
@@ -944,6 +944,7 @@ export default {
         notes: '',
       },
       fields: [
+        { key: 'client.id', label: 'client.clientId', sortable: true, formatter: value => `#${value}` },
         { key: 'client.name', label: 'table.client', sortable: true },
         { key: 'doctor.name', label: 'table.doctor', sortable: true },
         { key: 'appointment_date', label: 'table.appointment', formatter: this.formatDateTime, sortable: true },
@@ -987,7 +988,7 @@ export default {
     clientOptions() {
       return this.clients.map(client => ({
         value: client.id,
-        text: `${client.name} - ${client.phone}`,
+        text: `#${client.id} - ${client.name} - ${client.phone}`,
       }))
     },
     filteredClients() {
@@ -995,7 +996,7 @@ export default {
     },
     selectedClientDisplay() {
       const c = this.clients.find(cl => cl.id === this.form.client_id)
-      return c ? `${c.name} - ${c.phone}` : ''
+      return c ? `#${c.id} - ${c.name} - ${c.phone}` : ''
     },
     doctorOptions() {
       return this.doctors.map(doctor => ({
@@ -1169,7 +1170,7 @@ export default {
 
       this.suppressClientSearchWatch = true
       this.form.client_id = client.id
-      this.clientSearch = `${client.name} - ${client.phone}`
+      this.clientSearch = `#${client.id} - ${client.name} - ${client.phone}`
       this.clientDropdownOpen = false
     },
     async fetchClients(search = '') {

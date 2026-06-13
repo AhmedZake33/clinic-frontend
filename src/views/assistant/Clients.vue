@@ -285,6 +285,7 @@
       <div v-if="selectedClient">
         <b-row>
           <b-col cols="12" md="6">
+            <p><strong>{{ $t('client.clientId') }}:</strong> #{{ selectedClient.id }}</p>
             <p><strong>{{ $t('client.name') }}:</strong> {{ selectedClient.name }}</p>
             <p><strong>{{ $t('clinic.email') }}:</strong> {{ selectedClient.email }}</p>
             <p><strong>{{ $t('client.phone') }}:</strong> {{ selectedClient.phone }}</p>
@@ -360,6 +361,7 @@ export default {
     },
     computedFields() {
       return [
+        { key: 'id', label: this.$t('client.clientId'), sortable: true, formatter: value => `#${value}` },
         { key: 'name', label: this.$t('client.name'), sortable: true },
         { key: 'email', label: this.$t('clinic.email'), sortable: true },
         { key: 'phone', label: this.$t('client.phone') },
