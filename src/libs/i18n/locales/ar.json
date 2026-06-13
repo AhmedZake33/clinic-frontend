@@ -527,7 +527,31 @@
     "deleteText": "لا يمكن التراجع عن هذا الإجراء.",
     "noAssistants": "لا يوجد مساعدون",
     "createdAt": "تاريخ الإنشاء",
-    "actions": "الإجراءات"
+    "actions": "الإجراءات",
+    "permissions": "الصلاحيات",
+    "permissionsMap": {
+      "assistant_view_dashboard": "عرض لوحة التحكم",
+      "assistant_view_clients": "عرض العملاء",
+      "assistant_create_clients": "إضافة عملاء",
+      "assistant_edit_clients": "تعديل العملاء",
+      "assistant_delete_clients": "حذف العملاء",
+      "assistant_view_reservations": "عرض الحجوزات",
+      "assistant_create_reservations": "إنشاء الحجوزات",
+      "assistant_edit_reservations": "تعديل الحجوزات",
+      "assistant_delete_reservations": "حذف الحجوزات",
+      "assistant_confirm_reservations": "تأكيد الحجوزات",
+      "assistant_complete_reservations": "تقفيل الحجز",
+      "assistant_view_financials": "عرض الماليات",
+      "assistant_create_financials": "إضافة ماليات",
+      "assistant_edit_financials": "تعديل الماليات",
+      "assistant_delete_financials": "حذف الماليات",
+      "assistant_view_purchases": "عرض المشتريات",
+      "assistant_create_purchases": "إضافة مشتريات",
+      "assistant_edit_purchases": "تعديل المشتريات",
+      "assistant_delete_purchases": "حذف المشتريات",
+      "assistant_view_waiting_queue": "عرض قائمة الانتظار",
+      "assistant_check_in_patients": "تسجيل وصول المرضى"
+    }
   },
 
   "assistant": {
@@ -550,7 +574,31 @@
     "deleteText": "لا يمكن التراجع عن هذا الإجراء.",
     "noAssistants": "لا يوجد مساعدون",
     "createdAt": "تاريخ الإنشاء",
-    "actions": "الإجراءات"
+    "actions": "الإجراءات",
+    "permissions": "الصلاحيات",
+    "permissionsMap": {
+      "assistant_view_dashboard": "عرض لوحة التحكم",
+      "assistant_view_clients": "عرض العملاء",
+      "assistant_create_clients": "إضافة عملاء",
+      "assistant_edit_clients": "تعديل العملاء",
+      "assistant_delete_clients": "حذف العملاء",
+      "assistant_view_reservations": "عرض الحجوزات",
+      "assistant_create_reservations": "إنشاء الحجوزات",
+      "assistant_edit_reservations": "تعديل الحجوزات",
+      "assistant_delete_reservations": "حذف الحجوزات",
+      "assistant_confirm_reservations": "تأكيد الحجوزات",
+      "assistant_complete_reservations": "تقفيل الحجز",
+      "assistant_view_financials": "عرض الماليات",
+      "assistant_create_financials": "إضافة ماليات",
+      "assistant_edit_financials": "تعديل الماليات",
+      "assistant_delete_financials": "حذف الماليات",
+      "assistant_view_purchases": "عرض المشتريات",
+      "assistant_create_purchases": "إضافة مشتريات",
+      "assistant_edit_purchases": "تعديل المشتريات",
+      "assistant_delete_purchases": "حذف المشتريات",
+      "assistant_view_waiting_queue": "عرض قائمة الانتظار",
+      "assistant_check_in_patients": "تسجيل وصول المرضى"
+    }
   },
   "admin": {
     "adminMenu": "قائمة الإدارة",

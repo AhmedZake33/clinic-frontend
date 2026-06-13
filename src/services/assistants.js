@@ -6,6 +6,10 @@ export default {
     return apiClient.get('/assistants')
   },
 
+  getAssistantPermissions() {
+    return apiClient.get('/assistants/permissions')
+  },
+
   createAssistant(data) {
     return apiClient.post('/assistants', preparePhonePayload(data))
   },

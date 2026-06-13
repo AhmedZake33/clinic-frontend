@@ -105,6 +105,14 @@
         <b-form-group :label="$t('assistant.confirmPassword')" label-for="add-password-confirm">
           <b-form-input id="add-password-confirm" v-model="form.password_confirmation" type="password" required />
         </b-form-group>
+        <b-form-group :label="$t('assistant.permissions')" label-for="add-permissions">
+          <b-form-checkbox-group
+            id="add-permissions"
+            v-model="form.permissions"
+            :options="assistantPermissionOptions"
+            stacked
+          />
+        </b-form-group>
       </b-form>
     </b-modal>
 
@@ -152,6 +160,14 @@
         <b-form-group :label="$t('assistant.confirmPassword')" label-for="edit-password-confirm">
           <b-form-input id="edit-password-confirm" v-model="editForm.password_confirmation" type="password" />
         </b-form-group>
+        <b-form-group :label="$t('assistant.permissions')" label-for="edit-permissions">
+          <b-form-checkbox-group
+            id="edit-permissions"
+            v-model="editForm.permissions"
+            :options="assistantPermissionOptions"
+            stacked
+          />
+        </b-form-group>
       </b-form>
     </b-modal>
   </div>
@@ -160,7 +176,7 @@
 <script>
 import {
   BCard, BRow, BCol, BButton, BTable, BSpinner,
-  BModal, BForm, BFormGroup, BFormInput, BFormSelect, BFormCheckbox,
+  BModal, BForm, BFormGroup, BFormInput, BFormSelect, BFormCheckbox, BFormCheckboxGroup,
 } from 'bootstrap-vue'
 import assistantsService from '@/services/assistants'
 import countryList from '@/utils/countries'
@@ -170,12 +186,13 @@ import ToastificationContent from '@core/components/toastification/Toastificatio
 export default {
   components: {
     BCard, BRow, BCol, BButton, BTable, BSpinner,
-    BModal, BForm, BFormGroup, BFormInput, BFormSelect, BFormCheckbox,
+    BModal, BForm, BFormGroup, BFormInput, BFormSelect, BFormCheckbox, BFormCheckboxGroup,
   },
   data() {
     return {
       loading: false,
       assistants: [],
+      availablePermissions: [],
       showAdd: false,
       showEdit: false,
       form: {
@@ -187,6 +204,7 @@ export default {
         whatsapp_country_code: '',
         useSameMobile: false,
         password: '',
+        permissions: [],
         password_confirmation: '',
       },
       editForm: {
@@ -199,6 +217,7 @@ export default {
         whatsapp_country_code: '',
         useSameMobile: false,
         password: '',
+        permissions: [],
         password_confirmation: '',
       },
     }
@@ -217,11 +236,27 @@ export default {
         { key: 'actions', label: this.$t('assistant.actions') },
       ]
     },
+    assistantPermissionOptions() {
+      return this.availablePermissions.map(permission => ({
+        value: permission.name,
+        text: this.permissionLabel(permission.name),
+      }))
+    },
   },
   mounted() {
+    this.fetchAssistantPermissions()
     this.fetchAssistants()
   },
   methods: {
+    async fetchAssistantPermissions() {
+      try {
+        const response = await assistantsService.getAssistantPermissions()
+        this.availablePermissions = response.data || []
+      } catch (error) {
+        this.availablePermissions = []
+      }
+    },
+
     async fetchAssistants() {
       this.loading = true
       try {
@@ -236,12 +271,16 @@ export default {
 
     showAddModal() {
       this.form = this.emptyForm()
+      this.form.permissions = this.availablePermissions.map(permission => permission.name)
       this.showAdd = true
     },
 
     async saveAssistant() {
       try {
-        await assistantsService.createAssistant(this.form)
+        await assistantsService.createAssistant({
+          ...this.form,
+          permissions: this.normalizePermissionNames(this.form.permissions),
+        })
         this.showAdd = false
         this.fetchAssistants()
         this.$toast({
@@ -270,6 +309,7 @@ export default {
         whatsapp_country_code: whatsapp.prefix,
         useSameMobile: assistant.phone && assistant.phone === assistant.whatsapp_number,
         password: '',
+        permissions: this.normalizePermissionNames(assistant.permissions),
         password_confirmation: '',
       }
       this.showEdit = true
@@ -285,6 +325,7 @@ export default {
           whatsapp_number: this.editForm.whatsapp_number,
           whatsapp_country_code: this.editForm.whatsapp_country_code,
           useSameMobile: this.editForm.useSameMobile,
+          permissions: this.normalizePermissionNames(this.editForm.permissions),
         }
         if (this.editForm.password) {
           data.password = this.editForm.password
@@ -353,6 +394,7 @@ export default {
         whatsapp_country_code: '',
         useSameMobile: false,
         password: '',
+        permissions: [],
         password_confirmation: '',
       }
     },
@@ -362,6 +404,25 @@ export default {
         form.whatsapp_number = form.phone
         form.whatsapp_country_code = form.phone_country_code
       }
+    },
+    permissionLabel(permission) {
+      const key = `assistant.permissionsMap.${permission.replaceAll('.', '_').replaceAll('-', '_')}`
+      const translated = this.$t(key)
+      return translated === key ? permission : translated
+    },
+    normalizePermissionNames(permissions) {
+      if (!Array.isArray(permissions)) return []
+      const allowedPermissions = this.availablePermissions.map(permission => permission.name)
+
+      return permissions
+        .map(permission => {
+          if (typeof permission === 'string') return permission
+          if (permission && typeof permission.name === 'string') return permission.name
+          if (permission && typeof permission.value === 'string') return permission.value
+          return ''
+        })
+        .filter(permission => allowedPermissions.includes(permission))
+        .filter(Boolean)
     },
   },
 }

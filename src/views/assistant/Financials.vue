@@ -98,7 +98,7 @@
           <h4>{{ $t('financial.todayFinancials') }}</h4>
         </b-col>
         <b-col cols="12" md="8" class="text-right">
-          <b-button variant="primary" @click="showAddModal">
+          <b-button v-permission="'assistant.create-financials'" variant="primary" @click="showAddModal">
             <feather-icon icon="PlusIcon" class="mr-50" />
             {{ $t('financial.addFinancial') }}
           </b-button>
@@ -171,13 +171,13 @@
           <b-button v-b-tooltip.hover :title="$t('actions.view')" variant="info" size="sm" class="mr-1" @click="viewFinancial(data.item)">
             <feather-icon icon="EyeIcon" />
           </b-button>
-          <b-button v-if="parseFloat(data.item.remaining) > 0" v-b-tooltip.hover :title="$t('financial.pay')" variant="success" size="sm" class="mr-1" @click="viewFinancial(data.item); $nextTick(() => { activeTab = 1 })">
+          <b-button v-if="parseFloat(data.item.remaining) > 0" v-permission="'assistant.edit-financials'" v-b-tooltip.hover :title="$t('financial.pay')" variant="success" size="sm" class="mr-1" @click="viewFinancial(data.item); $nextTick(() => { activeTab = 1 })">
             <feather-icon icon="CreditCardIcon" />
           </b-button>
-          <b-button v-b-tooltip.hover :title="$t('actions.edit')" variant="warning" size="sm" class="mr-1" @click="showEditModal(data.item)">
+          <b-button v-permission="'assistant.edit-financials'" v-b-tooltip.hover :title="$t('actions.edit')" variant="warning" size="sm" class="mr-1" @click="showEditModal(data.item)">
             <feather-icon icon="EditIcon" />
           </b-button>
-          <b-button v-b-tooltip.hover :title="$t('actions.delete')" variant="danger" size="sm" @click="deleteFinancial(data.item)">
+          <b-button v-permission="'assistant.delete-financials'" v-b-tooltip.hover :title="$t('actions.delete')" variant="danger" size="sm" @click="deleteFinancial(data.item)">
             <feather-icon icon="TrashIcon" />
           </b-button>
         </template>
@@ -246,10 +246,10 @@
             >
               <feather-icon icon="CreditCardIcon" />
             </b-button>
-            <b-button variant="warning" size="sm" @click="showEditModal(item)">
+            <b-button v-permission="'assistant.edit-financials'" variant="warning" size="sm" @click="showEditModal(item)">
               <feather-icon icon="EditIcon" />
             </b-button>
-            <b-button variant="danger" size="sm" @click="deleteFinancial(item)">
+            <b-button v-permission="'assistant.delete-financials'" variant="danger" size="sm" @click="deleteFinancial(item)">
               <feather-icon icon="TrashIcon" />
             </b-button>
           </div>
@@ -399,7 +399,7 @@
             </p>
             <p><strong>{{ $t('reservation.created') }}:</strong> {{ formatDateTime(selectedFinancial.created_at) }}</p>
             <div v-if="parseFloat(selectedFinancial.remaining) > 0" class="text-right mt-1">
-              <b-button variant="success" @click="goToPayTab">
+              <b-button v-permission="'assistant.edit-financials'" variant="success" @click="goToPayTab">
                 <feather-icon icon="CreditCardIcon" class="mr-50" />
                 {{ $t('financial.pay') }}
               </b-button>
@@ -417,7 +417,7 @@
               </b-alert>
 
               <!-- Add transaction form -->
-              <b-card v-if="parseFloat(selectedFinancial.remaining) > 0" class="mb-1" bg-variant="light">
+              <b-card v-if="parseFloat(selectedFinancial.remaining) > 0" v-permission="'assistant.edit-financials'" class="mb-1" bg-variant="light">
                 <b-form @submit.prevent="addTransactions">
                   <b-row v-for="(row, idx) in txRows" :key="idx" align-v="end" class="mb-50">
                     <b-col cols="12" sm="4">
@@ -481,7 +481,7 @@
                   {{ formatDateTime(data.value) }}
                 </template>
                 <template #cell(actions)="data">
-                  <b-button variant="danger" size="sm" @click="deleteTransaction(data.item)">
+                  <b-button v-permission="'assistant.edit-financials'" variant="danger" size="sm" @click="deleteTransaction(data.item)">
                     <feather-icon icon="TrashIcon" />
                   </b-button>
                 </template>

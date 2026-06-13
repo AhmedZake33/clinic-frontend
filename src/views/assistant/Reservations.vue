@@ -6,7 +6,7 @@
           <h4>{{ $t('reservation.reservationsList') }}</h4>
         </b-col>
         <b-col cols="12" md="8" class="text-right">
-          <b-button variant="primary" @click="showAddModal">
+          <b-button v-permission="'assistant.create-reservations'" variant="primary" @click="showAddModal">
             <feather-icon icon="PlusIcon" class="mr-50" />
             {{ $t('actions.newReservation') }}
           </b-button>
@@ -84,6 +84,7 @@
           </b-button>
           <b-button
             v-if="!data.item.checked_in_at && (data.item.status === 'pending' || data.item.status === 'confirmed')"
+            v-permission="'assistant.check-in-patients'"
             v-b-tooltip.hover
             :title="$t('queue.checkIn')"
             variant="primary"
@@ -95,6 +96,7 @@
           </b-button>
           <b-button
             v-if="data.item.status === 'pending'"
+            v-permission="'assistant.confirm-reservations'"
             v-b-tooltip.hover
             :title="$t('actions.confirm')"
             variant="success"
@@ -106,6 +108,7 @@
           </b-button>
           <b-button
             v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
+            v-permission="'assistant.complete-reservations'"
             v-b-tooltip.hover
             :title="$t('reservation.completeReservation')"
             variant="success"
@@ -117,6 +120,7 @@
           </b-button>
           <b-button
             v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
+            v-permission="'assistant.edit-reservations'"
             v-b-tooltip.hover
             :title="$t('actions.edit')"
             variant="warning"
@@ -128,6 +132,7 @@
           </b-button>
           <b-button
             v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
+            v-permission="'assistant.delete-reservations'"
             v-b-tooltip.hover
             :title="$t('actions.cancel')"
             variant="danger"
