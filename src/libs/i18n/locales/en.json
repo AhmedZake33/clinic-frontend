@@ -603,6 +603,7 @@
     "exceedsRemaining": "Exceeds remaining balance",
     "addSuccess": "Payment recorded successfully",
     "noTransactions": "No transactions recorded yet",
+    "searchByClient": "Search by #Client ID, client, phone, or email",
     "dateFrom": "From Date",
     "dateTo": "To Date"
   },

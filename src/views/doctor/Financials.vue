@@ -130,6 +130,9 @@
           <b-button v-if="parseFloat(data.item.remaining) > 0" v-b-tooltip.hover :title="$t('financial.pay')" variant="success" size="sm" @click="viewFinancial(data.item); $nextTick(() => { activeTab = 1 })">
             <feather-icon icon="CreditCardIcon" />
           </b-button>
+          <b-button v-b-tooltip.hover :title="$t('actions.edit')" variant="warning" size="sm" class="ml-1" @click="showEditModal(data.item)">
+            <feather-icon icon="EditIcon" />
+          </b-button>
         </template>
 
         <template #table-busy>
@@ -195,6 +198,9 @@
               @click="viewFinancial(item); $nextTick(() => { activeTab = 1 })"
             >
               <feather-icon icon="CreditCardIcon" />
+            </b-button>
+            <b-button variant="warning" size="sm" @click="showEditModal(item)">
+              <feather-icon icon="EditIcon" />
             </b-button>
           </div>
         </b-card>
@@ -361,6 +367,72 @@
         </b-tabs>
       </div>
     </b-modal>
+
+    <!-- Edit Modal -->
+    <b-modal
+      v-model="modalShow"
+      :title="$t('financial.editFinancial')"
+      hide-footer
+      size="lg"
+    >
+      <b-form @submit.prevent="saveFinancial">
+        <b-form-group :label="$t('financial.amount')" label-for="doctor-financial-amount">
+          <b-form-input
+            id="doctor-financial-amount"
+            v-model="form.amount"
+            type="number"
+            step="0.01"
+            min="0"
+            required
+          />
+        </b-form-group>
+
+        <b-form-group :label="$t('financial.paid')" label-for="doctor-financial-paid">
+          <b-form-input
+            id="doctor-financial-paid"
+            v-model="form.paid"
+            type="number"
+            step="0.01"
+            min="0"
+            disabled
+          />
+          <small class="text-muted d-block mt-50">
+            {{ $t('financial.paid') }}: {{ formatCurrency(editPreview.paid) }}
+            |
+            {{ $t('financial.remaining') }}: {{ formatCurrency(editPreview.remaining) }}
+            |
+            {{ $t('financial.paymentStatus') }}: {{ $t('financial.' + editPreview.status) }}
+          </small>
+        </b-form-group>
+
+        <b-form-group :label="$t('financial.paymentMethod')" label-for="doctor-financial-payment-method">
+          <b-form-select
+            id="doctor-financial-payment-method"
+            v-model="form.payment_method"
+            :options="paymentMethodFormOptions"
+            required
+          />
+        </b-form-group>
+
+        <b-form-group :label="$t('reservation.notes')" label-for="doctor-financial-notes">
+          <b-form-textarea
+            id="doctor-financial-notes"
+            v-model="form.notes"
+            rows="3"
+          />
+        </b-form-group>
+
+        <div class="text-right">
+          <b-button variant="secondary" class="mr-1" @click="modalShow = false">
+            {{ $t('actions.cancel') }}
+          </b-button>
+          <b-button type="submit" variant="primary" :disabled="saving">
+            <b-spinner v-if="saving" small class="mr-1" />
+            {{ $t('actions.save') }}
+          </b-button>
+        </div>
+      </b-form>
+    </b-modal>
     </div>
   </div>
 </template>
@@ -379,6 +451,7 @@ import {
   BFormGroup,
   BFormInput,
   BFormSelect,
+  BFormTextarea,
   BSpinner,
   BBadge,
   BTabs,
@@ -406,6 +479,7 @@ export default {
     BFormGroup,
     BFormInput,
     BFormSelect,
+    BFormTextarea,
     BSpinner,
     BBadge,
     BTabs,
@@ -429,13 +503,22 @@ export default {
       },
       pageLoading: true,
       loading: false,
+      modalShow: false,
+      saving: false,
       viewModalShow: false,
       selectedFinancial: null,
+      editId: null,
       filters: {
         search: '',
         payment_status: '',
         payment_method: '',
         date: '',
+      },
+      form: {
+        amount: '',
+        paid: '',
+        payment_method: 'cash',
+        notes: '',
       },
       // Transactions
       transactions: [],
@@ -522,6 +605,20 @@ export default {
     txRowsTotal() {
       return this.txRows.reduce((sum, r) => sum + (parseFloat(r.amount) || 0), 0)
     },
+    editPreview() {
+      const amount = Math.max(0, parseFloat(this.form.amount) || 0)
+      const paid = Math.min(Math.max(0, parseFloat(this.form.paid) || 0), amount)
+      const remaining = Math.max(0, amount - paid)
+      let status = 'unpaid'
+
+      if (paid > 0 && remaining <= 0) {
+        status = 'paid'
+      } else if (paid > 0) {
+        status = 'partial'
+      }
+
+      return { paid, remaining, status }
+    },
   },
   methods: {
     async fetchFinancials() {
@@ -599,6 +696,40 @@ export default {
       return serviceNames
         ? `${this.$t('financial.additionalServicesInvoice')}: ${serviceNames}`
         : this.$t('financial.additionalServicesInvoice')
+    },
+    showEditModal(item) {
+      this.editId = item.id
+      this.form = {
+        amount: item.amount,
+        paid: item.paid,
+        payment_method: item.payment_method,
+        notes: item.notes || '',
+      }
+      this.modalShow = true
+    },
+    async saveFinancial() {
+      this.saving = true
+      try {
+        await financialsService.updateFinancial(this.editId, this.form)
+        this.modalShow = false
+        await this.fetchFinancials()
+        await this.fetchSummary()
+        this.$toast({
+          component: ToastificationContent,
+          props: { title: this.$t('messages.success'), text: this.$t('messages.updateSuccess'), variant: 'success' },
+        })
+      } catch (error) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: this.$t('messages.error'),
+            text: error.response?.data?.message || this.$t('messages.saveError'),
+            variant: 'danger',
+          },
+        })
+      } finally {
+        this.saving = false
+      }
     },
     viewFinancial(item) {
       this.selectedFinancial = { ...item }

@@ -16,13 +16,16 @@
         <!-- Filters -->
         <b-form @submit.prevent="applyFilters" class="mb-2">
           <b-row>
-            <b-col cols="6" md="3" class="mb-1 mb-md-0">
+            <b-col cols="12" md="3" class="mb-1 mb-md-0">
+              <b-form-input v-model="filters.search" :placeholder="$t('transaction.searchByClient')" />
+            </b-col>
+            <b-col cols="6" md="2" class="mb-1 mb-md-0">
               <b-form-select v-model="filters.payment_method" :options="paymentMethodOptions" />
             </b-col>
-            <b-col cols="6" md="3" class="mb-1 mb-md-0">
+            <b-col cols="6" md="2" class="mb-1 mb-md-0">
               <b-form-input v-model="filters.date_from" type="date" :placeholder="$t('transaction.dateFrom')" />
             </b-col>
-            <b-col cols="6" md="3" class="mb-1 mb-md-0">
+            <b-col cols="6" md="2" class="mb-1 mb-md-0">
               <b-form-input v-model="filters.date_to" type="date" :placeholder="$t('transaction.dateTo')" />
             </b-col>
             <b-col cols="12" md="3" class="transaction-filter-actions text-right">
@@ -170,6 +173,7 @@ export default {
       pageLoading: true,
       loading: false,
       filters: {
+        search: '',
         payment_method: '',
         date_from: '',
         date_to: '',
@@ -210,6 +214,7 @@ export default {
       this.loading = true
       try {
         const params = { page: this.pagination.current_page }
+        if (this.filters.search) params.search = this.filters.search
         if (this.filters.payment_method) params.payment_method = this.filters.payment_method
         if (this.filters.date_from) params.date_from = this.filters.date_from
         if (this.filters.date_to) params.date_to = this.filters.date_to
@@ -236,7 +241,7 @@ export default {
       this.fetchTransactions()
     },
     resetFilters() {
-      this.filters = { payment_method: '', date_from: '', date_to: '' }
+      this.filters = { search: '', payment_method: '', date_from: '', date_to: '' }
       this.pagination.current_page = 1
       this.fetchTransactions()
     },

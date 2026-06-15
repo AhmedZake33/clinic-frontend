@@ -312,6 +312,13 @@
             min="0"
             :disabled="editMode"
           />
+          <small v-if="editMode" class="text-muted d-block mt-50">
+            {{ $t('financial.paid') }}: {{ formatCurrency(editPreview.paid) }}
+            |
+            {{ $t('financial.remaining') }}: {{ formatCurrency(editPreview.remaining) }}
+            |
+            {{ $t('financial.paymentStatus') }}: {{ $t('financial.' + editPreview.status) }}
+          </small>
         </b-form-group>
 
         <b-form-group v-if="!editMode" :label="$t('financial.paymentMethod')" label-for="payment_method">
@@ -681,6 +688,20 @@ export default {
     },
     txRowsTotal() {
       return this.txRows.reduce((sum, r) => sum + (parseFloat(r.amount) || 0), 0)
+    },
+    editPreview() {
+      const amount = Math.max(0, parseFloat(this.form.amount) || 0)
+      const paid = Math.min(Math.max(0, parseFloat(this.form.paid) || 0), amount)
+      const remaining = Math.max(0, amount - paid)
+      let status = 'unpaid'
+
+      if (paid > 0 && remaining <= 0) {
+        status = 'paid'
+      } else if (paid > 0) {
+        status = 'partial'
+      }
+
+      return { paid, remaining, status }
     },
   },
   methods: {
