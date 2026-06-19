@@ -6,7 +6,7 @@
         <b-card>
           <b-row>
             <b-col cols="12" md="8">
-              <h2>{{ $t('dashboard.welcomeBack') }}, {{ user ? user.name : $t('reservation.doctor') }}! 👨‍⚕️</h2>
+              <h2>{{ $t('dashboard.welcomeBack') }}, {{ user ? user.name : $t('reservation.doctor') }}!</h2>
               <p class="mb-2">
                 {{ $t('dashboard.doctorOverview') }}
               </p>

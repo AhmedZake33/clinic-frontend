@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '@/router'
 
 const apiClient = axios.create({
   baseURL: `${process.env.VUE_APP_BASE_URL}`,
@@ -26,14 +27,21 @@ apiClient.interceptors.request.use(config => {
   return config
 })
 
-// Handle 401 errors
+// Handle authentication and subscription errors
 apiClient.interceptors.response.use(
   response => response,
   error => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
-      window.location.href = '/login'
+      router.replace({ name: 'login' }).catch(() => {})
+    } else if (
+      error.response
+      && error.response.status === 403
+      && error.response.data?.code === 'subscription_expired'
+      && localStorage.getItem('token')
+    ) {
+      router.replace({ name: 'subscription-expired' }).catch(() => {})
     }
     return Promise.reject(error)
   }

@@ -9,6 +9,15 @@ export default [
     },
   },
   {
+    path: '/subscription-expired',
+    name: 'subscription-expired',
+    component: () => import('@/views/SubscriptionExpired.vue'),
+    meta: {
+      layout: 'full',
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/forgot-password',
     name: 'forgot-password',
     component: () => import('@/views/ForgotPassword.vue'),

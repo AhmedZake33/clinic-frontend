@@ -888,6 +888,11 @@
     "preview": "Print Preview",
     "saved": "Print settings saved successfully"
   },
+  "subscriptionExpired": {
+    "title": "Subscription Expired",
+    "message": "Your subscription has expired. Please contact the administrator to renew it.",
+    "backToLogin": "Back to Login"
+  },
   "auth": {
     "forgotPassword": "Forgot Password?",
     "forgotPasswordTitle": "Forgot Password",
