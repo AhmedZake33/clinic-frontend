@@ -50,38 +50,40 @@
         show-empty
       >
         <template #cell(actions)="data">
-          <b-button
-            variant="info"
-            size="sm"
-            class="mr-1"
-            @click="viewClient(data.item)"
-          >
-            <feather-icon icon="EyeIcon" />
-          </b-button>
-          <b-button
-            variant="primary"
-            size="sm"
-            class="mr-1"
-            @click="goToProfile(data.item.id)"
-          >
-            <feather-icon icon="UserIcon" class="mr-50" />
-            {{ $t('client.clientDetails') }}
-          </b-button>
-          <b-button
-            variant="warning"
-            size="sm"
-            class="mr-1"
-            @click="editClient(data.item)"
-          >
-            <feather-icon icon="EditIcon" />
-          </b-button>
-          <b-button
-            variant="danger"
-            size="sm"
-            @click="deleteClient(data.item.id)"
-          >
-            <feather-icon icon="TrashIcon" />
-          </b-button>
+          <responsive-table-actions>
+            <b-button
+              variant="info"
+              size="sm"
+              class="mr-1"
+              @click="viewClient(data.item)"
+            >
+              <feather-icon icon="EyeIcon" />
+            </b-button>
+            <b-button
+              variant="primary"
+              size="sm"
+              class="mr-1"
+              @click="goToProfile(data.item.id)"
+            >
+              <feather-icon icon="UserIcon" class="mr-50" />
+              {{ $t('client.clientDetails') }}
+            </b-button>
+            <b-button
+              variant="warning"
+              size="sm"
+              class="mr-1"
+              @click="editClient(data.item)"
+            >
+              <feather-icon icon="EditIcon" />
+            </b-button>
+            <b-button
+              variant="danger"
+              size="sm"
+              @click="deleteClient(data.item.id)"
+            >
+              <feather-icon icon="TrashIcon" />
+            </b-button>
+          </responsive-table-actions>
         </template>
 
         <template #table-busy>
@@ -339,6 +341,7 @@ import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clie
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode } from '@/utils/phoneNumbers'
+import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
   components: {
@@ -356,6 +359,7 @@ export default {
     BFormSelect,
     BFormTextarea,
     BSpinner,
+    ResponsiveTableActions,
     vSelect,
   },
   computed: {

@@ -82,9 +82,11 @@
           {{ holidayDisplay(data.item) }}
         </template>
         <template #cell(actions)="data">
-          <b-button size="sm" variant="danger" v-b-tooltip.hover :title="$t('actions.delete')" @click="removeHoliday(data.item)">
-            <feather-icon icon="TrashIcon" />
-          </b-button>
+          <responsive-table-actions>
+            <b-button size="sm" variant="danger" v-b-tooltip.hover :title="$t('actions.delete')" @click="removeHoliday(data.item)">
+              <feather-icon icon="TrashIcon" />
+            </b-button>
+          </responsive-table-actions>
         </template>
       </b-table>
 
@@ -108,6 +110,7 @@
 import { BCard, BForm, BTable, BPagination, BButton, BRow, BCol, BFormInput, BSpinner, BFormGroup, BFormSelect, VBTooltip } from 'bootstrap-vue'
 import scheduleService from '@/services/schedule'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 let slotKeyCounter = 0
 
@@ -115,7 +118,7 @@ export default {
   directives: {
     'b-tooltip': VBTooltip,
   },
-  components: { BCard, BForm, BTable, BPagination, BButton, BRow, BCol, BFormInput, BSpinner, BFormGroup, BFormSelect },
+  components: { BCard, BForm, BTable, BPagination, BButton, BRow, BCol, BFormInput, BSpinner, BFormGroup, BFormSelect, ResponsiveTableActions },
   data() {
     return {
       user: null,

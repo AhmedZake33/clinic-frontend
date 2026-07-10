@@ -42,7 +42,7 @@ export default {
       {
         locale: 'ar',
         img: '',
-        name: 'عربى',
+        name: 'عربي',
         RTL: true,
       },
     ]

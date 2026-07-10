@@ -64,8 +64,7 @@
       "epilepsy": "Epilepsy",
       "arthritis": "Arthritis",
       "copd": "COPD"
-    }
-    ,
+    },
     "countryCode": "Country Code",
     "selectCountryCode": "-- Select country code --"
   },
@@ -493,7 +492,9 @@
     "waitingQueue": "Waiting Queue",
     "assistants": "My Assistants",
     "rolesPermissions": "Roles & Permissions",
-    "total": "Total"
+    "total": "Total",
+    "onlineBooking": "Online Booking",
+    "onlineReservations": "Online Reservations"
   },
   "help": {
     "quickTips": "Quick Tips"
@@ -800,7 +801,6 @@
     "enableSound": "Enable Sound",
     "soundEnabled": "Sound notifications enabled!"
   },
-
   "services": {
     "myServices": "Additional Services",
     "addService": "Add Service",

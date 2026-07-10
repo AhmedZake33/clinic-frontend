@@ -48,12 +48,14 @@
         </template>
 
         <template #cell(actions)="data">
-          <b-button v-if="canManageDiagnoses" size="sm" variant="flat-primary" class="btn-icon mr-25" @click="editDiagnosis(data.item)">
-            <feather-icon icon="EditIcon" />
-          </b-button>
-          <b-button v-if="canManageDiagnoses" size="sm" variant="flat-danger" class="btn-icon" @click="confirmDelete(data.item)">
-            <feather-icon icon="TrashIcon" />
-          </b-button>
+          <responsive-table-actions>
+            <b-button v-if="canManageDiagnoses" size="sm" variant="flat-primary" class="btn-icon mr-25" @click="editDiagnosis(data.item)">
+              <feather-icon icon="EditIcon" />
+            </b-button>
+            <b-button v-if="canManageDiagnoses" size="sm" variant="flat-danger" class="btn-icon" @click="confirmDelete(data.item)">
+              <feather-icon icon="TrashIcon" />
+            </b-button>
+          </responsive-table-actions>
         </template>
 
         <template #table-busy>
@@ -119,6 +121,7 @@ import {
 import diagnosesApi from '@/services/doctorDiagnoses'
 import reservationsApi from '@/services/reservations'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 const emptyForm = () => ({
   name: '',
@@ -143,6 +146,7 @@ export default {
     BRow,
     BSpinner,
     BTable,
+    ResponsiveTableActions,
   },
   data() {
     return {

@@ -44,12 +44,14 @@
         </template>
 
         <template #cell(actions)="data">
-          <b-button size="sm" variant="flat-primary" class="mr-25" @click="edit(data.item)">
-            <feather-icon icon="EditIcon" />
-          </b-button>
-          <b-button size="sm" variant="flat-danger" @click="remove(data.item)">
-            <feather-icon icon="TrashIcon" />
-          </b-button>
+          <responsive-table-actions>
+            <b-button size="sm" variant="flat-primary" class="mr-25" @click="edit(data.item)">
+              <feather-icon icon="EditIcon" />
+            </b-button>
+            <b-button size="sm" variant="flat-danger" @click="remove(data.item)">
+              <feather-icon icon="TrashIcon" />
+            </b-button>
+          </responsive-table-actions>
         </template>
       </b-table>
     </b-card>
@@ -115,8 +117,12 @@ import subDoctorsApi from '@/services/subDoctors'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
+  components: {
+    ResponsiveTableActions,
+  },
   data() {
     return {
       subs: [],

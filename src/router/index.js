@@ -1,4 +1,4 @@
-import Vue from 'vue'
+﻿import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 // Routes
@@ -40,6 +40,15 @@ const router = new VueRouter({
     ...formsTable,
     ...uiElements,
     ...others,
+    {
+      path: '/:bookingSlug',
+      name: 'public-online-booking',
+      component: () => import('@/views/PublicOnlineBooking.vue'),
+      meta: {
+        layout: 'full',
+        requiresAuth: false,
+      },
+    },
     {
       path: '*',
       redirect: 'error-404',

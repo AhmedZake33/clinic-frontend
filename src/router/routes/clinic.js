@@ -576,6 +576,42 @@ export default [
       ],
     },
   },
+  {
+    path: '/doctor/online-booking',
+    name: 'doctor-online-booking-settings',
+    component: () => import('@/views/doctor/OnlineBookingSettings.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-dashboard'],
+      pageTitle: 'menu.onlineBooking',
+      pageI18n: true,
+      breadcrumb: [{ text: 'menu.onlineBooking', active: true, i18n: true }],
+    },
+  },
+  {
+    path: '/doctor/online-reservations',
+    name: 'doctor-online-reservations',
+    component: () => import('@/views/shared/OnlineReservations.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-reservations'],
+      pageTitle: 'menu.onlineReservations',
+      pageI18n: true,
+      breadcrumb: [{ text: 'menu.onlineReservations', active: true, i18n: true }],
+    },
+  },
+  {
+    path: '/assistant/online-reservations',
+    name: 'assistant-online-reservations',
+    component: () => import('@/views/shared/OnlineReservations.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['assistant.view-reservations'],
+      pageTitle: 'menu.onlineReservations',
+      pageI18n: true,
+      breadcrumb: [{ text: 'menu.onlineReservations', active: true, i18n: true }],
+    },
+  },
   // Admin routes
   {
     path: '/admin/dashboard',

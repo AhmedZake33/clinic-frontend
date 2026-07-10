@@ -48,59 +48,61 @@
         </template>
 
         <template #cell(actions)="data">
-          <b-button
-            v-b-tooltip.hover
-            :title="$t('actions.view')"
-            variant="info"
-            size="sm"
-            class="mr-1"
-            @click="viewReservation(data.item)"
-          >
-            <feather-icon icon="EyeIcon" />
-          </b-button>
-          <b-button
-            v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
-            variant="success"
-            size="sm"
-            class="mr-1"
-            @click="showCompleteModal(data.item)"
-          >
-            <feather-icon icon="CheckIcon" class="mr-50" />
-            {{ $t('reservation.completeReservation') }}
-          </b-button>
-          <b-button
-            v-if="data.item.status === 'completed'"
-            variant="warning"
-            size="sm"
-            class="mr-1"
-            @click="showCompleteModal(data.item)"
-          >
-            <feather-icon icon="EditIcon" class="mr-50" />
-            {{ $t('reservation.editCompletedData') }}
-          </b-button>
-          <b-button
-            v-if="data.item.status === 'completed' && data.item.treatment"
-            v-b-tooltip.hover
-            :title="$t('reservation.printMedicinesPrescription')"
-            variant="primary"
-            size="sm"
-            @click="printMedicinesPrescription(data.item)"
-          >
-            <feather-icon icon="PrinterIcon" class="mr-50" />
-            {{ $t('reservation.printMedicinesPrescription') }}
-          </b-button>
-          <b-button
-            v-if="data.item.status !== 'cancelled'"
-            v-b-tooltip.hover
-            :title="$t('reservation.printReservationDetails')"
-            variant="outline-primary"
-            size="sm"
-            class="ml-1"
-            @click="printReservationDetails(data.item)"
-          >
-            <feather-icon icon="FileTextIcon" class="mr-50" />
-            {{ $t('reservation.printReservationDetails') }}
-          </b-button>
+          <responsive-table-actions>
+            <b-button
+              v-b-tooltip.hover
+              :title="$t('actions.view')"
+              variant="info"
+              size="sm"
+              class="mr-1"
+              @click="viewReservation(data.item)"
+            >
+              <feather-icon icon="EyeIcon" />
+            </b-button>
+            <b-button
+              v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
+              variant="success"
+              size="sm"
+              class="mr-1"
+              @click="showCompleteModal(data.item)"
+            >
+              <feather-icon icon="CheckIcon" class="mr-50" />
+              {{ $t('reservation.completeReservation') }}
+            </b-button>
+            <b-button
+              v-if="data.item.status === 'completed'"
+              variant="warning"
+              size="sm"
+              class="mr-1"
+              @click="showCompleteModal(data.item)"
+            >
+              <feather-icon icon="EditIcon" class="mr-50" />
+              {{ $t('reservation.editCompletedData') }}
+            </b-button>
+            <b-button
+              v-if="data.item.status === 'completed' && data.item.treatment"
+              v-b-tooltip.hover
+              :title="$t('reservation.printMedicinesPrescription')"
+              variant="primary"
+              size="sm"
+              @click="printMedicinesPrescription(data.item)"
+            >
+              <feather-icon icon="PrinterIcon" class="mr-50" />
+              {{ $t('reservation.printMedicinesPrescription') }}
+            </b-button>
+            <b-button
+              v-if="data.item.status !== 'cancelled'"
+              v-b-tooltip.hover
+              :title="$t('reservation.printReservationDetails')"
+              variant="outline-primary"
+              size="sm"
+              class="ml-1"
+              @click="printReservationDetails(data.item)"
+            >
+              <feather-icon icon="FileTextIcon" class="mr-50" />
+              {{ $t('reservation.printReservationDetails') }}
+            </b-button>
+          </responsive-table-actions>
         </template>
 
         <template #table-busy>
@@ -1053,6 +1055,7 @@ import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clie
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
+import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
   directives: {
@@ -1076,6 +1079,7 @@ export default {
     BSpinner,
     BBadge,
     BAlert,
+    ResponsiveTableActions,
     BInputGroup,
     BInputGroupAppend,
     BTabs,

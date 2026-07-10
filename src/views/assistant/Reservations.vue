@@ -72,81 +72,83 @@
         </template>
 
         <template #cell(actions)="data">
-          <b-button
-            v-b-tooltip.hover
-            :title="$t('actions.view')"
-            variant="info"
-            size="sm"
-            class="mr-1"
-            @click="viewReservation(data.item)"
-          >
-            <feather-icon icon="EyeIcon" />
-          </b-button>
-          <b-button
-            v-if="!data.item.checked_in_at && (data.item.status === 'pending' || data.item.status === 'confirmed')"
-            v-b-tooltip.hover
-            :title="$t('queue.checkIn')"
-            variant="primary"
-            size="sm"
-            class="mr-1"
-            @click="checkInPatient(data.item)"
-          >
-            <feather-icon icon="LogInIcon" />
-          </b-button>
-          <b-button
-            v-if="data.item.status === 'pending'"
-            v-b-tooltip.hover
-            :title="$t('actions.confirm')"
-            variant="success"
-            size="sm"
-            class="mr-1"
-            @click="confirmReservation(data.item)"
-          >
-            <feather-icon icon="CheckCircleIcon" />
-          </b-button>
-          <b-button
-            v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
-            v-b-tooltip.hover
-            :title="$t('reservation.completeReservation')"
-            variant="success"
-            size="sm"
-            class="mr-1"
-            @click="completeReservation(data.item)"
-          >
-            <feather-icon icon="CheckIcon" />
-          </b-button>
-          <b-button
-            v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
-            v-b-tooltip.hover
-            :title="$t('actions.edit')"
-            variant="warning"
-            size="sm"
-            class="mr-1"
-            @click="showEditModal(data.item)"
-          >
-            <feather-icon icon="EditIcon" />
-          </b-button>
-          <b-button
-            v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
-            v-b-tooltip.hover
-            :title="$t('actions.cancel')"
-            variant="danger"
-            size="sm"
-            @click="cancelReservation(data.item)"
-          >
-            <feather-icon icon="XCircleIcon" />
-          </b-button>
-          <b-button
-            v-if="data.item.status === 'completed' && data.item.treatment"
-            v-b-tooltip.hover
-            :title="$t('reservation.printMedicinesPrescription')"
-            variant="primary"
-            size="sm"
-            class="ml-1"
-            @click="printMedicinesPrescription(data.item)"
-          >
-            <feather-icon icon="PrinterIcon" />
-          </b-button>
+          <responsive-table-actions>
+            <b-button
+              v-b-tooltip.hover
+              :title="$t('actions.view')"
+              variant="info"
+              size="sm"
+              class="mr-1"
+              @click="viewReservation(data.item)"
+            >
+              <feather-icon icon="EyeIcon" />
+            </b-button>
+            <b-button
+              v-if="!data.item.checked_in_at && (data.item.status === 'pending' || data.item.status === 'confirmed')"
+              v-b-tooltip.hover
+              :title="$t('queue.checkIn')"
+              variant="primary"
+              size="sm"
+              class="mr-1"
+              @click="checkInPatient(data.item)"
+            >
+              <feather-icon icon="LogInIcon" />
+            </b-button>
+            <b-button
+              v-if="data.item.status === 'pending'"
+              v-b-tooltip.hover
+              :title="$t('actions.confirm')"
+              variant="success"
+              size="sm"
+              class="mr-1"
+              @click="confirmReservation(data.item)"
+            >
+              <feather-icon icon="CheckCircleIcon" />
+            </b-button>
+            <b-button
+              v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
+              v-b-tooltip.hover
+              :title="$t('reservation.completeReservation')"
+              variant="success"
+              size="sm"
+              class="mr-1"
+              @click="completeReservation(data.item)"
+            >
+              <feather-icon icon="CheckIcon" />
+            </b-button>
+            <b-button
+              v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
+              v-b-tooltip.hover
+              :title="$t('actions.edit')"
+              variant="warning"
+              size="sm"
+              class="mr-1"
+              @click="showEditModal(data.item)"
+            >
+              <feather-icon icon="EditIcon" />
+            </b-button>
+            <b-button
+              v-if="data.item.status !== 'completed' && data.item.status !== 'cancelled'"
+              v-b-tooltip.hover
+              :title="$t('actions.cancel')"
+              variant="danger"
+              size="sm"
+              @click="cancelReservation(data.item)"
+            >
+              <feather-icon icon="XCircleIcon" />
+            </b-button>
+            <b-button
+              v-if="data.item.status === 'completed' && data.item.treatment"
+              v-b-tooltip.hover
+              :title="$t('reservation.printMedicinesPrescription')"
+              variant="primary"
+              size="sm"
+              class="ml-1"
+              @click="printMedicinesPrescription(data.item)"
+            >
+              <feather-icon icon="PrinterIcon" />
+            </b-button>
+          </responsive-table-actions>
         </template>
 
         <template #table-busy>
@@ -844,6 +846,7 @@ import doctorServicesApi from '@/services/doctorServices'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
+import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
   components: {
@@ -861,6 +864,7 @@ export default {
     BFormSelect,
     BFormSelectOption,
     BSpinner,
+    ResponsiveTableActions,
     BBadge,
     BAlert,
     BCardHeader: () => import('bootstrap-vue').then(m => m.BCardHeader),

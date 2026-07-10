@@ -30,21 +30,23 @@
         </template>
 
         <template #cell(actions)="data">
-          <b-button
-            variant="warning"
-            size="sm"
-            class="mr-1"
-            @click="showEditModal(data.item)"
-          >
-            <feather-icon icon="EditIcon" />
-          </b-button>
-          <b-button
-            variant="danger"
-            size="sm"
-            @click="deleteAssistant(data.item)"
-          >
-            <feather-icon icon="TrashIcon" />
-          </b-button>
+          <responsive-table-actions>
+            <b-button
+              variant="warning"
+              size="sm"
+              class="mr-1"
+              @click="showEditModal(data.item)"
+            >
+              <feather-icon icon="EditIcon" />
+            </b-button>
+            <b-button
+              variant="danger"
+              size="sm"
+              @click="deleteAssistant(data.item)"
+            >
+              <feather-icon icon="TrashIcon" />
+            </b-button>
+          </responsive-table-actions>
         </template>
 
         <template #table-busy>
@@ -166,11 +168,13 @@ import assistantsService from '@/services/assistants'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
   components: {
     BCard, BRow, BCol, BButton, BTable, BSpinner,
     BModal, BForm, BFormGroup, BFormInput, BFormSelect, BFormCheckbox,
+    ResponsiveTableActions,
   },
   data() {
     return {

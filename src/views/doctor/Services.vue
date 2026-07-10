@@ -52,12 +52,14 @@
         </template>
 
         <template #cell(actions)="data">
-          <b-button v-if="canManageServices" size="sm" variant="flat-primary" class="btn-icon mr-25" @click="editService(data.item)">
-            <feather-icon icon="EditIcon" />
-          </b-button>
-          <b-button v-if="canManageServices" size="sm" variant="flat-danger" class="btn-icon" @click="confirmDelete(data.item)">
-            <feather-icon icon="TrashIcon" />
-          </b-button>
+          <responsive-table-actions>
+            <b-button v-if="canManageServices" size="sm" variant="flat-primary" class="btn-icon mr-25" @click="editService(data.item)">
+              <feather-icon icon="EditIcon" />
+            </b-button>
+            <b-button v-if="canManageServices" size="sm" variant="flat-danger" class="btn-icon" @click="confirmDelete(data.item)">
+              <feather-icon icon="TrashIcon" />
+            </b-button>
+          </responsive-table-actions>
         </template>
 
         <template #table-busy>
@@ -119,12 +121,14 @@ import {
 import doctorServicesApi from '@/services/doctorServices'
 import reservationsApi from '@/services/reservations'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
   components: {
     BCard, BCardHeader, BTable, BButton, BModal, BForm, BFormGroup,
     BFormInput, BFormTextarea, BFormCheckbox, BBadge, BSpinner, BInputGroup,
     BRow, BCol, BFormSelect,
+    ResponsiveTableActions,
   },
 
   data() {

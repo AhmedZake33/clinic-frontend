@@ -77,6 +77,7 @@
 
     <!-- main menu content-->
     <vue-perfect-scrollbar
+      :key="$store.state.appConfig.layout.isRTL ? 'menu-scroll-rtl' : 'menu-scroll-ltr'"
       :settings="perfectScrollbarSettings"
       class="main-menu-content scroll-area"
       tagname="ul"
@@ -182,5 +183,17 @@ export default {
 // from consuming all space and pushing the logo out of view in RTL.
 .main-menu:not(.expanded) .navbar-header .nav-item.flex-grow-1 {
   flex-grow: 0 !important;
+}
+
+html[dir='ltr'] .main-menu .main-menu-content.ps .ps__rail-y,
+html[dir='ltr'] .main-menu .main-menu-content .ps__rail-y {
+  right: 1px !important;
+  left: auto !important;
+}
+
+html[dir='rtl'] .main-menu .main-menu-content.ps .ps__rail-y,
+html[dir='rtl'] .main-menu .main-menu-content .ps__rail-y {
+  left: 1px !important;
+  right: auto !important;
 }
 </style>

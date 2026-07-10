@@ -1,4 +1,4 @@
-// Navigation items — controlled purely by permissions (section-prefixed)
+// Navigation items â€” controlled purely by permissions (section-prefixed)
 const navigationItems = [
   {
     header: 'menu.assistantMenu',
@@ -24,6 +24,13 @@ const navigationItems = [
     i18n: true,
     route: 'assistant-reservations',
     icon: 'CalendarIcon',
+    permission: 'assistant.view-reservations',
+  },
+  {
+    title: 'menu.onlineReservations',
+    i18n: true,
+    route: 'assistant-online-reservations',
+    icon: 'GlobeIcon',
     permission: 'assistant.view-reservations',
   },
   {
@@ -93,6 +100,20 @@ const navigationItems = [
     i18n: true,
     route: 'doctor-reservations',
     icon: 'ClipboardIcon',
+    permission: 'doctor.view-reservations',
+  },
+  {
+    title: 'menu.onlineBooking',
+    i18n: true,
+    route: 'doctor-online-booking-settings',
+    icon: 'LinkIcon',
+    permission: 'doctor.view-dashboard',
+  },
+  {
+    title: 'menu.onlineReservations',
+    i18n: true,
+    route: 'doctor-online-reservations',
+    icon: 'GlobeIcon',
     permission: 'doctor.view-reservations',
   },
   {

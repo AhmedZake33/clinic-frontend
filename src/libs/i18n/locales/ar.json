@@ -77,8 +77,7 @@
       "epilepsy": "الصرع",
       "arthritis": "التهاب المفاصل",
       "copd": "الانسداد الرئوي المزمن"
-    }
-    ,
+    },
     "countryCode": "رمز الدولة",
     "selectCountryCode": "-- اختر رمز الدولة --"
   },
@@ -313,7 +312,9 @@
     "help": "المساعدة",
     "waitingQueue": "قائمة الانتظار",
     "assistants": "مساعديّ",
-    "rolesPermissions": "الأدوار والصلاحيات"
+    "rolesPermissions": "الأدوار والصلاحيات",
+    "onlineBooking": "الحجز الأونلاين",
+    "onlineReservations": "الحجوزات الأونلاين"
   },
   "help": {
     "quickTips": "نصائح سريعة"
@@ -530,7 +531,6 @@
     "createdAt": "تاريخ الإنشاء",
     "actions": "الإجراءات"
   },
-
   "assistant": {
     "title": "مساعديّ",
     "addAssistant": "إضافة مساعد",
@@ -634,7 +634,6 @@
     "enableSound": "تفعيل الصوت",
     "soundEnabled": "تم تفعيل إشعارات الصوت!"
   },
-
   "services": {
     "myServices": "خدماتي الإضافية",
     "addService": "إضافة خدمة",
