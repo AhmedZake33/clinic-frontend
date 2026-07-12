@@ -239,7 +239,9 @@ export default {
       return this.$route.params.bookingSlug
     },
     today() {
-      return new Date().toISOString().slice(0, 10)
+      const date = new Date()
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+      return date.toISOString().slice(0, 10)
     },
     doctorOptions() {
       return this.doctors.map(doctor => ({ value: doctor.id, text: doctor.specialization ? `${doctor.name} - ${doctor.specialization}` : doctor.name }))
@@ -410,3 +412,4 @@ export default {
   border-bottom-left-radius: 0;
 }
 </style>
+
