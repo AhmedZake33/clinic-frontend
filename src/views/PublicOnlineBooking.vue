@@ -19,22 +19,39 @@
         </div>
 
         <div v-else>
-          <!-- <h3 class="mb-50">{{ clinic.name }}</h3> -->
-          <p v-if="clinic.address" class="text-muted mb-2">{{ clinic.address }}</p>
+          <div
+            class="online-booking-header mb-2"
+            :class="clinicPositionClass"
+            :style="{ borderColor: clinicPrimaryColor }"
+          >
+            <h3 v-if="clinic.name" class="mb-50" :style="{ color: clinicPrimaryColor }">{{ clinic.name }}</h3>
+            <p v-if="clinic.header" class="text-muted mb-50 online-booking-header__text">{{ clinic.header }}</p>
+            <p v-if="clinic.phone" class="mb-0 online-booking-header__phone" dir="ltr" :style="{ color: clinicPrimaryColor }">{{ clinic.phone }}</p>
+          </div>
+          <p v-if="clinic.address" class="text-muted mb-2" :class="clinicPositionClass">{{ clinic.address }}</p>
 
           <b-alert v-if="successMessage" show variant="success">{{ successMessage }}</b-alert>
           <b-alert v-if="errorMessage" show variant="danger">{{ errorMessage }}</b-alert>
 
           <b-form @submit.prevent="submitBooking">
-            <b-form-group :label="t('doctor')" label-for="doctor_id">
+            <b-form-group label-for="doctor_id">
+              <template #label>
+                {{ t('doctor') }} <span class="required-star">*</span>
+              </template>
               <b-form-select id="doctor_id" v-model="form.doctor_id" :options="doctorOptions" required @change="fetchTimes" />
             </b-form-group>
 
-            <b-form-group :label="t('date')" label-for="appointment_date">
+            <b-form-group label-for="appointment_date">
+              <template #label>
+                {{ t('date') }} <span class="required-star">*</span>
+              </template>
               <b-form-input id="appointment_date" v-model="form.appointment_date" type="date" :min="today" required @change="fetchTimes" />
             </b-form-group>
 
-            <b-form-group :label="t('time')" label-for="appointment_time">
+            <b-form-group label-for="appointment_time">
+              <template #label>
+                {{ t('time') }} <span class="required-star">*</span>
+              </template>
               <b-form-select id="appointment_time" v-model="form.appointment_time" :options="timeOptions" :disabled="timesLoading || !form.doctor_id || !form.appointment_date" required>
                 <template #first>
                   <b-form-select-option :value="null" disabled>
@@ -47,11 +64,17 @@
               </small>
             </b-form-group>
 
-            <b-form-group :label="t('name')" label-for="name">
+            <b-form-group label-for="name">
+              <template #label>
+                {{ t('name') }} <span class="required-star">*</span>
+              </template>
               <b-form-input id="name" v-model="form.name" required />
             </b-form-group>
 
-            <b-form-group :label="t('phone')" label-for="phone">
+            <b-form-group label-for="phone">
+              <template #label>
+                {{ t('phone') }} <span class="required-star">*</span>
+              </template>
               <div class="phone-combined-control">
                 <div class="country-col">
                   <b-form-select
@@ -227,6 +250,16 @@ export default {
     timeOptions() {
       return this.slots.map(slot => ({ value: slot.time, text: slot.label }))
     },
+    clinicPrimaryColor() {
+      return /^#[0-9A-Fa-f]{6}$/.test(this.clinic.primary_color || '') ? this.clinic.primary_color : '#7367f0'
+    },
+    clinicPositionClass() {
+      return {
+        left: 'text-left',
+        center: 'text-center',
+        right: 'text-right',
+      }[this.clinic.position] || 'text-center'
+    },
   },
   watch: {
     language(value) {
@@ -329,6 +362,27 @@ export default {
 
 .language-select {
   max-width: 160px;
+}
+
+.online-booking-header__text {
+  white-space: pre-line;
+}
+
+.online-booking-header__phone {
+  direction: ltr;
+  unicode-bidi: plaintext;
+  font-weight: 600;
+}
+
+.online-booking-header {
+  border: 2px solid #7367f0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.required-star {
+  color: #ea5455;
+  font-weight: 700;
 }
 
 .phone-combined-control {
