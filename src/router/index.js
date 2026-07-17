@@ -56,13 +56,28 @@ const router = new VueRouter({
   ],
 })
 
+const getStoredUser = () => {
+  try {
+    return JSON.parse(localStorage.getItem('user') || 'null')
+  } catch (error) {
+    localStorage.removeItem('user')
+    return null
+  }
+}
+
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
-  const user = JSON.parse(localStorage.getItem('user') || 'null')
+  const user = getStoredUser()
+  const isPublicRoute = to.matched.some(route => route.meta.requiresAuth === false)
+  const isAuthenticated = Boolean(token && user)
 
-  // Redirect to login if not authenticated and route requires auth
-  if (!token && to.meta.requiresAuth) {
-    return next({ name: 'login' })
+  // Protect every route by default. Only routes explicitly marked
+  // requiresAuth: false can be opened without a logged-in user.
+  if (!isAuthenticated && !isPublicRoute) {
+    return next({
+      name: 'login',
+      query: to.fullPath && to.fullPath !== '/' ? { redirect: to.fullPath } : {},
+    })
   }
 
   // Helper: get the home route name for a given role
@@ -74,7 +89,7 @@ router.beforeEach((to, from, next) => {
   }
 
   // Redirect to role-specific home if already logged in and trying to access login
-  if (token && to.name === 'login') {
+  if (isAuthenticated && to.name === 'login') {
     return next({ name: homeForRole(user && user.role) })
   }
 

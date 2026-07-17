@@ -283,6 +283,7 @@
                           <b-badge v-if="drug.form" variant="light-info" class="mr-50 mb-25">{{ drug.form }}</b-badge>
                           <b-badge v-if="drug.category" variant="light-primary" class="mr-50 mb-25">{{ drug.category }}</b-badge>
                         </div>
+                        <small v-if="drug.scientific_name" class="text-muted d-block">{{ drug.scientific_name }}</small>
                         <small v-if="drug.company" class="text-muted d-block">{{ drug.company }}</small>
                       </div>
                       <b-button
@@ -1682,7 +1683,8 @@ export default {
       if (!drug) return
       const name = drug.name
       const form = drug.form ? ` - ${drug.form}` : ''
-      const entry = `${name}${form}`
+      const scientificName = drug.scientific_name ? ` (${drug.scientific_name})` : ''
+      const entry = `${name}${scientificName}${form}`
 
       if (this.completeForm.treatment) {
         this.completeForm.treatment += '\n' + entry
