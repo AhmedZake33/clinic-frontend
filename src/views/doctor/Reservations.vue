@@ -130,9 +130,25 @@
       v-model="completeModalShow"
       :title="isEditingCompletedReservation ? $t('reservation.editCompletedData') : $t('reservation.completeReservation')"
       hide-footer
-      size="lg"
+      size="xl"
+      :dialog-class="diagnosisFullscreen ? 'diagnosis-fullscreen-dialog' : ''"
+      @hidden="onCompleteModalHidden"
     >
       <b-form @submit.prevent="completeReservation">
+        <div class="diagnosis-fullscreen-toolbar mb-1">
+          <b-button
+            variant="outline-primary"
+            size="sm"
+            @click="diagnosisFullscreen = !diagnosisFullscreen"
+          >
+            <feather-icon
+              :icon="diagnosisFullscreen ? 'MinimizeIcon' : 'MaximizeIcon'"
+              class="mr-50"
+            />
+            {{ diagnosisFullscreen ? $t('specialtyChart.exitFullscreen') : $t('specialtyChart.fullscreen') }}
+          </b-button>
+        </div>
+
         <b-alert variant="info" show>
           <div v-if="selectedReservation && selectedReservation.client">
             <p class="mb-25"><strong>{{ $t('reservation.client') }}:</strong> {{ selectedReservation.client.name }}</p>
@@ -176,6 +192,20 @@
             v-model="completeForm.diagnosis"
             rows="4"
             :placeholder="$t('reservation.enterDiagnosis')"
+          />
+        </b-form-group>
+
+        <b-form-group
+          v-if="hasSpecialtyChart"
+          :label="$t('specialtyChart.title')"
+          label-for="specialty-chart"
+        >
+          <anatomy-map-embed
+            id="specialty-chart"
+            v-model="completeForm.specialty_chart"
+            :specialization="selectedReservation && selectedReservation.doctor ? selectedReservation.doctor.specialization : ''"
+            :reservation="selectedReservation"
+            @change="syncSpecialtyChartDiagnosis"
           />
         </b-form-group>
 
@@ -606,6 +636,17 @@
           <hr>
           <p><strong>{{ $t('reservation.diagnosis') }}:</strong></p>
           <p>{{ selectedReservation.diagnosis }}</p>
+        </div>
+        <div v-if="reservationChartItems(selectedReservation).length">
+          <p><strong>{{ $t('specialtyChart.title') }}:</strong></p>
+          <b-badge
+            v-for="item in reservationChartItems(selectedReservation)"
+            :key="item.part"
+            variant="light-primary"
+            class="mr-50 mb-50"
+          >
+            {{ localizedChartRegionLabel(item) }} - {{ specialtyProblemLabel(item.problem) }}
+          </b-badge>
         </div>
         <div v-if="selectedReservation.treatment">
           <p><strong>{{ $t('reservation.treatment') }}:</strong></p>
@@ -1057,6 +1098,7 @@ import { formatAgeFromBirthDate } from '@/utils/clientAge'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
+import AnatomyMapEmbed from '@/components/AnatomyMapEmbed.vue'
 
 export default {
   directives: {
@@ -1083,6 +1125,7 @@ export default {
     ResponsiveTableActions,
     BInputGroup,
     BInputGroupAppend,
+    AnatomyMapEmbed,
     BTabs,
     BTab,
     BCardHeader: () => import('bootstrap-vue').then(m => m.BCardHeader),
@@ -1101,12 +1144,15 @@ export default {
       },
       loading: false,
       completeModalShow: false,
+      diagnosisFullscreen: false,
       isEditingCompletedReservation: false,
       viewModalShow: false,
       completing: false,
       selectedReservation: null,
       completeForm: {
         diagnosis: '',
+        dental_chart: { teeth: [] },
+        specialty_chart: { type: 'general', items: [] },
         treatment: '',
         current_procedures: '',
         procedure_notes: '',
@@ -1292,6 +1338,9 @@ export default {
         { value: 'other', text: this.$t('financial.other') },
       ]
     },
+    hasSpecialtyChart() {
+      return !!this.selectedReservation?.doctor
+    },
   },
   methods: {
     formatDate(value) {
@@ -1360,10 +1409,13 @@ export default {
       this.fetchReservations()
     },
     showCompleteModal(reservation) {
+      this.diagnosisFullscreen = false
       this.selectedReservation = reservation
       this.isEditingCompletedReservation = reservation.status === 'completed'
       this.completeForm = {
         diagnosis: reservation.diagnosis || '',
+        dental_chart: this.normalizeDentalChart(reservation.dental_chart),
+        specialty_chart: this.normalizeSpecialtyChart(reservation.specialty_chart, reservation.dental_chart, reservation.doctor?.specialization),
         treatment: reservation.treatment || '',
         current_procedures: reservation.current_procedures || '',
         procedure_notes: reservation.procedure_notes || '',
@@ -1392,6 +1444,9 @@ export default {
       this.selectedDiagnosisId = null
       this.fetchDoctorDiagnosesCatalog(reservation.id)
       this.completeModalShow = true
+    },
+    onCompleteModalHidden() {
+      this.diagnosisFullscreen = false
     },
     async viewReservation(reservation) {
       this.revokePreviewUrls()
@@ -1480,6 +1535,10 @@ export default {
         Object.entries(this.completeForm).forEach(([key, value]) => {
           if (typeof value === 'boolean') {
             formData.append(key, value ? '1' : '0')
+          } else if (key === 'dental_chart') {
+            formData.append(key, JSON.stringify(value || { teeth: [] }))
+          } else if (key === 'specialty_chart') {
+            formData.append(key, JSON.stringify(value || { type: 'general', items: [] }))
           } else {
             formData.append(key, value ?? '')
           }
@@ -1853,6 +1912,92 @@ export default {
       }
       this.editClientModalShow = true
     },
+    normalizeDentalChart(value) {
+      if (!value) return { teeth: [] }
+      if (typeof value === 'string') {
+        try {
+          const parsed = JSON.parse(value)
+          return { teeth: Array.isArray(parsed?.teeth) ? parsed.teeth : [] }
+        } catch {
+          return { teeth: [] }
+        }
+      }
+      return { teeth: Array.isArray(value.teeth) ? value.teeth : [] }
+    },
+    normalizeSpecialtyChart(value, dentalChart = null, specialization = '') {
+      if (value) {
+        if (typeof value === 'string') {
+          try {
+            const parsed = JSON.parse(value)
+            return {
+              type: parsed?.type || this.specialtyChartType(specialization),
+              items: Array.isArray(parsed?.items) ? parsed.items : [],
+            }
+          } catch {
+            return { type: this.specialtyChartType(specialization), items: [] }
+          }
+        }
+        return {
+          type: value.type || this.specialtyChartType(specialization),
+          items: Array.isArray(value.items) ? value.items : [],
+        }
+      }
+
+      const oldDental = this.normalizeDentalChart(dentalChart)
+      if (oldDental.teeth.length) {
+        return {
+          type: 'dental',
+          items: oldDental.teeth.map(item => ({ type: 'dental', part: item.tooth, problem: item.problem })),
+        }
+      }
+
+      return { type: this.specialtyChartType(specialization), items: [] }
+    },
+    specialtyChartType(specialization = '') {
+      const value = String(specialization || '').toLowerCase()
+      if (['dentistry', 'orthodontics'].includes(value) || value.includes('dental') || value.includes('tooth') || value.includes('teeth') || value.includes('أسنان') || value.includes('اسنان')) return 'dental'
+      return 'general'
+    },
+    specialtyProblemLabel(problem) {
+      const key = `specialtyChart.problems.${problem}`
+      const translated = this.$t(key)
+      return translated === key ? problem : translated
+    },
+    specialtyPartLabel(part) {
+      const key = `specialtyChart.parts.${part}`
+      const translated = this.$t(key)
+      return translated === key ? String(part) : translated
+    },
+    localizedChartRegionLabel(item) {
+      const isArabic = String(this.$i18n?.locale || '').toLowerCase().startsWith('ar')
+      return (isArabic ? item?.regionLabelAr : item?.regionLabelEn)
+        || item?.regionLabel
+        || this.specialtyPartLabel(item?.part)
+    },
+    reservationChartItems(reservation) {
+      if (Array.isArray(reservation?.specialty_chart?.items) && reservation.specialty_chart.items.length) {
+        return reservation.specialty_chart.items
+      }
+      if (Array.isArray(reservation?.dental_chart?.teeth) && reservation.dental_chart.teeth.length) {
+        return reservation.dental_chart.teeth.map(item => ({ type: 'dental', part: item.tooth, problem: item.problem }))
+      }
+      return []
+    },
+    specialtyChartSummary(chart = this.completeForm.specialty_chart) {
+      const items = Array.isArray(chart?.items) ? chart.items : []
+      if (!items.length) return ''
+      return `${this.$t('specialtyChart.title')}: ${items.map(item => `${this.localizedChartRegionLabel(item)} (${this.specialtyProblemLabel(item.problem)})`).join(', ')}`
+    },
+    syncSpecialtyChartDiagnosis(chart) {
+      const summary = this.specialtyChartSummary(chart)
+      const withoutOldSummary = String(this.completeForm.diagnosis || '')
+        .split('\n')
+        .filter(line => !line.startsWith('خريطة الأسنان:') && !line.startsWith('Dental Chart:') && !line.startsWith('خريطة التخصص:') && !line.startsWith('Specialty Chart:'))
+        .join('\n')
+        .trim()
+
+      this.completeForm.diagnosis = [withoutOldSummary, summary].filter(Boolean).join('\n')
+    },
     async saveClientData() {
       if (this.hasMissingPhoneCountryCode(this.clientForm)) return
       this.savingClient = true
@@ -2050,6 +2195,42 @@ export default {
 
 .phone-combined-control--rtl .phone-number-input {
   border-radius: 0.357rem 0 0 0.357rem;
+}
+
+.diagnosis-fullscreen-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  position: sticky;
+  top: -1rem;
+  z-index: 20;
+  padding: 0.5rem 0;
+  background: inherit;
+}
+
+::v-deep .diagnosis-fullscreen-dialog.modal-dialog {
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  margin: 0;
+}
+
+::v-deep .diagnosis-fullscreen-dialog .modal-content {
+  width: 100vw;
+  min-height: 100vh;
+  height: 100vh;
+  border: 0;
+  border-radius: 0;
+}
+
+::v-deep .diagnosis-fullscreen-dialog .modal-body {
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+@media (max-width: 767.98px) {
+  ::v-deep .diagnosis-fullscreen-dialog .modal-body {
+    padding: 0.75rem;
+  }
 }
 </style>
 
