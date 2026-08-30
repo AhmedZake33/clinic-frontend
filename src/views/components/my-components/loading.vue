@@ -1,7 +1,12 @@
 <template>
-  <div v-if="visible" class="loading-overlay">
-    <div class="spinner"></div>
-    <p class="loading-text">{{ text }}</p>
+  <div
+    v-if="visible"
+    class="loading-overlay"
+  >
+    <div class="spinner" />
+    <p class="loading-text">
+      {{ text }}
+    </p>
   </div>
 </template>
 

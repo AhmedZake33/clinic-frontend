@@ -1,8 +1,8 @@
 <template>
   <ul>
     <component
-      v-for="item in filteredItems"
       :is="resolveNavItemComponent(item)"
+      v-for="item in filteredItems"
       :key="item.header || item.title"
       :item="item"
     />
@@ -32,16 +32,14 @@ export default {
     provide('openGroups', ref([]))
 
     // 🔑 Clean items before rendering
-    const filteredItems = computed(() =>
-      props.items.map(item => {
-        // If it has children but they are empty after filtering, remove children
-        if (item.children && item.children.length === 0) {
-          const { children, ...rest } = item
-          return rest
-        }
-        return item
-      })
-    )
+    const filteredItems = computed(() => props.items.map(item => {
+      // If it has children but they are empty after filtering, remove children
+      if (item.children && item.children.length === 0) {
+        const { children, ...rest } = item
+        return rest
+      }
+      return item
+    }))
 
     return {
       resolveNavItemComponent,

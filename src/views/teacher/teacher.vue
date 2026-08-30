@@ -1,7 +1,7 @@
 <template>
-    <div>
-        dashboard for teacher
-    </div>
+  <div>
+    dashboard for teacher
+  </div>
 </template>
 
 <script>

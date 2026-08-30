@@ -1,24 +1,54 @@
-﻿<template>
+<template>
   <div>
     <b-card :title="$t('reports.title')">
       <b-form @submit.prevent="fetchSummary">
         <b-row>
-          <b-col cols="12" sm="6" md="3">
+          <b-col
+            cols="12"
+            sm="6"
+            md="3"
+          >
             <b-form-group :label="$t('reservation.from')">
-              <b-form-input v-model="filters.date_from" type="date" />
+              <b-form-input
+                v-model="filters.date_from"
+                type="date"
+              />
             </b-form-group>
           </b-col>
-          <b-col cols="12" sm="6" md="3">
+          <b-col
+            cols="12"
+            sm="6"
+            md="3"
+          >
             <b-form-group :label="$t('reservation.to')">
-              <b-form-input v-model="filters.date_to" type="date" />
+              <b-form-input
+                v-model="filters.date_to"
+                type="date"
+              />
             </b-form-group>
           </b-col>
-          <b-col md="3" class="d-flex align-items-end">
-            <b-button variant="primary" class="mr-1" type="submit" :disabled="loading">
-              <b-spinner v-if="loading" small class="mr-50" />
+          <b-col
+            md="3"
+            class="d-flex align-items-end"
+          >
+            <b-button
+              variant="primary"
+              class="mr-1"
+              type="submit"
+              :disabled="loading"
+            >
+              <b-spinner
+                v-if="loading"
+                small
+                class="mr-50"
+              />
               {{ $t('filters.apply') }}
             </b-button>
-            <b-button variant="outline-secondary" @click="resetFilters" :disabled="loading">
+            <b-button
+              variant="outline-secondary"
+              :disabled="loading"
+              @click="resetFilters"
+            >
               {{ $t('filters.reset') }}
             </b-button>
           </b-col>
@@ -26,22 +56,44 @@
       </b-form>
 
       <div class="d-flex justify-content-end mt-1">
-        <b-button variant="success" @click="downloadPdf" :disabled="loading || exportingPdf">
-          <b-spinner v-if="exportingPdf" small class="mr-50" />
-          <feather-icon icon="DownloadIcon" class="mr-50" />
+        <b-button
+          variant="success"
+          :disabled="loading || exportingPdf"
+          @click="downloadPdf"
+        >
+          <b-spinner
+            v-if="exportingPdf"
+            small
+            class="mr-50"
+          />
+          <feather-icon
+            icon="DownloadIcon"
+            class="mr-50"
+          />
           {{ $t('reports.exportPdf') }}
         </b-button>
       </div>
     </b-card>
 
-    <div v-if="pageLoading" class="text-center py-5">
-      <b-spinner variant="primary" class="mb-1" />
-      <div class="text-muted">{{ $t('messages.loading') }}</div>
+    <div
+      v-if="pageLoading"
+      class="text-center py-5"
+    >
+      <b-spinner
+        variant="primary"
+        class="mb-1"
+      />
+      <div class="text-muted">
+        {{ $t('messages.loading') }}
+      </div>
     </div>
 
     <template v-else>
       <b-row>
-        <b-col cols="12" md="6">
+        <b-col
+          cols="12"
+          md="6"
+        >
           <b-card :title="$t('reports.reservationsSummary')">
             <p><strong>{{ $t('reports.totalReservations') }}:</strong> {{ summary.reservations.total }}</p>
             <p><strong>{{ $t('reservation.pending') }}:</strong> {{ summary.reservations.pending }}</p>
@@ -53,7 +105,10 @@
           </b-card>
         </b-col>
 
-        <b-col cols="12" md="6">
+        <b-col
+          cols="12"
+          md="6"
+        >
           <b-card :title="$t('reports.financialSummary')">
             <p><strong>{{ $t('financial.totalAmount') }}:</strong> {{ formatCurrency(summary.financials.total_amount) }}</p>
             <p><strong>{{ $t('financial.totalPaid') }}:</strong> {{ formatCurrency(summary.financials.total_paid) }}</p>
@@ -64,80 +119,171 @@
       </b-row>
 
       <b-row>
-        <b-col cols="12" lg="6">
+        <b-col
+          cols="12"
+          lg="6"
+        >
           <b-card :title="$t('reports.incomeByInvoiceType')">
-            <b-table small responsive :items="incomeTypeRows" :fields="breakdownFields" show-empty>
+            <b-table
+              small
+              responsive
+              :items="incomeTypeRows"
+              :fields="breakdownFields"
+              show-empty
+            >
               <template #empty>
-                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+                <div class="text-center text-muted">
+                  {{ $t('messages.noData') }}
+                </div>
               </template>
-              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+              <template #cell(amount)="data">
+                {{ formatCurrency(data.value) }}
+              </template>
             </b-table>
           </b-card>
         </b-col>
-        <b-col cols="12" lg="6">
+        <b-col
+          cols="12"
+          lg="6"
+        >
           <b-card :title="$t('reports.incomeByPaymentMethod')">
-            <b-table small responsive :items="paymentMethodRows" :fields="breakdownFields" show-empty>
+            <b-table
+              small
+              responsive
+              :items="paymentMethodRows"
+              :fields="breakdownFields"
+              show-empty
+            >
               <template #empty>
-                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+                <div class="text-center text-muted">
+                  {{ $t('messages.noData') }}
+                </div>
               </template>
-              <template #cell(label)="data">{{ formatPaymentMethod(data.item.key, data.value) }}</template>
-              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+              <template #cell(label)="data">
+                {{ formatPaymentMethod(data.item.key, data.value) }}
+              </template>
+              <template #cell(amount)="data">
+                {{ formatCurrency(data.value) }}
+              </template>
             </b-table>
           </b-card>
         </b-col>
       </b-row>
 
       <b-row>
-        <b-col cols="12" lg="6">
+        <b-col
+          cols="12"
+          lg="6"
+        >
           <b-card :title="$t('reports.reservationPaymentsByMethod')">
-            <b-table small responsive :items="reservationPaymentMethodRows" :fields="breakdownFields" show-empty>
+            <b-table
+              small
+              responsive
+              :items="reservationPaymentMethodRows"
+              :fields="breakdownFields"
+              show-empty
+            >
               <template #empty>
-                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+                <div class="text-center text-muted">
+                  {{ $t('messages.noData') }}
+                </div>
               </template>
-              <template #cell(label)="data">{{ formatPaymentMethod(data.item.key, data.value) }}</template>
-              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+              <template #cell(label)="data">
+                {{ formatPaymentMethod(data.item.key, data.value) }}
+              </template>
+              <template #cell(amount)="data">
+                {{ formatCurrency(data.value) }}
+              </template>
             </b-table>
           </b-card>
         </b-col>
-        <b-col cols="12" lg="6">
+        <b-col
+          cols="12"
+          lg="6"
+        >
           <b-card :title="$t('reports.additionalServicesPaymentsByMethod')">
-            <b-table small responsive :items="additionalServicesPaymentMethodRows" :fields="breakdownFields" show-empty>
+            <b-table
+              small
+              responsive
+              :items="additionalServicesPaymentMethodRows"
+              :fields="breakdownFields"
+              show-empty
+            >
               <template #empty>
-                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+                <div class="text-center text-muted">
+                  {{ $t('messages.noData') }}
+                </div>
               </template>
-              <template #cell(label)="data">{{ formatPaymentMethod(data.item.key, data.value) }}</template>
-              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+              <template #cell(label)="data">
+                {{ formatPaymentMethod(data.item.key, data.value) }}
+              </template>
+              <template #cell(amount)="data">
+                {{ formatCurrency(data.value) }}
+              </template>
             </b-table>
           </b-card>
         </b-col>
       </b-row>
 
       <b-row>
-        <b-col cols="12" md="4">
+        <b-col
+          cols="12"
+          md="4"
+        >
           <b-card :title="$t('reports.purchasesSummary')">
             <p><strong>{{ $t('financial.totalAmount') }}:</strong> {{ formatCurrency(summary.purchases.total_amount) }}</p>
             <p><strong>{{ $t('financial.totalRecords') }}:</strong> {{ summary.purchases.total_records }}</p>
           </b-card>
         </b-col>
-        <b-col cols="12" md="4">
+        <b-col
+          cols="12"
+          md="4"
+        >
           <b-card :title="$t('reports.purchasesByCategory')">
-            <b-table small responsive :items="purchaseCategoryRows" :fields="breakdownFields" show-empty>
+            <b-table
+              small
+              responsive
+              :items="purchaseCategoryRows"
+              :fields="breakdownFields"
+              show-empty
+            >
               <template #empty>
-                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+                <div class="text-center text-muted">
+                  {{ $t('messages.noData') }}
+                </div>
               </template>
-              <template #cell(label)="data">{{ formatPurchaseCategory(data.item.key, data.value) }}</template>
-              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+              <template #cell(label)="data">
+                {{ formatPurchaseCategory(data.item.key, data.value) }}
+              </template>
+              <template #cell(amount)="data">
+                {{ formatCurrency(data.value) }}
+              </template>
             </b-table>
           </b-card>
         </b-col>
-        <b-col cols="12" md="4">
+        <b-col
+          cols="12"
+          md="4"
+        >
           <b-card :title="$t('reports.purchasesByPaymentMethod')">
-            <b-table small responsive :items="purchasePaymentMethodRows" :fields="breakdownFields" show-empty>
+            <b-table
+              small
+              responsive
+              :items="purchasePaymentMethodRows"
+              :fields="breakdownFields"
+              show-empty
+            >
               <template #empty>
-                <div class="text-center text-muted">{{ $t('messages.noData') }}</div>
+                <div class="text-center text-muted">
+                  {{ $t('messages.noData') }}
+                </div>
               </template>
-              <template #cell(label)="data">{{ formatPurchasePaymentMethod(data.item.key, data.value) }}</template>
-              <template #cell(amount)="data">{{ formatCurrency(data.value) }}</template>
+              <template #cell(label)="data">
+                {{ formatPurchasePaymentMethod(data.item.key, data.value) }}
+              </template>
+              <template #cell(amount)="data">
+                {{ formatCurrency(data.value) }}
+              </template>
             </b-table>
           </b-card>
         </b-col>
@@ -159,8 +305,8 @@ import {
   BSpinner,
   BTable,
 } from 'bootstrap-vue'
-import reportsService from '@/services/reports'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import reportsService from '@/services/reports'
 
 export default {
   components: {
@@ -226,9 +372,15 @@ export default {
     },
     breakdownFields() {
       return [
-        { key: 'label', label: this.$t('reports.breakdown'), thClass: 'text-center', tdClass: 'text-center' },
-        { key: 'amount', label: this.$t('financial.amount'), thClass: 'text-center', tdClass: 'text-center' },
-        { key: 'count', label: this.$t('financial.totalRecords'), thClass: 'text-center', tdClass: 'text-center' },
+        {
+          key: 'label', label: this.$t('reports.breakdown'), thClass: 'text-center', tdClass: 'text-center',
+        },
+        {
+          key: 'amount', label: this.$t('financial.amount'), thClass: 'text-center', tdClass: 'text-center',
+        },
+        {
+          key: 'count', label: this.$t('financial.totalRecords'), thClass: 'text-center', tdClass: 'text-center',
+        },
       ]
     },
     incomeTypeRows() {
@@ -377,5 +529,3 @@ export default {
   },
 }
 </script>
-
-

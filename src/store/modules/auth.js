@@ -52,16 +52,10 @@ export default {
       const role = state.user?.role || JSON.parse(localStorage.getItem('user') || 'null')?.role
       return role === 'client'
     },
-    subscriptionStatus: state => {
-      return state.user?.subscription_status || 'unknown'
-    },
+    subscriptionStatus: state => state.user?.subscription_status || 'unknown',
     // Permission-based getters
-    permissions: state => {
-      return state.permissions || JSON.parse(localStorage.getItem('permissions') || '[]')
-    },
-    userRoles: state => {
-      return state.roles || JSON.parse(localStorage.getItem('userRoles') || '[]')
-    },
+    permissions: state => state.permissions || JSON.parse(localStorage.getItem('permissions') || '[]'),
+    userRoles: state => state.roles || JSON.parse(localStorage.getItem('userRoles') || '[]'),
     hasPermission: state => permission => {
       const perms = state.permissions || JSON.parse(localStorage.getItem('permissions') || '[]')
       // Admin has all permissions
@@ -105,7 +99,9 @@ export default {
     },
   },
   actions: {
-    login({ commit, dispatch }, { token, user, permissions, roles }) {
+    login({ commit, dispatch }, {
+      token, user, permissions, roles,
+    }) {
       commit('SET_TOKEN', token)
       commit('SET_USER', user)
       commit('SET_PERMISSIONS', permissions || [])

@@ -1,6 +1,6 @@
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { updateEchoAuth } from '@/libs/echo'
 import store from '@/store'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 // Audio helpers with repeat support for assistant alerts
 let _audioCtx = null
@@ -85,7 +85,7 @@ export default {
         console.error('[assistantCalls] failed to process event', e)
       }
 
-      const call = data.call
+      const { call } = data
       if (!call) return
 
       // Determine current user and roles
@@ -160,12 +160,12 @@ export default {
 
     // Watch auth changes to (re)subscribe
     store.watch(
-      (state) => state.auth.user,
+      state => state.auth.user,
       (newUser, oldUser) => {
         if (newUser) subscribe()
         else unsubscribe()
       },
-      { immediate: true }
+      { immediate: true },
     )
-  }
+  },
 }

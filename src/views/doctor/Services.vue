@@ -2,19 +2,39 @@
   <div>
     <b-card>
       <b-row class="mb-2">
-        <b-col cols="12" md="4">
+        <b-col
+          cols="12"
+          md="4"
+        >
           <h4>{{ $t('services.myServices') }}</h4>
         </b-col>
-        <b-col cols="12" md="8" class="text-right">
-          <b-button v-if="canManageServices" variant="primary" @click="openAddModal">
-            <feather-icon icon="PlusIcon" class="mr-50" />
+        <b-col
+          cols="12"
+          md="8"
+          class="text-right"
+        >
+          <b-button
+            v-if="canManageServices"
+            variant="primary"
+            @click="openAddModal"
+          >
+            <feather-icon
+              icon="PlusIcon"
+              class="mr-50"
+            />
             {{ $t('services.addService') }}
           </b-button>
         </b-col>
       </b-row>
 
-      <b-row v-if="isAssistant" class="mb-2">
-        <b-col cols="12" md="4">
+      <b-row
+        v-if="isAssistant"
+        class="mb-2"
+      >
+        <b-col
+          cols="12"
+          md="4"
+        >
           <b-form-select
             v-model="selectedDoctorId"
             :options="doctorOptions"
@@ -23,7 +43,7 @@
           />
         </b-col>
       </b-row>
-      
+
       <b-table
         :items="services"
         :fields="fields"
@@ -37,7 +57,12 @@
         <template #cell(name)="data">
           <div>
             <strong>{{ data.item.name }}</strong>
-            <div v-if="data.item.name_en" class="text-muted small">{{ data.item.name_en }}</div>
+            <div
+              v-if="data.item.name_en"
+              class="text-muted small"
+            >
+              {{ data.item.name_en }}
+            </div>
           </div>
         </template>
 
@@ -53,10 +78,22 @@
 
         <template #cell(actions)="data">
           <responsive-table-actions>
-            <b-button v-if="canManageServices" size="sm" variant="flat-primary" class="btn-icon mr-25" @click="editService(data.item)">
+            <b-button
+              v-if="canManageServices"
+              size="sm"
+              variant="flat-primary"
+              class="btn-icon mr-25"
+              @click="editService(data.item)"
+            >
               <feather-icon icon="EditIcon" />
             </b-button>
-            <b-button v-if="canManageServices" size="sm" variant="flat-danger" class="btn-icon" @click="confirmDelete(data.item)">
+            <b-button
+              v-if="canManageServices"
+              size="sm"
+              variant="flat-danger"
+              class="btn-icon"
+              @click="confirmDelete(data.item)"
+            >
               <feather-icon icon="TrashIcon" />
             </b-button>
           </responsive-table-actions>
@@ -78,33 +115,82 @@
       @hidden="resetForm"
     >
       <b-form @submit.prevent="saveService">
-        <b-form-group :label="$t('services.nameAr')" label-for="svc-name">
-          <b-form-input id="svc-name" v-model="form.name" required :placeholder="$t('services.nameArPlaceholder')" />
+        <b-form-group
+          :label="$t('services.nameAr')"
+          label-for="svc-name"
+        >
+          <b-form-input
+            id="svc-name"
+            v-model="form.name"
+            required
+            :placeholder="$t('services.nameArPlaceholder')"
+          />
         </b-form-group>
 
-        <b-form-group :label="$t('services.nameEn')" label-for="svc-name-en">
-          <b-form-input id="svc-name-en" v-model="form.name_en" :placeholder="$t('services.nameEnPlaceholder')" />
+        <b-form-group
+          :label="$t('services.nameEn')"
+          label-for="svc-name-en"
+        >
+          <b-form-input
+            id="svc-name-en"
+            v-model="form.name_en"
+            :placeholder="$t('services.nameEnPlaceholder')"
+          />
         </b-form-group>
 
-        <b-form-group :label="$t('services.description')" label-for="svc-desc">
-          <b-form-textarea id="svc-desc" v-model="form.description" rows="2" :placeholder="$t('services.descriptionPlaceholder')" />
+        <b-form-group
+          :label="$t('services.description')"
+          label-for="svc-desc"
+        >
+          <b-form-textarea
+            id="svc-desc"
+            v-model="form.description"
+            rows="2"
+            :placeholder="$t('services.descriptionPlaceholder')"
+          />
         </b-form-group>
 
-        <b-form-group :label="$t('services.price')" label-for="svc-price">
+        <b-form-group
+          :label="$t('services.price')"
+          label-for="svc-price"
+        >
           <b-input-group :prepend="$t('services.currency')">
-            <b-form-input id="svc-price" v-model="form.price" type="number" step="0.01" min="0" required />
+            <b-form-input
+              id="svc-price"
+              v-model="form.price"
+              type="number"
+              step="0.01"
+              min="0"
+              required
+            />
           </b-input-group>
         </b-form-group>
 
-        <b-form-checkbox v-model="form.is_active" class="mt-1">
+        <b-form-checkbox
+          v-model="form.is_active"
+          class="mt-1"
+        >
           {{ $t('services.isActive') }}
         </b-form-checkbox>
       </b-form>
 
       <template #modal-footer>
-        <b-button variant="secondary" @click="showModal = false">{{ $t('actions.cancel') }}</b-button>
-        <b-button variant="primary" :disabled="saving" @click="saveService">
-          <b-spinner v-if="saving" small class="mr-50" />
+        <b-button
+          variant="secondary"
+          @click="showModal = false"
+        >
+          {{ $t('actions.cancel') }}
+        </b-button>
+        <b-button
+          variant="primary"
+          :disabled="saving"
+          @click="saveService"
+        >
+          <b-spinner
+            v-if="saving"
+            small
+            class="mr-50"
+          />
           {{ isEditing ? $t('actions.save') : $t('actions.add') }}
         </b-button>
       </template>
@@ -118,16 +204,29 @@ import {
   BFormInput, BFormTextarea, BFormCheckbox, BBadge, BSpinner,
   BInputGroup, BRow, BCol, BFormSelect,
 } from 'bootstrap-vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import doctorServicesApi from '@/services/doctorServices'
 import reservationsApi from '@/services/reservations'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
   components: {
-    BCard, BCardHeader, BTable, BButton, BModal, BForm, BFormGroup,
-    BFormInput, BFormTextarea, BFormCheckbox, BBadge, BSpinner, BInputGroup,
-    BRow, BCol, BFormSelect,
+    BCard,
+    BCardHeader,
+    BTable,
+    BButton,
+    BModal,
+    BForm,
+    BFormGroup,
+    BFormInput,
+    BFormTextarea,
+    BFormCheckbox,
+    BBadge,
+    BSpinner,
+    BInputGroup,
+    BRow,
+    BCol,
+    BFormSelect,
     ResponsiveTableActions,
   },
 
@@ -155,10 +254,10 @@ export default {
   computed: {
     fields() {
       return [
-        { key: 'name',      label: this.$t('services.name') },
-        { key: 'price',     label: this.$t('services.price'), sortable: true },
+        { key: 'name', label: this.$t('services.name') },
+        { key: 'price', label: this.$t('services.price'), sortable: true },
         { key: 'is_active', label: this.$t('services.status') },
-        { key: 'actions',   label: this.$t('table.actions') },
+        { key: 'actions', label: this.$t('table.actions') },
       ]
     },
     isRtl() {
@@ -291,7 +390,9 @@ export default {
     },
 
     resetForm() {
-      this.form = { name: '', name_en: '', description: '', price: 0, is_active: true }
+      this.form = {
+        name: '', name_en: '', description: '', price: 0, is_active: true,
+      }
       this.isEditing = false
       this.selectedService = null
     },

@@ -45,7 +45,9 @@ export const updateEchoAuth = () => {
  * @param {Function} onDeleted - Callback when reservation is deleted
  * @returns {Object} - Echo channel subscription
  */
-export const subscribeToDoctorChannel = (doctorId, { onCreated, onUpdated, onCompleted, onDeleted, onReordered }) => {
+export const subscribeToDoctorChannel = (doctorId, {
+  onCreated, onUpdated, onCompleted, onDeleted, onReordered,
+}) => {
   const ch = echo.private(`doctor.${doctorId}`)
     .listen('.reservation.created', onCreated)
     .listen('.reservation.updated', onUpdated)
@@ -63,7 +65,9 @@ export const subscribeToDoctorChannel = (doctorId, { onCreated, onUpdated, onCom
  * @param {Function} onDeleted - Callback when reservation is deleted
  * @returns {Object} - Echo channel subscription
  */
-export const subscribeToAssistantChannel = (doctorId, { onCreated, onUpdated, onCompleted, onDeleted, onReordered }) => {
+export const subscribeToAssistantChannel = (doctorId, {
+  onCreated, onUpdated, onCompleted, onDeleted, onReordered,
+}) => {
   const ch = echo.private(`assistant.reservations.${doctorId}`)
     .listen('.reservation.created', onCreated)
     .listen('.reservation.updated', onUpdated)
@@ -77,7 +81,7 @@ export const subscribeToAssistantChannel = (doctorId, { onCreated, onUpdated, on
  * Unsubscribe from a channel
  * @param {string} channelName - The channel name to leave
  */
-export const leaveChannel = (channelName) => {
+export const leaveChannel = channelName => {
   echo.leave(channelName)
 }
 

@@ -1,54 +1,90 @@
-﻿<template>
+<template>
   <div>
     <!-- Queue Stats Cards -->
     <b-row class="mb-2">
-      <b-col cols="6" md="3">
+      <b-col
+        cols="6"
+        md="3"
+      >
         <b-card class="text-center border-primary">
           <div class="d-flex align-items-center justify-content-center">
             <div class="rounded-circle bg-light-primary p-1 mr-1">
-              <feather-icon icon="UsersIcon" size="24" class="text-primary" />
+              <feather-icon
+                icon="UsersIcon"
+                size="24"
+                class="text-primary"
+              />
             </div>
             <div>
-              <h3 class="mb-0 text-primary">{{ stats.total_checked_in }}</h3>
+              <h3 class="mb-0 text-primary">
+                {{ stats.total_checked_in }}
+              </h3>
               <small class="text-muted">{{ $t('queue.checkedIn') }}</small>
             </div>
           </div>
         </b-card>
       </b-col>
-      <b-col cols="6" md="3">
+      <b-col
+        cols="6"
+        md="3"
+      >
         <b-card class="text-center border-warning">
           <div class="d-flex align-items-center justify-content-center">
             <div class="rounded-circle bg-light-warning p-1 mr-1">
-              <feather-icon icon="ClockIcon" size="24" class="text-warning" />
+              <feather-icon
+                icon="ClockIcon"
+                size="24"
+                class="text-warning"
+              />
             </div>
             <div>
-              <h3 class="mb-0 text-warning">{{ stats.waiting }}</h3>
+              <h3 class="mb-0 text-warning">
+                {{ stats.waiting }}
+              </h3>
               <small class="text-muted">{{ $t('queue.waiting') }}</small>
             </div>
           </div>
         </b-card>
       </b-col>
-      <b-col cols="6" md="3">
+      <b-col
+        cols="6"
+        md="3"
+      >
         <b-card class="text-center border-success">
           <div class="d-flex align-items-center justify-content-center">
             <div class="rounded-circle bg-light-success p-1 mr-1">
-              <feather-icon icon="CheckCircleIcon" size="24" class="text-success" />
+              <feather-icon
+                icon="CheckCircleIcon"
+                size="24"
+                class="text-success"
+              />
             </div>
             <div>
-              <h3 class="mb-0 text-success">{{ stats.completed }}</h3>
+              <h3 class="mb-0 text-success">
+                {{ stats.completed }}
+              </h3>
               <small class="text-muted">{{ $t('queue.completed') }}</small>
             </div>
           </div>
         </b-card>
       </b-col>
-      <b-col cols="6" md="3">
+      <b-col
+        cols="6"
+        md="3"
+      >
         <b-card class="text-center border-info">
           <div class="d-flex align-items-center justify-content-center">
             <div class="rounded-circle bg-light-info p-1 mr-1">
-              <feather-icon icon="ActivityIcon" size="24" class="text-info" />
+              <feather-icon
+                icon="ActivityIcon"
+                size="24"
+                class="text-info"
+              />
             </div>
             <div>
-              <h3 class="mb-0 text-info">{{ stats.currently_serving || '—' }}</h3>
+              <h3 class="mb-0 text-info">
+                {{ stats.currently_serving || '—' }}
+              </h3>
               <small class="text-muted">{{ $t('queue.nowServing') }}</small>
             </div>
           </div>
@@ -59,36 +95,72 @@
     <!-- Filters & Queue -->
     <b-card>
       <b-row class="mb-2 align-items-center">
-        <b-col cols="12" md="4">
+        <b-col
+          cols="12"
+          md="4"
+        >
           <h4 class="mb-0">
-            <feather-icon icon="ListIcon" size="20" class="mr-50" />
+            <feather-icon
+              icon="ListIcon"
+              size="20"
+              class="mr-50"
+            />
             {{ $t('queue.title') }}
           </h4>
         </b-col>
-        <b-col cols="6" md="3">
+        <b-col
+          cols="6"
+          md="3"
+        >
           <b-form-input
             v-model="filterDate"
             type="date"
             @change="fetchQueue"
           />
         </b-col>
-        <b-col cols="12" md="2" class="text-right mt-1 mt-md-0">
-          <b-button variant="outline-primary" size="sm" @click="fetchQueue" :disabled="loading">
-            <feather-icon icon="RefreshCwIcon" class="mr-50" />
+        <b-col
+          cols="12"
+          md="2"
+          class="text-right mt-1 mt-md-0"
+        >
+          <b-button
+            variant="outline-primary"
+            size="sm"
+            :disabled="loading"
+            @click="fetchQueue"
+          >
+            <feather-icon
+              icon="RefreshCwIcon"
+              class="mr-50"
+            />
             {{ $t('queue.refresh') }}
           </b-button>
         </b-col>
       </b-row>
 
       <!-- Queue List -->
-      <div v-if="loading" class="text-center my-3">
+      <div
+        v-if="loading"
+        class="text-center my-3"
+      >
         <b-spinner variant="primary" />
-        <p class="mt-1 text-muted">{{ $t('messages.loading') }}</p>
+        <p class="mt-1 text-muted">
+          {{ $t('messages.loading') }}
+        </p>
       </div>
 
-      <div v-else-if="queue.length === 0" class="text-center my-3">
-        <feather-icon icon="InboxIcon" size="48" class="text-muted mb-1" />
-        <p class="text-muted">{{ $t('queue.noPatients') }}</p>
+      <div
+        v-else-if="queue.length === 0"
+        class="text-center my-3"
+      >
+        <feather-icon
+          icon="InboxIcon"
+          size="48"
+          class="text-muted mb-1"
+        />
+        <p class="text-muted">
+          {{ $t('queue.noPatients') }}
+        </p>
       </div>
 
       <div v-else>
@@ -103,43 +175,78 @@
           @dragend="onDragEnd($event)"
         >
           <!-- Waiting Number Badge -->
-          <div class="queue-number mr-1" :class="queueNumberClass(item)">
+          <div
+            class="queue-number mr-1"
+            :class="queueNumberClass(item)"
+          >
             <span class="font-weight-bolder">{{ item.waiting_number }}</span>
           </div>
 
           <!-- Patient Info -->
           <div class="flex-grow-1">
             <div class="d-flex align-items-center mb-25">
-              <h6 class="mb-0 mr-1">{{ item.client ? item.client.name : '—' }}</h6>
-              <b-badge :variant="queueBadgeVariant(item)" pill>
+              <h6 class="mb-0 mr-1">
+                {{ item.client ? item.client.name : '—' }}
+              </h6>
+              <b-badge
+                :variant="queueBadgeVariant(item)"
+                pill
+              >
                 {{ $t('queue.' + item.queue_status) }}
               </b-badge>
-              <b-badge v-if="item.is_current" variant="danger" pill class="ml-50 pulse-badge">
+              <b-badge
+                v-if="item.is_current"
+                variant="danger"
+                pill
+                class="ml-50 pulse-badge"
+              >
                 {{ $t('queue.current') }}
               </b-badge>
             </div>
             <div class="d-flex flex-wrap text-muted small">
               <span class="mr-1">
-                <feather-icon icon="UserIcon" size="12" class="mr-25" />
+                <feather-icon
+                  icon="UserIcon"
+                  size="12"
+                  class="mr-25"
+                />
                 {{ item.doctor ? item.doctor.name : '—' }}
               </span>
               <span class="mr-1">
-                <feather-icon icon="ClockIcon" size="12" class="mr-25" />
+                <feather-icon
+                  icon="ClockIcon"
+                  size="12"
+                  class="mr-25"
+                />
                 {{ formatTime(item.appointment_date) }}
               </span>
               <span class="mr-1">
-                <feather-icon icon="LogInIcon" size="12" class="mr-25" />
+                <feather-icon
+                  icon="LogInIcon"
+                  size="12"
+                  class="mr-25"
+                />
                 {{ $t('queue.checkedInAt') }}: {{ formatTime(item.checked_in_at) }}
               </span>
-              <span v-if="item.estimated_wait !== null && item.estimated_wait > 0" class="text-warning">
-                <feather-icon icon="AlertCircleIcon" size="12" class="mr-25" />
+              <span
+                v-if="item.estimated_wait !== null && item.estimated_wait > 0"
+                class="text-warning"
+              >
+                <feather-icon
+                  icon="AlertCircleIcon"
+                  size="12"
+                  class="mr-25"
+                />
                 ~{{ item.estimated_wait }} {{ $t('queue.minutes') }}
               </span>
             </div>
           </div>
 
           <!-- Actions (assistant only) -->
-          <div v-if="userRole === 'assistant'" class="ml-1">
+          <div
+            v-if="userRole === 'assistant'"
+            class="ml-1"
+          >
             <b-button
               v-if="item.queue_status !== 'completed'"
               v-b-tooltip.hover
@@ -148,7 +255,10 @@
               size="sm"
               @click="undoCheckIn(item)"
             >
-              <feather-icon icon="XIcon" size="14" />
+              <feather-icon
+                icon="XIcon"
+                size="14"
+              />
             </b-button>
           </div>
         </div>
@@ -157,7 +267,11 @@
       <!-- Auto-refresh indicator -->
       <div class="text-center mt-2">
         <small class="text-muted">
-          <feather-icon icon="RefreshCwIcon" size="12" class="mr-25" />
+          <feather-icon
+            icon="RefreshCwIcon"
+            size="12"
+            class="mr-25"
+          />
           {{ $t('queue.autoRefresh') }}
         </small>
       </div>
@@ -177,8 +291,8 @@ import {
   BBadge,
   VBTooltip,
 } from 'bootstrap-vue'
-import reservationsService from '@/services/reservations'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import reservationsService from '@/services/reservations'
 
 export default {
   components: {
@@ -218,6 +332,11 @@ export default {
       return userData.role || ''
     },
   },
+  watch: {
+    '$store.state.broadcast.eventCounter': function () {
+      this.fetchQueue()
+    },
+  },
   mounted() {
     this.fetchQueue()
     // Auto-refresh every 30 seconds
@@ -229,11 +348,6 @@ export default {
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval)
     }
-  },
-  watch: {
-    '$store.state.broadcast.eventCounter'() {
-      this.fetchQueue()
-    },
   },
   methods: {
     async fetchQueue() {
@@ -333,7 +447,7 @@ export default {
       }
       this.draggingIndex = null
     },
-    
+
     async syncOrder() {
       try {
         const orderedIds = this.queue.map(i => i.id)

@@ -14,5 +14,5 @@ export default [
         route: 'attendance',
       },
     ],
-  }
+  },
 ]

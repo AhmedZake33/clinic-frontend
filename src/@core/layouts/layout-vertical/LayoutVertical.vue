@@ -32,7 +32,10 @@
       :items="filteredNavItems"
     >
       <template #header="slotProps">
-        <slot name="vertical-menu-header" v-bind="slotProps" />
+        <slot
+          name="vertical-menu-header"
+          v-bind="slotProps"
+        />
       </template>
     </vertical-nav-menu>
     <!-- /Vertical Nav Menu -->
@@ -46,7 +49,10 @@
     <!-- /Vertical Nav Menu Overlay -->
 
     <!-- Content -->
-    <transition :name="routerTransition" mode="out-in">
+    <transition
+      :name="routerTransition"
+      mode="out-in"
+    >
       <component
         :is="layoutContentRenderer"
         :key="
@@ -55,15 +61,24 @@
             : null
         "
       >
-        <template v-for="(index, name) in $scopedSlots" v-slot:[name]="data">
-          <slot :name="name" v-bind="data" />
+        <template
+          v-for="(index, name) in $scopedSlots"
+          v-slot:[name]="data"
+        >
+          <slot
+            :name="name"
+            v-bind="data"
+          />
         </template>
       </component>
     </transition>
     <!--/ Content -->
 
     <!-- Footer -->
-    <footer class="footer footer-light" :class="[footerTypeClass]">
+    <footer
+      class="footer footer-light"
+      :class="[footerTypeClass]"
+    >
       <slot name="footer">
         <app-footer />
       </slot>
@@ -85,7 +100,6 @@ import VerticalNavMenu from './components/vertical-nav-menu/VerticalNavMenu.vue'
 import useVerticalLayout from './useVerticalLayout'
 import mixinVerticalLayout from './mixinVerticalLayout'
 
-
 export default {
 
   components: {
@@ -102,49 +116,47 @@ export default {
     layoutContentRenderer() {
       const rendererType = this.$route.meta.contentRenderer
       if (rendererType === 'sidebar-left') return 'layout-content-renderer-left'
-      if (rendererType === 'sidebar-left-detached')
-        return 'layout-content-renderer-left-detached'
+      if (rendererType === 'sidebar-left-detached') return 'layout-content-renderer-left-detached'
       return 'layout-content-renderer-default'
     },
     isLoggedIn() {
       return this.$store.getters['auth/isLoggedIn']
     },
     filteredNavItems() {
-    const role = this.$store.getters['auth/userRole']
-    console.log('Current role:', role)
+      const role = this.$store.getters['auth/userRole']
+      console.log('Current role:', role)
 
-    function filterByRole(items) {
-      return items
-        .map(item => {
+      function filterByRole(items) {
+        return items
+          .map(item => {
           // Recursively filter children
-          let children = []
-          if (item.children && item.children.length > 0) {
-            children = filterByRole(item.children)
-          }
+            let children = []
+            if (item.children && item.children.length > 0) {
+              children = filterByRole(item.children)
+            }
 
-          // Check role restriction - use resource property instead of meta.role
-          const allowed =
-            !item.resource ||
-            item.resource.toLowerCase() === role.toLowerCase()
+            // Check role restriction - use resource property instead of meta.role
+            const allowed = !item.resource
+            || item.resource.toLowerCase() === role.toLowerCase()
 
-          // Keep this item only if:
-          //  - user is allowed
-          //  - OR it has allowed children
-          if (allowed) {
-            return { ...item, children: children.filter(Boolean) }
-          }
-          if (children.length > 0) {
-            return { ...item, children: children.filter(Boolean) }
-          }
-          return null
-        })
-        .filter(Boolean)
-    }
+            // Keep this item only if:
+            //  - user is allowed
+            //  - OR it has allowed children
+            if (allowed) {
+              return { ...item, children: children.filter(Boolean) }
+            }
+            if (children.length > 0) {
+              return { ...item, children: children.filter(Boolean) }
+            }
+            return null
+          })
+          .filter(Boolean)
+      }
 
-    const filtered = filterByRole(require('@/navigation/vertical').default)
-    console.log('Filtered nav items:', filtered)
-    return filtered
-  },
+      const filtered = filterByRole(require('@/navigation/vertical').default)
+      console.log('Filtered nav items:', filtered)
+      return filtered
+    },
   },
   watch: {
     isLoggedIn: {
@@ -157,8 +169,8 @@ export default {
           })
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   setup() {
     const {

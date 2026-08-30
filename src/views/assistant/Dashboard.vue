@@ -1,15 +1,29 @@
-﻿<template>
+<template>
   <div>
     <!-- Sound Permission Banner -->
     <b-row v-if="!soundEnabled">
       <b-col cols="12">
-        <b-alert show variant="warning" class="d-flex align-items-center justify-content-between mb-1">
+        <b-alert
+          show
+          variant="warning"
+          class="d-flex align-items-center justify-content-between mb-1"
+        >
           <div>
-            <feather-icon icon="VolumeXIcon" class="mr-50" />
+            <feather-icon
+              icon="VolumeXIcon"
+              class="mr-50"
+            />
             {{ $t('assistantCall.soundDisabled') }}
           </div>
-          <b-button variant="warning" size="sm" @click="enableSound">
-            <feather-icon icon="Volume2Icon" class="mr-25" />
+          <b-button
+            variant="warning"
+            size="sm"
+            @click="enableSound"
+          >
+            <feather-icon
+              icon="Volume2Icon"
+              class="mr-25"
+            />
             {{ $t('assistantCall.enableSound') }}
           </b-button>
         </b-alert>
@@ -25,8 +39,15 @@
           border-variant="danger"
         >
           <div class="d-flex align-items-center mb-1">
-            <b-avatar variant="danger" size="40" class="mr-1">
-              <feather-icon icon="PhoneCallIcon" size="20" />
+            <b-avatar
+              variant="danger"
+              size="40"
+              class="mr-1"
+            >
+              <feather-icon
+                icon="PhoneCallIcon"
+                size="20"
+              />
             </b-avatar>
             <h4 class="text-danger mb-0">
               {{ $t('assistantCall.incomingCalls') }}
@@ -40,13 +61,22 @@
               :variant="call.status === 'pending' ? 'warning' : 'info'"
             >
               <div>
-                <feather-icon icon="AlertCircleIcon" class="text-danger mr-50" />
+                <feather-icon
+                  icon="AlertCircleIcon"
+                  class="text-danger mr-50"
+                />
                 <strong>{{ call.doctor ? call.doctor.name : $t('assistantCall.doctor') }}</strong>
                 <span v-if="currentUserRole === 'assistant'">{{ $t('assistantCall.isRequestingAssistance') }}</span>
-                <b-badge :variant="call.status === 'pending' ? 'warning' : 'info'" class="ml-50">
+                <b-badge
+                  :variant="call.status === 'pending' ? 'warning' : 'info'"
+                  class="ml-50"
+                >
                   {{ $t('assistantCall.' + call.status) }}
                 </b-badge>
-                <small v-if="call.message" class="d-block text-muted mt-25">{{ call.message }}</small>
+                <small
+                  v-if="call.message"
+                  class="d-block text-muted mt-25"
+                >{{ call.message }}</small>
               </div>
               <div>
                 <b-button
@@ -56,7 +86,10 @@
                   class="mr-50"
                   @click="acceptCall(call)"
                 >
-                  <feather-icon icon="CheckIcon" class="mr-25" />
+                  <feather-icon
+                    icon="CheckIcon"
+                    class="mr-25"
+                  />
                   {{ $t('assistantCall.accept') }}
                 </b-button>
                 <b-button
@@ -65,7 +98,10 @@
                   size="sm"
                   @click="completeCallAction(call)"
                 >
-                  <feather-icon icon="CheckCircleIcon" class="mr-25" />
+                  <feather-icon
+                    icon="CheckCircleIcon"
+                    class="mr-25"
+                  />
                   {{ $t('assistantCall.markDone') }}
                 </b-button>
               </div>
@@ -77,7 +113,11 @@
 
     <!-- Statistics Cards -->
     <b-row class="match-height">
-      <b-col cols="12" sm="6" lg="3">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
         <b-card class="text-center">
           <b-avatar
             variant="light-primary"
@@ -97,7 +137,11 @@
         </b-card>
       </b-col>
 
-      <b-col cols="12" sm="6" lg="3">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
         <b-card class="text-center">
           <b-avatar
             variant="light-info"
@@ -117,7 +161,11 @@
         </b-card>
       </b-col>
 
-      <b-col cols="12" sm="6" lg="3">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
         <b-card class="text-center">
           <b-avatar
             variant="light-warning"
@@ -137,7 +185,11 @@
         </b-card>
       </b-col>
 
-      <b-col cols="12" sm="6" lg="3">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
         <b-card class="text-center">
           <b-avatar
             variant="light-success"
@@ -162,21 +214,30 @@
     <b-row>
       <b-col cols="12">
         <b-card :title="$t('dashboard.quickActions')">
-          <div class="d-flex flex-wrap" style="gap: 0.5rem;">
-          <b-button
-            variant="primary"
-            :to="{ name: 'assistant-clients' }"
+          <div
+            class="d-flex flex-wrap"
+            style="gap: 0.5rem;"
           >
-            <feather-icon icon="UserPlusIcon" class="mr-50" />
-            {{ $t('client.addClient') }}
-          </b-button>
-          <b-button
-            variant="success"
-            :to="{ name: 'assistant-reservations' }"
-          >
-            <feather-icon icon="PlusIcon" class="mr-50" />
-            {{ $t('actions.newReservation') }}
-          </b-button>
+            <b-button
+              variant="primary"
+              :to="{ name: 'assistant-clients' }"
+            >
+              <feather-icon
+                icon="UserPlusIcon"
+                class="mr-50"
+              />
+              {{ $t('client.addClient') }}
+            </b-button>
+            <b-button
+              variant="success"
+              :to="{ name: 'assistant-reservations' }"
+            >
+              <feather-icon
+                icon="PlusIcon"
+                class="mr-50"
+              />
+              {{ $t('actions.newReservation') }}
+            </b-button>
           </div>
         </b-card>
       </b-col>
@@ -238,11 +299,11 @@ import {
   BListGroupItem,
   BAlert,
 } from 'bootstrap-vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import clientsService from '@/services/clients'
 import reservationsService from '@/services/reservations'
 import assistantCallsService from '@/services/assistantCalls'
 import { updateEchoAuth } from '@/libs/echo'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   components: {
@@ -295,7 +356,7 @@ export default {
     },
   },
   watch: {
-    '$store.state.broadcast.eventCounter'() {
+    '$store.state.broadcast.eventCounter': function () {
       this.fetchStats()
       this.fetchTodayReservations()
     },
@@ -470,7 +531,7 @@ export default {
       }
     },
     handleCallEvent(event) {
-      const call = event.call
+      const { call } = event
       if (!call) return
 
       if (event.action === 'created') {

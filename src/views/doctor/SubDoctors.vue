@@ -20,35 +20,71 @@
       </b-card-header> -->
 
       <b-row class="mb-2">
-        <b-col cols="12" md="4">
+        <b-col
+          cols="12"
+          md="4"
+        >
           <h4>
-            <small v-if="maxAllowed > 0" class="text-muted">
+            <small
+              v-if="maxAllowed > 0"
+              class="text-muted"
+            >
               {{ $t('subDoctors.usage', { current: subs.length, max: maxAllowed }) }}
             </small>
           </h4>
         </b-col>
-        <b-col cols="12" md="8" class="text-right">
-          <b-button variant="primary" :disabled="maxAllowed <= 0 || subs.length >= maxAllowed" @click="openAdd">
-            <feather-icon icon="PlusIcon" class="mr-50" />
+        <b-col
+          cols="12"
+          md="8"
+          class="text-right"
+        >
+          <b-button
+            variant="primary"
+            :disabled="maxAllowed <= 0 || subs.length >= maxAllowed"
+            @click="openAdd"
+          >
+            <feather-icon
+              icon="PlusIcon"
+              class="mr-50"
+            />
             {{ $t('subDoctors.add') }}
           </b-button>
         </b-col>
       </b-row>
 
-
-      <b-table :key="`sub-doctors-${currentLocale}`" :items="subs" :fields="fields" :busy="loading" responsive>
+      <b-table
+        :key="`sub-doctors-${currentLocale}`"
+        :items="subs"
+        :fields="fields"
+        :busy="loading"
+        responsive
+      >
         <template #cell(permissions)="data">
           <div class="small text-muted">
-            <div v-for="p in data.item.permissions" :key="p">{{ p }}</div>
+            <div
+              v-for="p in data.item.permissions"
+              :key="p"
+            >
+              {{ p }}
+            </div>
           </div>
         </template>
 
         <template #cell(actions)="data">
           <responsive-table-actions>
-            <b-button size="sm" variant="flat-primary" class="mr-25" @click="edit(data.item)">
+            <b-button
+              size="sm"
+              variant="flat-primary"
+              class="mr-25"
+              @click="edit(data.item)"
+            >
               <feather-icon icon="EditIcon" />
             </b-button>
-            <b-button size="sm" variant="flat-danger" @click="remove(data.item)">
+            <b-button
+              size="sm"
+              variant="flat-danger"
+              @click="remove(data.item)"
+            >
               <feather-icon icon="TrashIcon" />
             </b-button>
           </responsive-table-actions>
@@ -56,42 +92,86 @@
       </b-table>
     </b-card>
 
-    <b-modal v-model="showModal" :title="isEditing ? $t('subDoctors.edit') : $t('subDoctors.add')" @hidden="reset">
+    <b-modal
+      v-model="showModal"
+      :title="isEditing ? $t('subDoctors.edit') : $t('subDoctors.add')"
+      @hidden="reset"
+    >
       <b-form @submit.prevent="save">
         <b-form-group :label="$t('subDoctors.name')">
-          <b-form-input v-model="form.name" required />
+          <b-form-input
+            v-model="form.name"
+            required
+          />
         </b-form-group>
         <b-form-group :label="$t('subDoctors.nameEn')">
           <b-form-input v-model="form.name_en" />
         </b-form-group>
         <b-form-group :label="$t('subDoctors.email')">
-          <b-form-input v-model="form.email" type="email" :required="!isEditing" />
+          <b-form-input
+            v-model="form.email"
+            type="email"
+            :required="!isEditing"
+          />
         </b-form-group>
         <b-form-group :label="$t('client.phone')">
-          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+          <div
+            class="phone-combined-control"
+            :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+          >
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="form.phone_country_code" :options="countrySelectOptions" :required="!!form.phone" />
+              <b-form-select
+                v-model="form.phone_country_code"
+                class="phone-country-select"
+                :options="countrySelectOptions"
+                :required="!!form.phone"
+              />
             </div>
             <div class="number-col">
-              <b-form-input class="phone-number-input" v-model="form.phone" :placeholder="$t('client.phone')" />
+              <b-form-input
+                v-model="form.phone"
+                class="phone-number-input"
+                :placeholder="$t('client.phone')"
+              />
             </div>
           </div>
         </b-form-group>
         <b-form-group :label="$t('client.whatsappNumber')">
-          <b-form-checkbox v-model="form.useSameMobile" class="mb-50" @change="handleUseSameMobileChange">
+          <b-form-checkbox
+            v-model="form.useSameMobile"
+            class="mb-50"
+            @change="handleUseSameMobileChange"
+          >
             {{ $t('client.useSameMobile') }}
           </b-form-checkbox>
-          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+          <div
+            class="phone-combined-control"
+            :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+          >
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="form.whatsapp_country_code" :options="countrySelectOptions" :disabled="form.useSameMobile" :required="!!form.whatsapp_number && !form.useSameMobile" />
+              <b-form-select
+                v-model="form.whatsapp_country_code"
+                class="phone-country-select"
+                :options="countrySelectOptions"
+                :disabled="form.useSameMobile"
+                :required="!!form.whatsapp_number && !form.useSameMobile"
+              />
             </div>
             <div class="number-col">
-              <b-form-input class="phone-number-input" v-model="form.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="form.useSameMobile" />
+              <b-form-input
+                v-model="form.whatsapp_number"
+                class="phone-number-input"
+                :placeholder="$t('client.whatsappPlaceholder')"
+                :disabled="form.useSameMobile"
+              />
             </div>
           </div>
         </b-form-group>
         <b-form-group :label="$t('admin.specialization')">
-          <b-form-select v-model="form.specialization" :options="specializationOptions">
+          <b-form-select
+            v-model="form.specialization"
+            :options="specializationOptions"
+          >
             <template #first>
               <b-form-select-option value="">
                 {{ $t('admin.specializationPlaceholder') }}
@@ -100,23 +180,37 @@
           </b-form-select>
         </b-form-group>
         <b-form-group :label="$t('subDoctors.password')">
-          <b-form-input v-model="form.password" type="password" :required="!isEditing" />
+          <b-form-input
+            v-model="form.password"
+            type="password"
+            :required="!isEditing"
+          />
         </b-form-group>
       </b-form>
 
       <template #modal-footer>
-        <b-button variant="secondary" @click="showModal = false">{{ $t('actions.cancel') }}</b-button>
-        <b-button variant="primary" @click="save">{{ isEditing ? $t('actions.save') : $t('actions.add') }}</b-button>
+        <b-button
+          variant="secondary"
+          @click="showModal = false"
+        >
+          {{ $t('actions.cancel') }}
+        </b-button>
+        <b-button
+          variant="primary"
+          @click="save"
+        >
+          {{ isEditing ? $t('actions.save') : $t('actions.add') }}
+        </b-button>
       </template>
     </b-modal>
   </div>
 </template>
 
 <script>
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import subDoctorsApi from '@/services/subDoctors'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
@@ -167,7 +261,7 @@ export default {
         { key: 'specialization', label: this.$t('admin.specialization'), formatter: this.specializationLabel },
         { key: 'actions', label: this.$t('table.actions') },
       ]
-    }
+    },
   },
   mounted() {
     this.fetch()
@@ -289,7 +383,7 @@ export default {
       this.$toast({ component: ToastificationContent, props: { title: this.$t('messages.error'), text: this.$t('client.selectCountryCode'), variant: 'danger' } })
       return true
     },
-  }
+  },
 }
 </script>
 

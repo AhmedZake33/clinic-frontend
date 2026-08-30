@@ -1,4 +1,4 @@
-﻿import Vue from 'vue'
+import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 // Routes
@@ -19,16 +19,24 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   mode: 'history',
   /**
-   * FIX: Do NOT use VUE_APP_BASE_URL here. 
+   * FIX: Do NOT use VUE_APP_BASE_URL here.
    * VUE_APP_BASE_URL is for your API (https://...).
    * 'base' should be the subdirectory of your frontend (usually '/' or process.env.BASE_URL).
    */
-  base: process.env.BASE_URL || '/', 
+  base: process.env.BASE_URL || '/',
   scrollBehavior() {
     return { x: 0, y: 0 }
   },
   routes: [
-    { path: '/', redirect: { name: 'login' } },
+    {
+      path: '/',
+      name: 'landing-page',
+      component: () => import('@/views/LandingPage.vue'),
+      meta: {
+        layout: 'full',
+        requiresAuth: false,
+      },
+    },
     ...apps,
     ...welcome,
     ...admin,

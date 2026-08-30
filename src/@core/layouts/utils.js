@@ -1,6 +1,6 @@
-import router from '@/router'
 import { isObject } from '@core/utils/utils'
 import { computed } from '@vue/composition-api'
+import router from '@/router'
 
 /**
  * Return which component to render based on it's data/context
@@ -8,9 +8,9 @@ import { computed } from '@vue/composition-api'
  */
 export const resolveVerticalNavMenuItemComponent = item => {
   if (item.header) return 'vertical-nav-menu-header'
- if (item.children && item.children.length > 0) {
+  if (item.children && item.children.length > 0) {
     return 'vertical-nav-menu-group'
-  }  return 'vertical-nav-menu-link'
+  } return 'vertical-nav-menu-link'
 }
 
 /**

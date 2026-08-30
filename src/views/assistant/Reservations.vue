@@ -1,37 +1,97 @@
-﻿<template>
+<template>
   <div>
     <b-card>
       <b-row class="mb-2">
-        <b-col cols="12" md="4">
+        <b-col
+          cols="12"
+          md="4"
+        >
           <h4>{{ $t('reservation.reservationsList') }}</h4>
         </b-col>
-        <b-col cols="12" md="8" class="text-right">
-          <b-button variant="primary" @click="showAddModal">
-            <feather-icon icon="PlusIcon" class="mr-50" />
+        <b-col
+          cols="12"
+          md="8"
+          class="text-right"
+        >
+          <b-button
+            variant="primary"
+            @click="showAddModal"
+          >
+            <feather-icon
+              icon="PlusIcon"
+              class="mr-50"
+            />
             {{ $t('actions.newReservation') }}
           </b-button>
         </b-col>
       </b-row>
 
-      <b-form @submit.prevent="applyFilters" class="mb-2">
+      <b-form
+        class="mb-2"
+        @submit.prevent="applyFilters"
+      >
         <b-row>
-          <b-col cols="12" md="3" class="mb-1 mb-md-0">
-            <b-form-input v-model="filters.search" :placeholder="$t('reservation.searchByClientOrNotes')" />
+          <b-col
+            cols="12"
+            md="3"
+            class="mb-1 mb-md-0"
+          >
+            <b-form-input
+              v-model="filters.search"
+              :placeholder="$t('reservation.searchByClientOrNotes')"
+            />
           </b-col>
-          <b-col cols="6" md="2" class="mb-1 mb-md-0">
-            <b-form-select v-model="filters.status" :options="statusOptions" />
+          <b-col
+            cols="6"
+            md="2"
+            class="mb-1 mb-md-0"
+          >
+            <b-form-select
+              v-model="filters.status"
+              :options="statusOptions"
+            />
           </b-col>
-          <b-col cols="6" md="3" class="mb-1 mb-md-0">
-            <b-form-input v-model="filters.date_from" type="date" :placeholder="$t('reservation.from')" />
+          <b-col
+            cols="6"
+            md="3"
+            class="mb-1 mb-md-0"
+          >
+            <b-form-input
+              v-model="filters.date_from"
+              type="date"
+              :placeholder="$t('reservation.from')"
+            />
           </b-col>
-          <b-col cols="6" md="2" class="mb-1 mb-md-0">
-            <b-form-input v-model="filters.date_to" type="date" :placeholder="$t('reservation.to')" />
+          <b-col
+            cols="6"
+            md="2"
+            class="mb-1 mb-md-0"
+          >
+            <b-form-input
+              v-model="filters.date_to"
+              type="date"
+              :placeholder="$t('reservation.to')"
+            />
           </b-col>
-          <b-col cols="12" md="12" class="text-right mt-1">
-            <b-button type="submit" variant="primary" class="mr-1" :disabled="loading">
+          <b-col
+            cols="12"
+            md="12"
+            class="text-right mt-1"
+          >
+            <b-button
+              type="submit"
+              variant="primary"
+              class="mr-1"
+              :disabled="loading"
+            >
               {{ $t('filters.apply') }}
             </b-button>
-            <b-button variant="outline-secondary" size="sm" @click="resetFilters" :disabled="loading">
+            <b-button
+              variant="outline-secondary"
+              size="sm"
+              :disabled="loading"
+              @click="resetFilters"
+            >
               {{ $t('filters.reset') }}
             </b-button>
           </b-col>
@@ -51,21 +111,48 @@
           <b-badge :variant="getStatusVariant(data.value)">
             {{ $t('reservation.' + data.value) }}
           </b-badge>
-          <b-badge v-if="data.item.checked_in_at" variant="success" pill class="ml-50">
-            <feather-icon icon="LogInIcon" size="12" class="mr-25" />
+          <b-badge
+            v-if="data.item.checked_in_at"
+            variant="success"
+            pill
+            class="ml-50"
+          >
+            <feather-icon
+              icon="LogInIcon"
+              size="12"
+              class="mr-25"
+            />
             #{{ data.item.waiting_number }}
           </b-badge>
         </template>
 
         <template #cell(requirements)="data">
-          <span v-if="!data.item.requires_xray && !data.item.requires_lab" class="text-muted">—</span>
+          <span
+            v-if="!data.item.requires_xray && !data.item.requires_lab"
+            class="text-muted"
+          >—</span>
           <span v-else>
-            <b-badge v-if="data.item.requires_xray" variant="warning" class="mr-50">
-              <feather-icon icon="ImageIcon" size="12" class="mr-25" />
+            <b-badge
+              v-if="data.item.requires_xray"
+              variant="warning"
+              class="mr-50"
+            >
+              <feather-icon
+                icon="ImageIcon"
+                size="12"
+                class="mr-25"
+              />
               {{ $t('reservation.xray') }}
             </b-badge>
-            <b-badge v-if="data.item.requires_lab" variant="info">
-              <feather-icon icon="ActivityIcon" size="12" class="mr-25" />
+            <b-badge
+              v-if="data.item.requires_lab"
+              variant="info"
+            >
+              <feather-icon
+                icon="ActivityIcon"
+                size="12"
+                class="mr-25"
+              />
               {{ $t('reservation.lab') }}
             </b-badge>
           </span>
@@ -162,11 +249,14 @@
         v-model="pagination.current_page"
         :total-rows="pagination.total"
         :per-page="pagination.per_page"
-        @change="onPageChange"
         class="mt-2"
         align="center"
+        @change="onPageChange"
       />
-      <div class="text-center text-muted small mt-1" v-if="pagination.total">
+      <div
+        v-if="pagination.total"
+        class="text-center text-muted small mt-1"
+      >
         {{ paginationCountText(pagination) }}
       </div>
     </b-card>
@@ -179,7 +269,10 @@
       size="lg"
     >
       <b-form @submit.prevent="saveReservation">
-        <b-form-group :label="$t('table.client')" label-for="client">
+        <b-form-group
+          :label="$t('table.client')"
+          label-for="client"
+        >
           <b-form-input
             id="client-search"
             v-model="clientSearch"
@@ -187,13 +280,22 @@
             autocomplete="off"
             @focus="openClientSearch"
           />
-          <div v-if="clientDropdownOpen && clientsLoading" class="client-search-dropdown">
+          <div
+            v-if="clientDropdownOpen && clientsLoading"
+            class="client-search-dropdown"
+          >
             <div class="client-search-item text-muted">
-              <b-spinner small class="mr-50" />
+              <b-spinner
+                small
+                class="mr-50"
+              />
               {{ $t('messages.loading') }}
             </div>
           </div>
-          <div v-else-if="clientDropdownOpen && filteredClients.length" class="client-search-dropdown">
+          <div
+            v-else-if="clientDropdownOpen && filteredClients.length"
+            class="client-search-dropdown"
+          >
             <div
               v-for="client in filteredClients"
               :key="client.id"
@@ -207,15 +309,26 @@
               </small>
             </div>
           </div>
-          <div v-else-if="clientDropdownOpen && clientSearch && !filteredClients.length" class="client-search-dropdown">
-            <div class="client-search-item text-muted">{{ $t('messages.noData') }}</div>
+          <div
+            v-else-if="clientDropdownOpen && clientSearch && !filteredClients.length"
+            class="client-search-dropdown"
+          >
+            <div class="client-search-item text-muted">
+              {{ $t('messages.noData') }}
+            </div>
           </div>
-          <small v-if="form.client_id && selectedClientDisplay" class="text-success">
+          <small
+            v-if="form.client_id && selectedClientDisplay"
+            class="text-success"
+          >
             {{ $t('reservation.selected') }}: {{ selectedClientDisplay }}
           </small>
         </b-form-group>
 
-        <b-form-group :label="$t('table.doctor')" label-for="doctor">
+        <b-form-group
+          :label="$t('table.doctor')"
+          label-for="doctor"
+        >
           <b-form-select
             id="doctor"
             v-model="form.doctor_id"
@@ -223,7 +336,10 @@
             required
           >
             <template #first>
-              <b-form-select-option :value="null" disabled>
+              <b-form-select-option
+                :value="null"
+                disabled
+              >
                 {{ $t('reservation.selectDoctor') }}
               </b-form-select-option>
             </template>
@@ -231,8 +347,14 @@
         </b-form-group>
 
         <b-row>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('reservation.appointmentDate')" label-for="appointment-date">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('reservation.appointmentDate')"
+              label-for="appointment-date"
+            >
               <b-form-input
                 id="appointment-date"
                 v-model="form.appointment_date_only"
@@ -241,8 +363,14 @@
               />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('reservation.appointmentTime')" label-for="appointment-time">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('reservation.appointmentTime')"
+              label-for="appointment-time"
+            >
               <b-form-select
                 id="appointment-time"
                 v-model="form.selected_time"
@@ -251,7 +379,10 @@
                 required
               >
                 <template #first>
-                  <b-form-select-option :value="null" disabled>
+                  <b-form-select-option
+                    :value="null"
+                    disabled
+                  >
                     {{ availabilityLoading ? $t('messages.loading') : (availableTimeSlots.length === 0 && form.doctor_id && form.appointment_date_only ? $t('reservation.noAvailableTimes') : $t('reservation.selectTime')) }}
                   </b-form-select-option>
                 </template>
@@ -260,13 +391,26 @@
           </b-col>
         </b-row>
         <div class="mb-1">
-          <b-alert v-if="availabilityLoading" show variant="info">{{ $t('reservation.loadingAvailableTimes') }}</b-alert>
-          <b-alert v-else-if="timeSlotsMessage" :variant="timeSlotsMessageVariant" show>
+          <b-alert
+            v-if="availabilityLoading"
+            show
+            variant="info"
+          >
+            {{ $t('reservation.loadingAvailableTimes') }}
+          </b-alert>
+          <b-alert
+            v-else-if="timeSlotsMessage"
+            :variant="timeSlotsMessageVariant"
+            show
+          >
             {{ timeSlotsMessage }}
           </b-alert>
         </div>
 
-        <b-form-group :label="$t('reservation.notes')" label-for="notes">
+        <b-form-group
+          :label="$t('reservation.notes')"
+          label-for="notes"
+        >
           <b-form-textarea
             id="notes"
             v-model="form.notes"
@@ -277,12 +421,20 @@
 
         <hr>
         <div class="d-flex justify-content-between align-items-center mb-1">
-          <h6 class="mb-0">{{ $t('services.additionalServices') }}</h6>
-          <small v-if="!form.doctor_id" class="text-muted">{{ $t('reservation.selectDoctor') }}</small>
+          <h6 class="mb-0">
+            {{ $t('services.additionalServices') }}
+          </h6>
+          <small
+            v-if="!form.doctor_id"
+            class="text-muted"
+          >{{ $t('reservation.selectDoctor') }}</small>
         </div>
 
         <div>
-          <b-form-group :label="$t('services.selectFromCatalog')" label-for="create-svc-catalog">
+          <b-form-group
+            :label="$t('services.selectFromCatalog')"
+            label-for="create-svc-catalog"
+          >
             <b-form-select
               id="create-svc-catalog"
               v-model="createServiceForm.doctor_service_id"
@@ -292,7 +444,10 @@
             />
           </b-form-group>
 
-          <b-form-group :label="$t('services.name')" label-for="create-service-name">
+          <b-form-group
+            :label="$t('services.name')"
+            label-for="create-service-name"
+          >
             <b-form-input
               id="create-service-name"
               v-model="createServiceForm.service_name"
@@ -302,7 +457,10 @@
 
           <b-row>
             <b-col cols="6">
-              <b-form-group :label="$t('services.price')" label-for="create-service-price">
+              <b-form-group
+                :label="$t('services.price')"
+                label-for="create-service-price"
+              >
                 <b-form-input
                   id="create-service-price"
                   v-model="createServiceForm.unit_price"
@@ -314,7 +472,10 @@
               </b-form-group>
             </b-col>
             <b-col cols="6">
-              <b-form-group :label="$t('services.quantity')" label-for="create-service-quantity">
+              <b-form-group
+                :label="$t('services.quantity')"
+                label-for="create-service-quantity"
+              >
                 <b-form-input
                   id="create-service-quantity"
                   v-model="createServiceForm.quantity"
@@ -330,18 +491,33 @@
             <strong>{{ $t('services.total') }}: {{ createServiceTotal.toFixed(2) }}</strong>
           </div>
 
-          <b-form-group :label="$t('services.invoiceOption')" label-for="create-service-invoice">
+          <b-form-group
+            :label="$t('services.invoiceOption')"
+            label-for="create-service-invoice"
+          >
             <div class="d-flex">
-              <b-form-radio v-model="createServiceForm.with_invoice" :value="true" class="mr-2" :disabled="!form.doctor_id">
+              <b-form-radio
+                v-model="createServiceForm.with_invoice"
+                :value="true"
+                class="mr-2"
+                :disabled="!form.doctor_id"
+              >
                 {{ $t('services.withInvoice') }}
               </b-form-radio>
-              <b-form-radio v-model="createServiceForm.with_invoice" :value="false" :disabled="!form.doctor_id">
+              <b-form-radio
+                v-model="createServiceForm.with_invoice"
+                :value="false"
+                :disabled="!form.doctor_id"
+              >
                 {{ $t('services.noInvoice') }}
               </b-form-radio>
             </div>
           </b-form-group>
 
-          <b-form-group :label="$t('services.notes')" label-for="create-service-notes">
+          <b-form-group
+            :label="$t('services.notes')"
+            label-for="create-service-notes"
+          >
             <b-form-input
               id="create-service-notes"
               v-model="createServiceForm.notes"
@@ -351,14 +527,27 @@
           </b-form-group>
 
           <div class="text-right mb-1">
-            <b-button type="button" size="sm" variant="outline-primary" :disabled="!form.doctor_id || !createServiceForm.service_name" @click="addPendingReservationService">
-              <feather-icon icon="PlusIcon" size="14" class="mr-25" />
+            <b-button
+              type="button"
+              size="sm"
+              variant="outline-primary"
+              :disabled="!form.doctor_id || !createServiceForm.service_name"
+              @click="addPendingReservationService"
+            >
+              <feather-icon
+                icon="PlusIcon"
+                size="14"
+                class="mr-25"
+              />
               {{ $t('services.addService') }}
             </b-button>
           </div>
         </div>
 
-        <div v-if="pendingReservationServices.length === 0" class="text-muted small text-center py-1">
+        <div
+          v-if="pendingReservationServices.length === 0"
+          class="text-muted small text-center py-1"
+        >
           {{ $t('services.noServicesOnReservation') }}
         </div>
         <b-table
@@ -371,7 +560,10 @@
         >
           <template #cell(service_name)="data">
             {{ data.item.service_name }}
-            <span v-if="data.item.notes" class="text-muted d-block small">{{ data.item.notes }}</span>
+            <span
+              v-if="data.item.notes"
+              class="text-muted d-block small"
+            >{{ data.item.notes }}</span>
           </template>
           <template #cell(total_price)="data">
             {{ Number(data.item.unit_price).toFixed(2) }} × {{ data.item.quantity }} = <strong>{{ Number(data.item.total_price).toFixed(2) }}</strong>
@@ -395,16 +587,28 @@
           </template>
         </b-table>
 
-        <div v-if="pendingReservationServices.length" class="text-right mt-50">
+        <div
+          v-if="pendingReservationServices.length"
+          class="text-right mt-50"
+        >
           <strong>{{ $t('services.totalServices') }}: {{ pendingServicesTotal.toFixed(2) }}</strong>
         </div>
 
         <hr>
-        <h6 class="mb-1">{{ $t('financial.financial') }}</h6>
+        <h6 class="mb-1">
+          {{ $t('financial.financial') }}
+        </h6>
 
         <b-row>
-          <b-col cols="12" sm="6" md="4">
-            <b-form-group :label="$t('financial.amount')" label-for="amount">
+          <b-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <b-form-group
+              :label="$t('financial.amount')"
+              label-for="amount"
+            >
               <b-form-input
                 id="amount"
                 v-model.number="form.amount"
@@ -415,8 +619,15 @@
               />
             </b-form-group>
           </b-col>
-          <b-col cols="12" sm="6" md="4">
-            <b-form-group :label="$t('financial.paid')" label-for="paid">
+          <b-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <b-form-group
+              :label="$t('financial.paid')"
+              label-for="paid"
+            >
               <b-form-input
                 id="paid"
                 v-model.number="form.paid"
@@ -426,8 +637,15 @@
               />
             </b-form-group>
           </b-col>
-          <b-col cols="12" sm="6" md="4">
-            <b-form-group :label="$t('financial.paymentMethod')" label-for="payment_method">
+          <b-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <b-form-group
+              :label="$t('financial.paymentMethod')"
+              label-for="payment_method"
+            >
               <b-form-select
                 id="payment_method"
                 v-model="form.payment_method"
@@ -439,11 +657,24 @@
         </b-row>
 
         <div class="text-right">
-          <b-button type="button" variant="secondary" class="mr-1" @click="modalShow = false">
+          <b-button
+            type="button"
+            variant="secondary"
+            class="mr-1"
+            @click="modalShow = false"
+          >
             {{ $t('actions.cancel') }}
           </b-button>
-          <b-button type="submit" variant="primary" :disabled="saving">
-            <b-spinner v-if="saving" small class="mr-1" />
+          <b-button
+            type="submit"
+            variant="primary"
+            :disabled="saving"
+          >
+            <b-spinner
+              v-if="saving"
+              small
+              class="mr-1"
+            />
             {{ $t('actions.createReservation') }}
           </b-button>
         </div>
@@ -466,7 +697,10 @@
             class="mr-1 mb-50"
             @click="printMedicinesPrescription(selectedReservation)"
           >
-            <feather-icon icon="PrinterIcon" class="mr-50" />
+            <feather-icon
+              icon="PrinterIcon"
+              class="mr-50"
+            />
             {{ $t('reservation.printMedicinesPrescription') }}
           </b-button>
           <b-button
@@ -476,50 +710,104 @@
             class="mb-50"
             @click="printReservationDetails(selectedReservation)"
           >
-            <feather-icon icon="FileTextIcon" class="mr-50" />
+            <feather-icon
+              icon="FileTextIcon"
+              class="mr-50"
+            />
             {{ $t('reservation.printReservationDetails') }}
           </b-button>
         </div>
 
         <!-- Client Details -->
-        <b-card v-if="selectedReservation.client" class="mb-2" no-body>
+        <b-card
+          v-if="selectedReservation.client"
+          class="mb-2"
+          no-body
+        >
           <b-card-header>
-            <h6 class="mb-0">{{ $t('client.clientDetails') }}</h6>
+            <h6 class="mb-0">
+              {{ $t('client.clientDetails') }}
+            </h6>
           </b-card-header>
           <b-card-body>
             <b-row>
-              <b-col cols="12" md="6">
-                <p class="mb-50"><strong>{{ $t('client.name') }}:</strong> {{ selectedReservation.client.name }}</p>
-                <p class="mb-50"><strong>{{ $t('client.phone') }}:</strong> {{ selectedReservation.client.phone }}</p>
-                <p class="mb-50"><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedReservation.client.whatsapp_number || $t('reservation.na') }}</p>
-                <p class="mb-50"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth || $t('reservation.na') }}</p>
-                <p class="mb-50"><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(selectedReservation.client.date_of_birth) }}</p>
+              <b-col
+                cols="12"
+                md="6"
+              >
+                <p class="mb-50">
+                  <strong>{{ $t('client.name') }}:</strong> {{ selectedReservation.client.name }}
+                </p>
+                <p class="mb-50">
+                  <strong>{{ $t('client.phone') }}:</strong> {{ selectedReservation.client.phone }}
+                </p>
+                <p class="mb-50">
+                  <strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedReservation.client.whatsapp_number || $t('reservation.na') }}
+                </p>
+                <p class="mb-50">
+                  <strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth || $t('reservation.na') }}
+                </p>
+                <p class="mb-50">
+                  <strong>{{ $t('client.age') }}:</strong> {{ calculateAge(selectedReservation.client.date_of_birth) }}
+                </p>
               </b-col>
-              <b-col cols="12" md="6">
-                <p class="mb-50"><strong>{{ $t('client.height') }}:</strong> {{ selectedReservation.client.height ? selectedReservation.client.height + ' cm' : $t('reservation.na') }}</p>
-                <p class="mb-50"><strong>{{ $t('client.weight') }}:</strong> {{ selectedReservation.client.weight ? selectedReservation.client.weight + ' kg' : $t('reservation.na') }}</p>
-                <p class="mb-50"><strong>{{ $t('client.address') }}:</strong> {{ selectedReservation.client.address || $t('reservation.na') }}</p>
-                <p class="mb-50"><strong>{{ $t('client.job') }}:</strong> {{ selectedReservation.client.job || $t('reservation.na') }}</p>
-                <p class="mb-50"><strong>{{ $t('client.chronicIllnesses') }}:</strong> {{ formatClientChronicIllnesses(selectedReservation.client.chronic_illnesses) }}</p>
+              <b-col
+                cols="12"
+                md="6"
+              >
+                <p class="mb-50">
+                  <strong>{{ $t('client.height') }}:</strong> {{ selectedReservation.client.height ? selectedReservation.client.height + ' cm' : $t('reservation.na') }}
+                </p>
+                <p class="mb-50">
+                  <strong>{{ $t('client.weight') }}:</strong> {{ selectedReservation.client.weight ? selectedReservation.client.weight + ' kg' : $t('reservation.na') }}
+                </p>
+                <p class="mb-50">
+                  <strong>{{ $t('client.address') }}:</strong> {{ selectedReservation.client.address || $t('reservation.na') }}
+                </p>
+                <p class="mb-50">
+                  <strong>{{ $t('client.job') }}:</strong> {{ selectedReservation.client.job || $t('reservation.na') }}
+                </p>
+                <p class="mb-50">
+                  <strong>{{ $t('client.chronicIllnesses') }}:</strong> {{ formatClientChronicIllnesses(selectedReservation.client.chronic_illnesses) }}
+                </p>
               </b-col>
             </b-row>
-            <div v-if="selectedReservation.client.medical_history" class="mt-50">
-              <p class="mb-25"><strong>{{ $t('client.medicalHistory') }}:</strong></p>
-              <b-alert variant="warning" show class="mb-0">{{ selectedReservation.client.medical_history }}</b-alert>
+            <div
+              v-if="selectedReservation.client.medical_history"
+              class="mt-50"
+            >
+              <p class="mb-25">
+                <strong>{{ $t('client.medicalHistory') }}:</strong>
+              </p>
+              <b-alert
+                variant="warning"
+                show
+                class="mb-0"
+              >
+                {{ selectedReservation.client.medical_history }}
+              </b-alert>
             </div>
           </b-card-body>
         </b-card>
 
         <b-row>
-          <b-col cols="12" md="6">
-            <p v-if="selectedReservation.doctor"><strong>{{ $t('table.doctor') }}:</strong> {{ selectedReservation.doctor.name }}</p>
-            <p><strong>{{ $t('table.status') }}:</strong> 
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <p v-if="selectedReservation.doctor">
+              <strong>{{ $t('table.doctor') }}:</strong> {{ selectedReservation.doctor.name }}
+            </p>
+            <p><strong>{{ $t('table.status') }}:</strong>
               <b-badge :variant="getStatusVariant(selectedReservation.status)">
                 {{ $t('reservation.' + selectedReservation.status) }}
               </b-badge>
             </p>
           </b-col>
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <p><strong>{{ $t('table.appointment') }}:</strong> {{ formatDateTime(selectedReservation.appointment_date) }}</p>
             <p><strong>{{ $t('table.created') }}:</strong> {{ formatDateTime(selectedReservation.created_at) }}</p>
             <p v-if="selectedReservation.completed_at">
@@ -527,7 +815,11 @@
             </p>
             <p v-if="selectedReservation.checked_in_at">
               <strong>{{ $t('queue.checkedInAt') }}:</strong> {{ formatDateTime(selectedReservation.checked_in_at) }}
-              <b-badge variant="success" pill class="ml-50">
+              <b-badge
+                variant="success"
+                pill
+                class="ml-50"
+              >
                 {{ $t('queue.waitingNumber') }}: #{{ selectedReservation.waiting_number }}
               </b-badge>
             </p>
@@ -568,9 +860,16 @@
               class="mb-50 text-left"
               @click="downloadCompletionFile(file)"
             >
-              <feather-icon icon="PaperclipIcon" size="14" class="mr-50" />
+              <feather-icon
+                icon="PaperclipIcon"
+                size="14"
+                class="mr-50"
+              />
               {{ file.file_name }}
-              <span v-if="file.size_text" class="text-muted ml-50">({{ file.size_text }})</span>
+              <span
+                v-if="file.size_text"
+                class="text-muted ml-50"
+              >({{ file.size_text }})</span>
             </b-button>
           </div>
         </div>
@@ -578,24 +877,53 @@
         <div v-if="selectedReservation.requires_xray || selectedReservation.requires_lab">
           <hr>
           <h6>{{ $t('reservation.additionalRequirements') }}</h6>
-          <div v-if="selectedReservation.requires_xray" class="mb-1">
-            <b-badge variant="warning" class="mr-1">
-              <feather-icon icon="ImageIcon" size="12" class="mr-25" />
+          <div
+            v-if="selectedReservation.requires_xray"
+            class="mb-1"
+          >
+            <b-badge
+              variant="warning"
+              class="mr-1"
+            >
+              <feather-icon
+                icon="ImageIcon"
+                size="12"
+                class="mr-25"
+              />
               {{ $t('reservation.requiresXray') }}
             </b-badge>
-            <p v-if="selectedReservation.xray_notes" class="mt-50 text-muted small">{{ selectedReservation.xray_notes }}</p>
+            <p
+              v-if="selectedReservation.xray_notes"
+              class="mt-50 text-muted small"
+            >
+              {{ selectedReservation.xray_notes }}
+            </p>
           </div>
           <div v-if="selectedReservation.requires_lab">
-            <b-badge variant="info" class="mr-1">
-              <feather-icon icon="ActivityIcon" size="12" class="mr-25" />
+            <b-badge
+              variant="info"
+              class="mr-1"
+            >
+              <feather-icon
+                icon="ActivityIcon"
+                size="12"
+                class="mr-25"
+              />
               {{ $t('reservation.requiresLab') }}
             </b-badge>
-            <p v-if="selectedReservation.lab_notes" class="mt-50 text-muted small">{{ selectedReservation.lab_notes }}</p>
+            <p
+              v-if="selectedReservation.lab_notes"
+              class="mt-50 text-muted small"
+            >
+              {{ selectedReservation.lab_notes }}
+            </p>
           </div>
         </div>
 
         <hr>
-        <h6 class="mb-1">{{ $t('reservation.activityLog') }}</h6>
+        <h6 class="mb-1">
+          {{ $t('reservation.activityLog') }}
+        </h6>
         <div v-if="selectedReservation.logs && selectedReservation.logs.length">
           <div
             v-for="log in selectedReservation.logs"
@@ -603,7 +931,10 @@
             class="d-flex justify-content-between align-items-start border-bottom py-50"
           >
             <div>
-              <b-badge :variant="getReservationLogVariant(log.action)" class="mr-50">
+              <b-badge
+                :variant="getReservationLogVariant(log.action)"
+                class="mr-50"
+              >
                 {{ getReservationLogLabel(log.action) }}
               </b-badge>
               <span>{{ getReservationLogDescription(log) }}</span>
@@ -615,28 +946,43 @@
             <small class="text-muted text-nowrap ml-1">{{ formatDateTime(log.created_at) }}</small>
           </div>
         </div>
-        <div v-else class="text-muted small text-center py-1">
+        <div
+          v-else
+          class="text-muted small text-center py-1"
+        >
           {{ $t('reservation.noActivityLog') }}
         </div>
 
         <hr>
         <div class="d-flex justify-content-between align-items-center mb-1">
-          <h6 class="mb-0">{{ $t('services.additionalServices') }}</h6>
+          <h6 class="mb-0">
+            {{ $t('services.additionalServices') }}
+          </h6>
           <b-button
             v-if="selectedReservation.status !== 'completed' && selectedReservation.status !== 'cancelled'"
             size="sm"
             variant="outline-primary"
             @click="openAddServiceModal"
           >
-            <feather-icon icon="PlusIcon" size="14" class="mr-25" />
+            <feather-icon
+              icon="PlusIcon"
+              size="14"
+              class="mr-25"
+            />
             {{ $t('services.addService') }}
           </b-button>
         </div>
 
-        <div v-if="loadingResServices" class="text-center py-1">
+        <div
+          v-if="loadingResServices"
+          class="text-center py-1"
+        >
           <b-spinner small />
         </div>
-        <div v-else-if="reservationServices.length === 0" class="text-muted small text-center py-1">
+        <div
+          v-else-if="reservationServices.length === 0"
+          class="text-muted small text-center py-1"
+        >
           {{ $t('services.noServicesOnReservation') }}
         </div>
         <b-table
@@ -649,7 +995,10 @@
         >
           <template #cell(service_name)="data">
             {{ data.item.service_name }}
-            <span v-if="data.item.notes" class="text-muted d-block small">{{ data.item.notes }}</span>
+            <span
+              v-if="data.item.notes"
+              class="text-muted d-block small"
+            >{{ data.item.notes }}</span>
           </template>
           <template #cell(total_price)="data">
             {{ Number(data.item.unit_price).toFixed(2) }} × {{ data.item.quantity }} = <strong>{{ Number(data.item.total_price).toFixed(2) }}</strong>
@@ -661,7 +1010,10 @@
           </template>
         </b-table>
 
-        <div v-if="reservationServices.length" class="text-right mt-50">
+        <div
+          v-if="reservationServices.length"
+          class="text-right mt-50"
+        >
           <strong>{{ $t('services.totalServices') }}:
             {{ reservationServices.reduce((sum, s) => sum + Number(s.total_price), 0).toFixed(2) }}
           </strong>
@@ -676,7 +1028,10 @@
       @hidden="resetServiceForm"
     >
       <b-form @submit.prevent="saveReservationService">
-        <b-form-group :label="$t('services.selectFromCatalog')" label-for="svc-catalog-assistant">
+        <b-form-group
+          :label="$t('services.selectFromCatalog')"
+          label-for="svc-catalog-assistant"
+        >
           <b-form-select
             id="svc-catalog-assistant"
             v-model="serviceForm.doctor_service_id"
@@ -685,7 +1040,10 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('services.name')" label-for="assistant-service-name">
+        <b-form-group
+          :label="$t('services.name')"
+          label-for="assistant-service-name"
+        >
           <b-form-input
             id="assistant-service-name"
             v-model="serviceForm.service_name"
@@ -695,7 +1053,10 @@
 
         <b-row>
           <b-col cols="6">
-            <b-form-group :label="$t('services.price')" label-for="assistant-service-price">
+            <b-form-group
+              :label="$t('services.price')"
+              label-for="assistant-service-price"
+            >
               <b-form-input
                 id="assistant-service-price"
                 v-model="serviceForm.unit_price"
@@ -707,7 +1068,10 @@
             </b-form-group>
           </b-col>
           <b-col cols="6">
-            <b-form-group :label="$t('services.quantity')" label-for="assistant-service-quantity">
+            <b-form-group
+              :label="$t('services.quantity')"
+              label-for="assistant-service-quantity"
+            >
               <b-form-input
                 id="assistant-service-quantity"
                 v-model="serviceForm.quantity"
@@ -723,18 +1087,31 @@
           <strong>{{ $t('services.total') }}: {{ serviceTotal.toFixed(2) }}</strong>
         </div>
 
-        <b-form-group :label="$t('services.invoiceOption')" label-for="assistant-service-invoice">
+        <b-form-group
+          :label="$t('services.invoiceOption')"
+          label-for="assistant-service-invoice"
+        >
           <div class="d-flex">
-            <b-form-radio v-model="serviceForm.with_invoice" :value="true" class="mr-2">
+            <b-form-radio
+              v-model="serviceForm.with_invoice"
+              :value="true"
+              class="mr-2"
+            >
               {{ $t('services.withInvoice') }}
             </b-form-radio>
-            <b-form-radio v-model="serviceForm.with_invoice" :value="false">
+            <b-form-radio
+              v-model="serviceForm.with_invoice"
+              :value="false"
+            >
               {{ $t('services.noInvoice') }}
             </b-form-radio>
           </div>
         </b-form-group>
 
-        <b-form-group :label="$t('services.notes')" label-for="assistant-service-notes">
+        <b-form-group
+          :label="$t('services.notes')"
+          label-for="assistant-service-notes"
+        >
           <b-form-input
             id="assistant-service-notes"
             v-model="serviceForm.notes"
@@ -744,9 +1121,22 @@
       </b-form>
 
       <template #modal-footer>
-        <b-button variant="secondary" @click="addServiceModalShow = false">{{ $t('actions.cancel') }}</b-button>
-        <b-button variant="primary" :disabled="savingService" @click="saveReservationService">
-          <b-spinner v-if="savingService" small class="mr-50" />
+        <b-button
+          variant="secondary"
+          @click="addServiceModalShow = false"
+        >
+          {{ $t('actions.cancel') }}
+        </b-button>
+        <b-button
+          variant="primary"
+          :disabled="savingService"
+          @click="saveReservationService"
+        >
+          <b-spinner
+            v-if="savingService"
+            small
+            class="mr-50"
+          />
           {{ $t('actions.add') }}
         </b-button>
       </template>
@@ -760,7 +1150,10 @@
       size="lg"
     >
       <b-form @submit.prevent="updateSelectedReservation">
-        <b-form-group :label="$t('table.client')" label-for="edit-client">
+        <b-form-group
+          :label="$t('table.client')"
+          label-for="edit-client"
+        >
           <b-form-select
             id="edit-client"
             v-model="editForm.client_id"
@@ -769,7 +1162,10 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('table.doctor')" label-for="edit-doctor">
+        <b-form-group
+          :label="$t('table.doctor')"
+          label-for="edit-doctor"
+        >
           <b-form-select
             id="edit-doctor"
             v-model="editForm.doctor_id"
@@ -778,7 +1174,10 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('reservation.appointmentDate')" label-for="edit-datetime">
+        <b-form-group
+          :label="$t('reservation.appointmentDate')"
+          label-for="edit-datetime"
+        >
           <b-form-input
             id="edit-datetime"
             v-model="editForm.appointment_date"
@@ -787,7 +1186,10 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('table.status')" label-for="edit-status">
+        <b-form-group
+          :label="$t('table.status')"
+          label-for="edit-status"
+        >
           <b-form-select
             id="edit-status"
             v-model="editForm.status"
@@ -796,7 +1198,10 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('reservation.notes')" label-for="edit-notes">
+        <b-form-group
+          :label="$t('reservation.notes')"
+          label-for="edit-notes"
+        >
           <b-form-textarea
             id="edit-notes"
             v-model="editForm.notes"
@@ -806,11 +1211,23 @@
         </b-form-group>
 
         <div class="text-right">
-          <b-button variant="secondary" class="mr-1" @click="editModalShow = false">
+          <b-button
+            variant="secondary"
+            class="mr-1"
+            @click="editModalShow = false"
+          >
             {{ $t('actions.cancel') }}
           </b-button>
-          <b-button type="submit" variant="primary" :disabled="updating">
-            <b-spinner v-if="updating" small class="mr-1" />
+          <b-button
+            type="submit"
+            variant="primary"
+            :disabled="updating"
+          >
+            <b-spinner
+              v-if="updating"
+              small
+              class="mr-1"
+            />
             {{ $t('actions.save') }}
           </b-button>
         </div>
@@ -839,11 +1256,11 @@ import {
   BAlert,
   VBTooltip,
 } from 'bootstrap-vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import reservationsService from '@/services/reservations'
 import clientsService from '@/services/clients'
 import scheduleService from '@/services/schedule'
 import doctorServicesApi from '@/services/doctorServices'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
 import { formatAgeFromBirthDate } from '@/utils/clientAge'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
@@ -948,39 +1365,19 @@ export default {
         notes: '',
       },
       fields: [
-        { key: 'client.id', label: 'client.clientId', sortable: true, formatter: value => `#${value}` },
+        {
+          key: 'client.id', label: 'client.clientId', sortable: true, formatter: value => `#${value}`,
+        },
         { key: 'client.name', label: 'table.client', sortable: true },
         { key: 'doctor.name', label: 'table.doctor', sortable: true },
-        { key: 'appointment_date', label: 'table.appointment', formatter: this.formatDateTime, sortable: true },
+        {
+          key: 'appointment_date', label: 'table.appointment', formatter: this.formatDateTime, sortable: true,
+        },
         { key: 'status', label: 'table.status', sortable: true },
         { key: 'requirements', label: 'reservation.requirements' },
         { key: 'actions', label: 'table.actions' },
       ],
     }
-  },
-  watch: {
-    'form.doctor_id': function (doctorId) {
-      this.fetchAvailableTimes()
-      this.pendingReservationServices = []
-      this.resetCreateServiceForm()
-      this.fetchDoctorServicesCatalogForDoctor(doctorId)
-    },
-    'form.appointment_date_only': function () {
-      this.fetchAvailableTimes()
-    },
-    clientSearch(search) {
-      if (this.suppressClientSearchWatch) {
-        this.suppressClientSearchWatch = false
-        return
-      }
-
-      this.clientDropdownOpen = true
-      this.form.client_id = null
-      this.queueClientSearch(search)
-    },
-    '$store.state.broadcast.eventCounter'() {
-      this.fetchReservations()
-    },
   },
   computed: {
     translatedFields() {
@@ -1010,7 +1407,7 @@ export default {
     },
     statusOptions() {
       return [
-        { value: '', text: this.$t('filters.all') + ' ' + this.$t('table.status') },
+        { value: '', text: `${this.$t('filters.all')} ${this.$t('table.status')}` },
         { value: 'pending', text: this.$t('reservation.pending') },
         { value: 'confirmed', text: this.$t('reservation.confirmed') },
         { value: 'completed', text: this.$t('reservation.completed') },
@@ -1026,7 +1423,7 @@ export default {
         cancelled: ['cancelled'],
       }
       const allowed = transitions[current] || [current]
-      return allowed.map(s => ({ value: s, text: this.$t('reservation.' + s) }))
+      return allowed.map(s => ({ value: s, text: this.$t(`reservation.${s}`) }))
     },
     paymentMethodOptions() {
       return [
@@ -1062,7 +1459,7 @@ export default {
     doctorServiceOptions() {
       const opts = [{ value: null, text: `— ${this.$t('services.customService')} —` }]
       this.doctorServicesCatalog.forEach(s => {
-        if (s.is_active) opts.push({ value: s.id, text: `${s.name}${s.name_en ? ' / ' + s.name_en : ''} (${Number(s.price).toFixed(2)})` })
+        if (s.is_active) opts.push({ value: s.id, text: `${s.name}${s.name_en ? ` / ${s.name_en}` : ''} (${Number(s.price).toFixed(2)})` })
       })
       return opts
     },
@@ -1074,6 +1471,30 @@ export default {
     },
     pendingServicesTotal() {
       return this.pendingReservationServices.reduce((sum, s) => sum + Number(s.total_price || 0), 0)
+    },
+  },
+  watch: {
+    'form.doctor_id': function (doctorId) {
+      this.fetchAvailableTimes()
+      this.pendingReservationServices = []
+      this.resetCreateServiceForm()
+      this.fetchDoctorServicesCatalogForDoctor(doctorId)
+    },
+    'form.appointment_date_only': function () {
+      this.fetchAvailableTimes()
+    },
+    clientSearch(search) {
+      if (this.suppressClientSearchWatch) {
+        this.suppressClientSearchWatch = false
+        return
+      }
+
+      this.clientDropdownOpen = true
+      this.form.client_id = null
+      this.queueClientSearch(search)
+    },
+    '$store.state.broadcast.eventCounter': function () {
+      this.fetchReservations()
     },
   },
   mounted() {
@@ -1144,7 +1565,9 @@ export default {
       this.fetchReservations()
     },
     resetFilters() {
-      this.filters = { search: '', status: '', date_from: '', date_to: '' }
+      this.filters = {
+        search: '', status: '', date_from: '', date_to: '',
+      }
       this.pagination.current_page = 1
       this.fetchReservations()
     },
@@ -1724,7 +2147,7 @@ export default {
         () => reservationsService.generatePrescription(reservation.id),
         `prescription_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`,
         this.$t('messages.prescriptionDownloaded'),
-        this.$t('messages.generatePrescriptionError')
+        this.$t('messages.generatePrescriptionError'),
       )
     },
     async printMedicinesPrescription(reservation) {
@@ -1732,7 +2155,7 @@ export default {
         () => reservationsService.generateMedicinesPrescription(reservation.id),
         `medicines_prescription_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`,
         this.$t('messages.prescriptionDownloaded'),
-        this.$t('messages.generatePrescriptionError')
+        this.$t('messages.generatePrescriptionError'),
       )
     },
     async printReservationDetails(reservation) {
@@ -1740,7 +2163,7 @@ export default {
         () => reservationsService.generateReservationDetailsPdf(reservation.id),
         `reservation_details_${reservation.id}_${new Date().toISOString().split('T')[0]}.pdf`,
         this.$t('messages.reservationDetailsDownloaded'),
-        this.$t('messages.generateReservationDetailsError')
+        this.$t('messages.generateReservationDetailsError'),
       )
     },
     async printReservationPdf(requestPdf, filename, successText, errorText) {
@@ -1853,5 +2276,3 @@ export default {
   background-color: #f8f8f8;
 }
 </style>
-
-

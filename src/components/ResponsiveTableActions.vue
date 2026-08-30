@@ -9,7 +9,10 @@
     toggle-class="p-0 shadow-none text-body"
   >
     <template #button-content>
-      <feather-icon icon="MoreVerticalIcon" size="20" />
+      <feather-icon
+        icon="MoreVerticalIcon"
+        size="20"
+      />
     </template>
 
     <div class="responsive-table-actions__menu">
@@ -17,7 +20,10 @@
     </div>
   </b-dropdown>
 
-  <div v-else class="responsive-table-actions responsive-table-actions--desktop">
+  <div
+    v-else
+    class="responsive-table-actions responsive-table-actions--desktop"
+  >
     <slot />
   </div>
 </template>

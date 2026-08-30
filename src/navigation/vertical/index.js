@@ -1,4 +1,3 @@
-
 import clinic from './clinic'
 
 // Array of sections

@@ -1,5 +1,7 @@
-import { subscribeToDoctorChannel, subscribeToAssistantChannel, leaveChannel, updateEchoAuth } from '@/libs/echo'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import {
+  subscribeToDoctorChannel, subscribeToAssistantChannel, leaveChannel, updateEchoAuth,
+} from '@/libs/echo'
 import store from '@/store'
 
 /**
@@ -120,7 +122,12 @@ function playFallbackSound() {
 function showToast(vm, variant, icon, title, text) {
   if (vm && vm.$toast) {
     vm.$toast(
-      { component: ToastificationContent, props: { title, text, variant, icon } },
+      {
+        component: ToastificationContent,
+        props: {
+          title, text, variant, icon,
+        },
+      },
       { timeout: 6000 },
     )
   }
@@ -142,7 +149,7 @@ function subscribe(vm) {
       const date = data.reservation?.appointment_date
         ? new Date(data.reservation.appointment_date).toLocaleString()
         : ''
-      showToast(vm, 'success', 'BellIcon', 'New Reservation', `New appointment for ${name}` + (date ? ` on ${date}` : ''))
+      showToast(vm, 'success', 'BellIcon', 'New Reservation', `New appointment for ${name}${date ? ` on ${date}` : ''}`)
       playNotificationSound()
       store.commit('broadcast/RESERVATION_EVENT', { type: 'created', data })
     },
@@ -222,7 +229,7 @@ export default {
         // Watch login state and subscribe/unsubscribe automatically
         this.$watch(
           () => store.getters['auth/isLoggedIn'],
-          (loggedIn) => {
+          loggedIn => {
             if (loggedIn) {
               if (!subscribed) {
                 this.$nextTick(() => subscribe(this))

@@ -158,8 +158,8 @@ import {
   BRow, BCol, BCardTitle, BCardText, BForm, BFormGroup, BInputGroup, BInputGroupAppend, BLink, BFormInput, BButton, BImg,
 } from 'bootstrap-vue'
 import { required } from '@validations'
-import store from '@/store/index'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import store from '@/store/index'
 
 export default {
   components: {

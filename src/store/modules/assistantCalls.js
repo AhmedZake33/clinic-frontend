@@ -5,7 +5,7 @@ const state = {
 }
 
 const getters = {
-  activeCalls: (s) => s.activeCalls,
+  activeCalls: s => s.activeCalls,
 }
 
 const mutations = {
@@ -54,7 +54,7 @@ const actions = {
   },
   // helper to process broadcast payloads
   processCallEvent({ commit }, payload) {
-    const call = payload.call
+    const { call } = payload
     if (!call) return
     if (payload.action === 'created') commit('ADD_CALL', call)
     else if (payload.action === 'accepted') commit('UPDATE_CALL', call)

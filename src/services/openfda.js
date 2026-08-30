@@ -17,7 +17,9 @@ export default {
   // Egypt drug database
   searchEgyptDrugs(query, { category, form, limit } = {}) {
     return apiClient.get('/egypt-drugs/search', {
-      params: { query, category, form, limit },
+      params: {
+        query, category, form, limit,
+      },
     })
   },
 

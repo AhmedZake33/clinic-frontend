@@ -3,7 +3,10 @@
     <div class="auth-inner py-2">
       <b-card class="mb-0 text-center">
         <div class="subscription-icon mx-auto mb-2">
-          <feather-icon icon="ClockIcon" size="42" />
+          <feather-icon
+            icon="ClockIcon"
+            size="42"
+          />
         </div>
 
         <b-card-title class="mb-1">
@@ -14,7 +17,11 @@
           {{ $t('subscriptionExpired.message') }}
         </b-card-text>
 
-        <b-button variant="primary" block @click="logout">
+        <b-button
+          variant="primary"
+          block
+          @click="logout"
+        >
           {{ $t('subscriptionExpired.backToLogin') }}
         </b-button>
       </b-card>

@@ -217,15 +217,13 @@ import VuexyLogo from '@core/layouts/components/Logo.vue'
 import {
   BRow, BCol, BLink, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup, BFormCheckbox, BCardText, BCardTitle, BImg, BForm, BButton, BAlert, VBTooltip,
 } from 'bootstrap-vue'
-import useJwt from '@/auth/jwt/useJwt'
 import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import useJwt from '@/auth/jwt/useJwt'
 import store from '@/store/index'
 import { getHomeRouteForLoggedInUser } from '@/auth/utils'
-import api from "@/libs/axios";
-
-
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import api from '@/libs/axios'
 
 export default {
   directives: {
@@ -278,17 +276,17 @@ export default {
   },
   methods: {
     async login() {
-      alert();
+      alert()
       try {
-        const res = await api.post("/login", {
+        const res = await api.post('/login', {
           email: this.userEmail,
           password: this.password,
-        });
-        console.log("res");
-        console.log(res);
+        })
+        console.log('res')
+        console.log(res)
 
-        const token = res.data.token
-        const user = res.data.user
+        const { token } = res.data
+        const { user } = res.data
 
         // store state + localStorage (including permissions so router guard works immediately)
         this.$store.commit('auth/SET_TOKEN', token)
@@ -297,31 +295,30 @@ export default {
         this.$store.commit('auth/SET_ROLES', res.data.roles || [])
 
         // Redirect based on role (tolerant to different role string formats)
-        const rawRole = user.role || '';
-        const role = String(rawRole).toLowerCase().replace(/[_\s]/g, '-');
+        const rawRole = user.role || ''
+        const role = String(rawRole).toLowerCase().replace(/[_\s]/g, '-')
         console.log('Logged in user role:', rawRole, 'Normalized role:', role)
         if (role === 'doctor') {
-          this.$router.push({ name: 'doctor-dashboard' });
+          this.$router.push({ name: 'doctor-dashboard' })
         } else if (role === 'assistant') {
-          this.$router.push({ name: 'assistant-dashboard' });
+          this.$router.push({ name: 'assistant-dashboard' })
         } else if (role === 'sub-doctor' || role === 'subdoctor' || role.includes('sub-doctor') || role.includes('subdoctor') || role.startsWith('sub')) {
           // Sub-doctors should land on the reservations page
-          this.$router.push({ name: 'doctor-reservations' });
+          this.$router.push({ name: 'doctor-reservations' })
         } else {
           // alert();
-          console.log('Unknown role, redirecting to default dashboard');
-          this.$router.push({ name: 'dashboard' });
+          console.log('Unknown role, redirecting to default dashboard')
+          this.$router.push({ name: 'dashboard' })
         }
-
       } catch (err) {
-        console.error(err);
-        this.$bvToast.toast(err.response?.data?.message || "Invalid credentials", {
-          title: "Error",
-          variant: "danger",
+        console.error(err)
+        this.$bvToast.toast(err.response?.data?.message || 'Invalid credentials', {
+          title: 'Error',
+          variant: 'danger',
           solid: true,
-        });
+        })
       }
-    }
+    },
   },
 }
 </script>

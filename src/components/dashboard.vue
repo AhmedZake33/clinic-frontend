@@ -1,224 +1,262 @@
 <template>
-    <v-app>
-     <h2>الاختصارات</h2>
+  <v-app>
+    <h2>الاختصارات</h2>
 
-       <div class="main">
-         <div class="responsive-grid">
-            <v-row>
-                <v-col cols="12" sm="6" md="3" v-for="data in allData" :key="data.id">
-                     <div class="grid-item">
-                <v-card
+    <div class="main">
+      <div class="responsive-grid">
+        <v-row>
+          <v-col
+            v-for="data in allData"
+            :key="data.id"
+            cols="12"
+            sm="6"
+            md="3"
+          >
+            <div class="grid-item">
+              <v-card
+                class="mx-auto shortcut-card"
                 @click="addData(data.id)"
-                    class="mx-auto shortcut-card"
-                >
+              >
                 <div>
-                    <v-img
+                  <v-img
                     :src="data.img"
                     height="70px"
                     width="70px"
                     class="card-img"
-                    ></v-img>
-                    <v-card-title>
-                        <v-btn 
-                        rounded
-                        color="#10a29b"
-                        style="color:white"
-                        >
-                         {{data.name}}  <v-icon  color="white darken-2">mdi-plus</v-icon>
-                        </v-btn>
-                    
-                    </v-card-title>
-                </div>
-                </v-card>
-                 </div>
-                </v-col>
-            </v-row>
-        </div>
-       </div>
+                  />
+                  <v-card-title>
+                    <v-btn
+                      rounded
+                      color="#10a29b"
+                      style="color:white"
+                    >
+                      {{ data.name }}  <v-icon color="white darken-2">
+                        mdi-plus
+                      </v-icon>
+                    </v-btn>
 
-    <h2>الاقسام</h2>   
-   
-    <div class="main">
-        <div class="responsive-grid">
-            <v-row>
-                <v-col cols="6" sm="4" md="2" v-for="data in actions" :key="data.id">
-                    <v-btn @click="addTo(data.id)" x-large style="color:white" :color="data.color" block>{{data.name}}</v-btn>
-                </v-col>
-            </v-row>
-        </div>
+                  </v-card-title>
+                </div>
+              </v-card>
+            </div>
+          </v-col>
+        </v-row>
+      </div>
     </div>
 
+    <h2>الاقسام</h2>
 
-     <h2>الاحصائيات</h2>   
-   
     <div class="main">
-        <div class="responsive-grid">
-             <v-row>
-                <v-col cols="6" sm="4" md="2" v-for="data in statistics" :key="data.id">
-                    <div class="customDiv">
-                        <h3>{{data.name}}</h3>
-                        <h1>{{data.value}}</h1>
+      <div class="responsive-grid">
+        <v-row>
+          <v-col
+            v-for="data in actions"
+            :key="data.id"
+            cols="6"
+            sm="4"
+            md="2"
+          >
+            <v-btn
+              x-large
+              style="color:white"
+              :color="data.color"
+              block
+              @click="addTo(data.id)"
+            >
+              {{ data.name }}
+            </v-btn>
+          </v-col>
+        </v-row>
+      </div>
+    </div>
 
-                        <v-btn color="#10a29b" >المزيد</v-btn>
-                    </div>
-                </v-col>
-            </v-row>
-        </div>
+    <h2>الاحصائيات</h2>
+
+    <div class="main">
+      <div class="responsive-grid">
+        <v-row>
+          <v-col
+            v-for="data in statistics"
+            :key="data.id"
+            cols="6"
+            sm="4"
+            md="2"
+          >
+            <div class="customDiv">
+              <h3>{{ data.name }}</h3>
+              <h1>{{ data.value }}</h1>
+
+              <v-btn color="#10a29b">
+                المزيد
+              </v-btn>
+            </div>
+          </v-col>
+        </v-row>
+      </div>
     </div>
 
     <h2>المدارس</h2>
     <div class="main">
-        <div class="responsive-grid">
-            <v-row>
-            <v-col cols="6" sm="4" md="2" v-for="data in schools" :key="data.id">
-                <div class="customDivSchools">
-                    <div>
-                        <v-img v-bind:src="data.img"></v-img>
-                    </div>
-                    <div>
-                    </div>
-                </div>
-            </v-col>
+      <div class="responsive-grid">
+        <v-row>
+          <v-col
+            v-for="data in schools"
+            :key="data.id"
+            cols="6"
+            sm="4"
+            md="2"
+          >
+            <div class="customDivSchools">
+              <div>
+                <v-img :src="data.img" />
+              </div>
+              <div />
+            </div>
+          </v-col>
         </v-row>
-        </div>
+      </div>
     </div>
 
     <h2>التقارير</h2>
-     <div class="main">
-         <div class="responsive-grid">
-            <v-row>
-                <v-col cols="12" sm="6" md="4" v-for="data in reports" :key="data.id">
-                     <div class="grid-item">
-                <v-card
-                    class="mx-auto shortcut-card"
-                >
+    <div class="main">
+      <div class="responsive-grid">
+        <v-row>
+          <v-col
+            v-for="data in reports"
+            :key="data.id"
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <div class="grid-item">
+              <v-card
+                class="mx-auto shortcut-card"
+              >
                 <div>
-                    <v-img
+                  <v-img
                     :src="data.img"
                     height="70px"
                     width="70px"
                     class="card-img"
-                    ></v-img>
-                    <v-card-title>
-                        <v-btn 
-                        rounded
-                        color="#10a29b"
-                        style="color:white"
-                        >
-                         {{data.name}} 
-                        </v-btn>
-                    
-                    </v-card-title>
+                  />
+                  <v-card-title>
+                    <v-btn
+                      rounded
+                      color="#10a29b"
+                      style="color:white"
+                    >
+                      {{ data.name }}
+                    </v-btn>
+
+                  </v-card-title>
                 </div>
-                </v-card>
-                 </div>
-                </v-col>
-            </v-row>
-        </div>
-       </div>
+              </v-card>
+            </div>
+          </v-col>
+        </v-row>
+      </div>
     </div>
-  
-    </v-app>
+    </div>
+
+  </v-app>
 </template>
 
 <script>
 export default {
-
-    methods:{
-        addTo(id){
-            this.$router.push('/addTo/'+id);
+  data() {
+    return {
+      status: false,
+      reports: [
+        {
+          img: require('@/assets/img/تقرير الاطفال.png'),
+          name: 'تقرير الاطفال',
         },
-        addData(id){
-
-            this.$router.push(`addData/`+id);
+        {
+          img: require('@/assets/img/تقرير الجلسات.png'),
+          name: 'تقرير الجلسات',
         },
-    },
-    data(){
-        return {
-            status:false,
-            reports:[
-                {
-                    img:require('@/assets/img/تقرير الاطفال.png'),
-                    name:'تقرير الاطفال'
-                },
-                  {
-                    img:require('@/assets/img/تقرير الجلسات.png'),
-                    name:'تقرير الجلسات'
-                },
-                  {
-                    img:require('@/assets/img/تقرير المستخدمين.png'),
-                    name:'تقرير المستخدمين'
-                },
-            ],
-            schools:[
-                   {
-                    img:require('@/assets/img/المدارس.png'),
-                    name:'الامل'
-                   },
-                   {
-                    img:require('@/assets/img/المدارس.png'),
-                    name:'الامل'
-                   },
-                   {
-                    img:require('@/assets/img/المدارس.png'),
-                    name:'الامل'
-                   },
-                   {
-                    img:require('@/assets/img/المدارس.png'),
-                    name:'الامل'
-                   },{
-                    img:require('@/assets/img/المدارس.png'),
-                    name:'الامل'
-                   }
-                   ,{
-                    img:require('@/assets/img/المدارس.png'),
-                    name:'الامل'
-                   },
-            ],
-            statistics:[
-                {id:1,name:"عدد الاطفال" ,value:'15'},
-                {id:2,name:"عدد المدارس" ,value:'15'},
-                {id:3,name:"عدد المعلمين" ,value:'15'},
-                {id:4,name:"عدد التقيمات" ,value:'15'},
-                {id:5,name:"عدد الجلسات" ,value:'15'},
-                {id:6,name:"عدد الجلسات" ,value:'15'},
+        {
+          img: require('@/assets/img/تقرير المستخدمين.png'),
+          name: 'تقرير المستخدمين',
+        },
+      ],
+      schools: [
+        {
+          img: require('@/assets/img/المدارس.png'),
+          name: 'الامل',
+        },
+        {
+          img: require('@/assets/img/المدارس.png'),
+          name: 'الامل',
+        },
+        {
+          img: require('@/assets/img/المدارس.png'),
+          name: 'الامل',
+        },
+        {
+          img: require('@/assets/img/المدارس.png'),
+          name: 'الامل',
+        }, {
+          img: require('@/assets/img/المدارس.png'),
+          name: 'الامل',
+        },
+        {
+          img: require('@/assets/img/المدارس.png'),
+          name: 'الامل',
+        },
+      ],
+      statistics: [
+        { id: 1, name: 'عدد الاطفال', value: '15' },
+        { id: 2, name: 'عدد المدارس', value: '15' },
+        { id: 3, name: 'عدد المعلمين', value: '15' },
+        { id: 4, name: 'عدد التقيمات', value: '15' },
+        { id: 5, name: 'عدد الجلسات', value: '15' },
+        { id: 6, name: 'عدد الجلسات', value: '15' },
 
+      ],
+      actions: [
+        { name: 'اسناد طفل', color: 'red', id: '1' },
+        { name: 'اسناد طفل', color: 'blue', id: '2' },
+        { name: 'اسناد طفل', color: 'yellow', id: '3' },
+        { name: 'اسناد طفل', color: 'green', id: '4' },
+        { name: 'اسناد طفل', color: 'orange', id: '5' },
+        { name: 'اسناد طفل', color: 'blue', id: '6' },
+      ],
+      allData: [
+        {
+          img: require('@/assets/img/أضافه طفل.png'),
+          name: 'اضافه طفل',
+          id: '1',
+        },
+        {
+          img: require('@/assets/img/أضافه فصل.png'),
+          name: 'اضافه فصل',
+          id: '4',
+        },
+        {
+          img: require('@/assets/img/أضافه مدرسه.png'),
+          name: 'اضافه مدرسه',
+          id: '2',
+        },
+        {
+          img: require('@/assets/img/أضافه متخصص.png'),
+          name: 'اضافه متخصص',
+          id: '3',
+        },
 
-            ],
-            actions : [
-                {name:'اسناد طفل',color:'red',id:'1'},
-                {name:'اسناد طفل',color:'blue',id:'2'},
-                {name:'اسناد طفل',color:'yellow',id:'3'},
-                {name:'اسناد طفل',color:'green',id:'4'},
-                {name:'اسناد طفل',color:'orange',id:'5'},
-                {name:'اسناد طفل',color:'blue',id:'6'},
-            ],
-            allData:[
-                {
-                    img:require('@/assets/img/أضافه طفل.png'),
-                    name:"اضافه طفل",
-                    id:"1"
-                },
-                {
-                    img:require('@/assets/img/أضافه فصل.png'),
-                    name:"اضافه فصل",
-                    id:"4"
-                },
-                {
-                    img:require('@/assets/img/أضافه مدرسه.png'),
-                    name:"اضافه مدرسه",
-                    id:"2"
-                },
-                {
-                    img:require('@/assets/img/أضافه متخصص.png'),
-                    name:"اضافه متخصص",
-                    id:"3"
-                },
-                
-            ]
-        }
+      ],
     }
-    
+  },
+
+  methods: {
+    addTo(id) {
+      this.$router.push(`/addTo/${id}`)
+    },
+    addData(id) {
+      this.$router.push(`addData/${id}`)
+    },
+  },
+
 }
 </script>
 

@@ -17,12 +17,10 @@ function loadLocaleMessages() {
 }
 
 // Get stored locale or default to 'en'
-const getStoredLocale = () => {
-  return localStorage.getItem('locale') || 'en'
-}
+const getStoredLocale = () => localStorage.getItem('locale') || 'en'
 
 // Set HTML direction based on locale
-const setHTMLDirection = (locale) => {
+const setHTMLDirection = locale => {
   const html = document.documentElement
   if (locale === 'ar') {
     html.setAttribute('dir', 'rtl')

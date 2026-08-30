@@ -33,4 +33,4 @@ import others from './others'
 import attendance from './attendance'
 
 // Array of sections
-export default [...attendance,...dashboard, ...apps, ...uiElements, ...formAndTable, ...pages, ...chartsAndMaps, ...others]
+export default [...attendance, ...dashboard, ...apps, ...uiElements, ...formAndTable, ...pages, ...chartsAndMaps, ...others]

@@ -1,6 +1,9 @@
-﻿<template>
+<template>
   <div class="auth-wrapper auth-v1 px-2">
-    <div class="auth-inner py-2 online-booking-page" :dir="isArabic ? 'rtl' : 'ltr'">
+    <div
+      class="auth-inner py-2 online-booking-page"
+      :dir="isArabic ? 'rtl' : 'ltr'"
+    >
       <b-card>
         <div class="d-flex justify-content-end mb-1">
           <b-form-select
@@ -10,12 +13,20 @@
           />
         </div>
 
-        <div v-if="loading" class="text-center py-2">
+        <div
+          v-if="loading"
+          class="text-center py-2"
+        >
           <b-spinner />
         </div>
 
         <div v-else-if="loadError">
-          <b-alert show variant="danger">{{ loadError }}</b-alert>
+          <b-alert
+            show
+            variant="danger"
+          >
+            {{ loadError }}
+          </b-alert>
         </div>
 
         <div v-else>
@@ -24,42 +35,103 @@
             :class="clinicPositionClass"
             :style="{ borderColor: clinicPrimaryColor }"
           >
-            <h3 v-if="clinic.name" class="mb-50" :style="{ color: clinicPrimaryColor }">{{ clinic.name }}</h3>
-            <p v-if="clinic.header" class="text-muted mb-50 online-booking-header__text">{{ clinic.header }}</p>
-            <p v-if="clinic.phone" class="mb-0 online-booking-header__phone" dir="ltr" :style="{ color: clinicPrimaryColor }">{{ clinic.phone }}</p>
+            <h3
+              v-if="clinic.name"
+              class="mb-50"
+              :style="{ color: clinicPrimaryColor }"
+            >
+              {{ clinic.name }}
+            </h3>
+            <p
+              v-if="clinic.header"
+              class="text-muted mb-50 online-booking-header__text"
+            >
+              {{ clinic.header }}
+            </p>
+            <p
+              v-if="clinic.phone"
+              class="mb-0 online-booking-header__phone"
+              dir="ltr"
+              :style="{ color: clinicPrimaryColor }"
+            >
+              {{ clinic.phone }}
+            </p>
           </div>
-          <p v-if="clinic.address" class="text-muted mb-2" :class="clinicPositionClass">{{ clinic.address }}</p>
+          <p
+            v-if="clinic.address"
+            class="text-muted mb-2"
+            :class="clinicPositionClass"
+          >
+            {{ clinic.address }}
+          </p>
 
-          <b-alert v-if="successMessage" show variant="success">{{ successMessage }}</b-alert>
-          <b-alert v-if="errorMessage" show variant="danger">{{ errorMessage }}</b-alert>
+          <b-alert
+            v-if="successMessage"
+            show
+            variant="success"
+          >
+            {{ successMessage }}
+          </b-alert>
+          <b-alert
+            v-if="errorMessage"
+            show
+            variant="danger"
+          >
+            {{ errorMessage }}
+          </b-alert>
 
           <b-form @submit.prevent="submitBooking">
             <b-form-group label-for="doctor_id">
               <template #label>
                 {{ t('doctor') }} <span class="required-star">*</span>
               </template>
-              <b-form-select id="doctor_id" v-model="form.doctor_id" :options="doctorOptions" required @change="fetchTimes" />
+              <b-form-select
+                id="doctor_id"
+                v-model="form.doctor_id"
+                :options="doctorOptions"
+                required
+                @change="fetchTimes"
+              />
             </b-form-group>
 
             <b-form-group label-for="appointment_date">
               <template #label>
                 {{ t('date') }} <span class="required-star">*</span>
               </template>
-              <b-form-input id="appointment_date" v-model="form.appointment_date" type="date" :min="today" required @change="fetchTimes" />
+              <b-form-input
+                id="appointment_date"
+                v-model="form.appointment_date"
+                type="date"
+                :min="today"
+                required
+                @change="fetchTimes"
+              />
             </b-form-group>
 
             <b-form-group label-for="appointment_time">
               <template #label>
                 {{ t('time') }} <span class="required-star">*</span>
               </template>
-              <b-form-select id="appointment_time" v-model="form.appointment_time" :options="timeOptions" :disabled="timesLoading || !form.doctor_id || !form.appointment_date" required>
+              <b-form-select
+                id="appointment_time"
+                v-model="form.appointment_time"
+                :options="timeOptions"
+                :disabled="timesLoading || !form.doctor_id || !form.appointment_date"
+                required
+              >
                 <template #first>
-                  <b-form-select-option :value="null" disabled>
+                  <b-form-select-option
+                    :value="null"
+                    disabled
+                  >
                     {{ timesLoading ? t('loadingTimes') : t('selectTime') }}
                   </b-form-select-option>
                 </template>
               </b-form-select>
-              <small v-if="!timesLoading && form.doctor_id && form.appointment_date && timeOptions.length === 0" class="text-danger">
+              <small
+                v-if="!timesLoading && form.doctor_id && form.appointment_date && timeOptions.length === 0"
+                class="text-danger"
+              >
                 {{ t('noTimes') }}
               </small>
             </b-form-group>
@@ -68,7 +140,11 @@
               <template #label>
                 {{ t('name') }} <span class="required-star">*</span>
               </template>
-              <b-form-input id="name" v-model="form.name" required />
+              <b-form-input
+                id="name"
+                v-model="form.name"
+                required
+              />
             </b-form-group>
 
             <b-form-group label-for="phone">
@@ -85,12 +161,19 @@
                   />
                 </div>
                 <div class="number-col">
-                  <b-form-input id="phone" v-model="form.phone" required />
+                  <b-form-input
+                    id="phone"
+                    v-model="form.phone"
+                    required
+                  />
                 </div>
               </div>
             </b-form-group>
 
-            <b-form-group :label="t('whatsapp')" label-for="whatsapp_number">
+            <b-form-group
+              :label="t('whatsapp')"
+              label-for="whatsapp_number"
+            >
               <div class="phone-combined-control">
                 <div class="country-col">
                   <b-form-select
@@ -101,21 +184,48 @@
                   />
                 </div>
                 <div class="number-col">
-                  <b-form-input id="whatsapp_number" v-model="form.whatsapp_number" :placeholder="t('optional')" />
+                  <b-form-input
+                    id="whatsapp_number"
+                    v-model="form.whatsapp_number"
+                    :placeholder="t('optional')"
+                  />
                 </div>
               </div>
             </b-form-group>
 
-            <b-form-group :label="t('email')" label-for="email">
-              <b-form-input id="email" v-model="form.email" type="email" />
+            <b-form-group
+              :label="t('email')"
+              label-for="email"
+            >
+              <b-form-input
+                id="email"
+                v-model="form.email"
+                type="email"
+              />
             </b-form-group>
 
-            <b-form-group :label="t('notes')" label-for="notes">
-              <b-form-textarea id="notes" v-model="form.notes" rows="3" />
+            <b-form-group
+              :label="t('notes')"
+              label-for="notes"
+            >
+              <b-form-textarea
+                id="notes"
+                v-model="form.notes"
+                rows="3"
+              />
             </b-form-group>
 
-            <b-button type="submit" variant="primary" block :disabled="submitting">
-              <b-spinner v-if="submitting" small class="mr-50" />
+            <b-button
+              type="submit"
+              variant="primary"
+              block
+              :disabled="submitting"
+            >
+              <b-spinner
+                v-if="submitting"
+                small
+                class="mr-50"
+              />
               {{ t('submit') }}
             </b-button>
           </b-form>
@@ -199,7 +309,7 @@ export default {
     BSpinner,
   },
   data() {
-      return {
+    return {
       loading: false,
       language: normalizeLanguage(this.$i18n?.locale || localStorage.getItem('locale') || 'en'),
       timesLoading: false,
@@ -412,4 +522,3 @@ export default {
   border-bottom-left-radius: 0;
 }
 </style>
-

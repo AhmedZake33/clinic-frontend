@@ -1,21 +1,45 @@
 <template>
-  <div v-if="visible" class="card p-2 shadow-sm" style="min-width:220px">
+  <div
+    v-if="visible"
+    class="card p-2 shadow-sm"
+    style="min-width:220px"
+  >
     <div class="d-flex align-items-start">
       <div class="mr-2">
-        <b-avatar variant="danger" size="36">
-          <feather-icon icon="PhoneCallIcon" size="16" />
+        <b-avatar
+          variant="danger"
+          size="36"
+        >
+          <feather-icon
+            icon="PhoneCallIcon"
+            size="16"
+          />
         </b-avatar>
       </div>
       <div class="flex-grow-1">
-        <div class="font-weight-bold text-truncate">{{ titleText }}</div>
+        <div class="font-weight-bold text-truncate">
+          {{ titleText }}
+        </div>
         <small class="text-muted d-block text-truncate">{{ subtitleText }}</small>
       </div>
     </div>
     <div class="d-flex justify-content-end mt-2">
-      <b-button size="sm" variant="success" class="mr-1" @click="onAccept">
-        <feather-icon icon="CheckIcon" class="mr-25" /> {{ $t('assistantCall.accept') }}
+      <b-button
+        size="sm"
+        variant="success"
+        class="mr-1"
+        @click="onAccept"
+      >
+        <feather-icon
+          icon="CheckIcon"
+          class="mr-25"
+        /> {{ $t('assistantCall.accept') }}
       </b-button>
-      <b-button size="sm" variant="light" @click="onDismiss">
+      <b-button
+        size="sm"
+        variant="light"
+        @click="onDismiss"
+      >
         {{ $t('actions.close') || 'Close' }}
       </b-button>
     </div>

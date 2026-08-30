@@ -7,7 +7,7 @@ function cleanPrefix(p) {
   if (!s) return ''
   // ensure starts with + and remove any non-digit/+ chars
   s = s.replace(/[^0-9+]/g, '')
-  if (!s.startsWith('+')) s = '+' + s.replace(/^0+/, '')
+  if (!s.startsWith('+')) s = `+${s.replace(/^0+/, '')}`
   return s
 }
 
@@ -75,22 +75,22 @@ export default {
   getClients(params = {}) {
     return apiClient.get('/clients', { params })
   },
-  
+
   getClient(id) {
     return apiClient.get(`/clients/${id}`)
   },
-  
+
   createClient(clientData) {
     const payload = prepareClientPayload(clientData)
     return apiClient.post('/clients', payload)
   },
-  
+
   updateClient(id, clientData) {
     const payload = prepareClientPayload(clientData)
     return apiClient.put(`/clients/${id}`, payload)
   },
-  
+
   deleteClient(id) {
     return apiClient.delete(`/clients/${id}`)
-  }
+  },
 }

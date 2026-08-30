@@ -16,7 +16,7 @@ export const can = (action, subject) => {
  * Check if user has a specific Spatie permission
  * @param {String} permission Permission name
  */
-const hasPermission = (permission) => {
+const hasPermission = permission => {
   if (!permission) return true
   const user = JSON.parse(localStorage.getItem('user') || 'null')
   if (!user) return false

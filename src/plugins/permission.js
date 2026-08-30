@@ -10,7 +10,7 @@ import Vue from 'vue'
  */
 Vue.directive('permission', {
   inserted(el, binding) {
-    const value = binding.value
+    const { value } = binding
     const user = JSON.parse(localStorage.getItem('user') || 'null')
 
     if (!user) {

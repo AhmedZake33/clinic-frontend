@@ -2,54 +2,55 @@
   <v-app>
     <div class="main">
       <div class="body">
-      <div class="left">
-        <v-img src="../assets/img/welcome illustration.png" />
-      </div>
-
-      <div class="right">
-        <h1 style="color:#10a29b">منصه مركز هيلب للشرق الاوسط وشمال افريقيا</h1>
-        <div class="description-text">
-          <h4>لوريم لوريم لوريم لوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم</h4>
+        <div class="left">
+          <v-img src="../assets/img/welcome illustration.png" />
         </div>
-        <div class="action-buttons">
-         <v-btn
-         
-          rounded
-          color="#10a29b"
-          @click="login"
-          x-large
-          outlined
-          dark
-          >
-          تسجيل الدخول
-          </v-btn>
+
+        <div class="right">
+          <h1 style="color:#10a29b">
+            منصه مركز هيلب للشرق الاوسط وشمال افريقيا
+          </h1>
+          <div class="description-text">
+            <h4>لوريم لوريم لوريم لوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم</h4>
+          </div>
+          <div class="action-buttons">
+            <v-btn
+
+              rounded
+              color="#10a29b"
+              x-large
+              outlined
+              dark
+              @click="login"
+            >
+              تسجيل الدخول
+            </v-btn>
           &nbsp;
           &nbsp;
-           <v-btn
-          rounded
-          color="#10a29b"
-          x-large
-          dark
-          >
-          عن منصة هيلب
-          </v-btn>
-        </div>  
-      </div>
+            <v-btn
+              rounded
+              color="#10a29b"
+              x-large
+              dark
+            >
+              عن منصة هيلب
+            </v-btn>
+          </div>
+        </div>
       </div>
 
       <div class="footer">
-       
-          <h1 style="color:#10a29b">منصه مركز هيلب للشرق الاوسط وشمال افريقيا</h1>
-         
-            <h4>لوريم لوريم لوريم لوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم</h4>
-         
-        </div>
-     
 
-      
+        <h1 style="color:#10a29b">
+          منصه مركز هيلب للشرق الاوسط وشمال افريقيا
+        </h1>
+
+        <h4>لوريم لوريم لوريم لوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم لوريم لوريم الوريم لوريم لوريم</h4>
+
+      </div>
+
     </div>
 
-  
   </v-app>
 </template>
 
@@ -59,20 +60,19 @@ export default {
   name: 'App',
 
   components: {
-    
-  },
-  methods:{
-    login(){
-        this.$router.push('/login');
-    }
-    
-  },
 
+  },
 
   data: () => ({
     //
   }),
-};
+  methods: {
+    login() {
+      this.$router.push('/login')
+    },
+
+  },
+}
 </script>
 
 <style scoped>

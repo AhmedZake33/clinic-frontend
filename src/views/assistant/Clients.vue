@@ -1,39 +1,95 @@
-﻿<template>
+<template>
   <div>
     <b-card>
 
       <b-row class="mb-2">
-        <b-col cols="12" md="4">
+        <b-col
+          cols="12"
+          md="4"
+        >
           <h4>{{ $t('client.clientsList') }}</h4>
         </b-col>
-        <b-col cols="12" md="8" class="text-right">
-          <b-button variant="primary" @click="showAddModal">
-            <feather-icon icon="PlusIcon" class="mr-50" />
+        <b-col
+          cols="12"
+          md="8"
+          class="text-right"
+        >
+          <b-button
+            variant="primary"
+            @click="showAddModal"
+          >
+            <feather-icon
+              icon="PlusIcon"
+              class="mr-50"
+            />
             {{ $t('client.addClient') }}
           </b-button>
         </b-col>
       </b-row>
 
-      <b-form @submit.prevent="applyFilters" class="mb-2">
+      <b-form
+        class="mb-2"
+        @submit.prevent="applyFilters"
+      >
         <b-row>
-          <b-col cols="12" md="5" class="mb-1 mb-md-0">
-            <b-form-input v-model="filters.search" :placeholder="$t('client.searchPlaceholder')" />
+          <b-col
+            cols="12"
+            md="5"
+            class="mb-1 mb-md-0"
+          >
+            <b-form-input
+              v-model="filters.search"
+              :placeholder="$t('client.searchPlaceholder')"
+            />
           </b-col>
-          <b-col cols="6" md="3" class="mb-1 mb-md-0">
-            <b-form-input v-model="filters.created_from" type="date" placeholder="From" />
+          <b-col
+            cols="6"
+            md="3"
+            class="mb-1 mb-md-0"
+          >
+            <b-form-input
+              v-model="filters.created_from"
+              type="date"
+              placeholder="From"
+            />
           </b-col>
-          <b-col cols="6" md="3" class="mb-1 mb-md-0">
-            <b-form-input v-model="filters.created_to" type="date" placeholder="To" />
+          <b-col
+            cols="6"
+            md="3"
+            class="mb-1 mb-md-0"
+          >
+            <b-form-input
+              v-model="filters.created_to"
+              type="date"
+              placeholder="To"
+            />
           </b-col>
-          <b-col cols="12" md="1" class="text-right">
-            <b-button type="submit" variant="primary" class="mr-1" :disabled="loading">
+          <b-col
+            cols="12"
+            md="1"
+            class="text-right"
+          >
+            <b-button
+              type="submit"
+              variant="primary"
+              class="mr-1"
+              :disabled="loading"
+            >
               {{ $t('client.filter') }}
             </b-button>
           </b-col>
         </b-row>
         <b-row class="mt-1">
-          <b-col cols="12" class="text-right">
-            <b-button variant="outline-secondary" size="sm" @click="resetFilters" :disabled="loading">
+          <b-col
+            cols="12"
+            class="text-right"
+          >
+            <b-button
+              variant="outline-secondary"
+              size="sm"
+              :disabled="loading"
+              @click="resetFilters"
+            >
               {{ $t('client.reset') }}
             </b-button>
           </b-col>
@@ -65,7 +121,10 @@
               class="mr-1"
               @click="goToProfile(data.item.id)"
             >
-              <feather-icon icon="UserIcon" class="mr-50" />
+              <feather-icon
+                icon="UserIcon"
+                class="mr-50"
+              />
               {{ $t('client.clientDetails') }}
             </b-button>
             <b-button
@@ -97,11 +156,14 @@
         v-model="pagination.current_page"
         :total-rows="pagination.total"
         :per-page="pagination.per_page"
-        @change="onPageChange"
         class="mt-2"
         align="center"
+        @change="onPageChange"
       />
-      <div class="text-center text-muted small mt-1" v-if="pagination.total">
+      <div
+        v-if="pagination.total"
+        class="text-center text-muted small mt-1"
+      >
         {{ paginationCountText(pagination) }}
       </div>
     </b-card>
@@ -114,7 +176,10 @@
       size="lg"
     >
       <b-form @submit.prevent="saveClient">
-        <b-form-group :label="$t('client.name')" label-for="name">
+        <b-form-group
+          :label="$t('client.name')"
+          label-for="name"
+        >
           <b-form-input
             id="name"
             v-model="form.name"
@@ -123,7 +188,10 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('clinic.email')" label-for="email">
+        <b-form-group
+          :label="$t('clinic.email')"
+          label-for="email"
+        >
           <b-form-input
             id="email"
             v-model="form.email"
@@ -132,13 +200,19 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('client.phone')" label-for="phone">
-          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+        <b-form-group
+          :label="$t('client.phone')"
+          label-for="phone"
+        >
+          <div
+            class="phone-combined-control"
+            :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+          >
             <div class="country-col">
               <b-form-select
                 id="country-code"
-                class="phone-country-select"
                 v-model="form.phone_country_code"
+                class="phone-country-select"
                 :options="countrySelectOptions"
                 :required="!!form.phone"
               />
@@ -146,8 +220,8 @@
             <div class="number-col">
               <b-form-input
                 id="phone"
-                class="phone-number-input"
                 v-model="form.phone"
+                class="phone-number-input"
                 required
                 :placeholder="$t('client.phone')"
               />
@@ -155,7 +229,10 @@
           </div>
         </b-form-group>
 
-        <b-form-group :label="$t('client.whatsappNumber')" label-for="whatsapp-number">
+        <b-form-group
+          :label="$t('client.whatsappNumber')"
+          label-for="whatsapp-number"
+        >
           <div class="mb-2">
             <b-form-checkbox
               v-model="form.useSameMobile"
@@ -164,11 +241,14 @@
               {{ $t('client.useSameMobile') }}
             </b-form-checkbox>
           </div>
-          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+          <div
+            class="phone-combined-control"
+            :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+          >
             <div class="country-col">
               <b-form-select
-                class="phone-country-select"
                 v-model="form.whatsapp_country_code"
+                class="phone-country-select"
                 :options="countrySelectOptions"
                 :disabled="form.useSameMobile"
                 :required="!!form.whatsapp_number && !form.useSameMobile"
@@ -177,8 +257,8 @@
             <div class="number-col">
               <b-form-input
                 id="whatsapp-number"
-                class="phone-number-input"
                 v-model="form.whatsapp_number"
+                class="phone-number-input"
                 :placeholder="$t('client.whatsappPlaceholder')"
                 :disabled="form.useSameMobile"
               />
@@ -186,7 +266,10 @@
           </div>
         </b-form-group>
 
-        <b-form-group :label="$t('client.bloodType')" label-for="blood-type">
+        <b-form-group
+          :label="$t('client.bloodType')"
+          label-for="blood-type"
+        >
           <b-form-select
             id="blood-type"
             v-model="form.blood_type"
@@ -194,7 +277,10 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('client.dateOfBirth')" label-for="dob">
+        <b-form-group
+          :label="$t('client.dateOfBirth')"
+          label-for="dob"
+        >
           <b-form-input
             id="dob"
             v-model="form.date_of_birth"
@@ -204,7 +290,10 @@
 
         <b-row>
           <b-col cols="6">
-            <b-form-group :label="$t('client.height')" label-for="height">
+            <b-form-group
+              :label="$t('client.height')"
+              label-for="height"
+            >
               <b-form-input
                 id="height"
                 v-model="form.height"
@@ -217,7 +306,10 @@
             </b-form-group>
           </b-col>
           <b-col cols="6">
-            <b-form-group :label="$t('client.weight')" label-for="weight">
+            <b-form-group
+              :label="$t('client.weight')"
+              label-for="weight"
+            >
               <b-form-input
                 id="weight"
                 v-model="form.weight"
@@ -231,7 +323,10 @@
           </b-col>
         </b-row>
 
-        <b-form-group :label="$t('client.address')" label-for="address">
+        <b-form-group
+          :label="$t('client.address')"
+          label-for="address"
+        >
           <b-form-textarea
             id="address"
             v-model="form.address"
@@ -240,7 +335,10 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('client.job')" label-for="job">
+        <b-form-group
+          :label="$t('client.job')"
+          label-for="job"
+        >
           <b-form-input
             id="job"
             v-model="form.job"
@@ -248,7 +346,10 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('client.medicalHistory')" label-for="history">
+        <b-form-group
+          :label="$t('client.medicalHistory')"
+          label-for="history"
+        >
           <b-form-textarea
             id="history"
             v-model="form.medical_history"
@@ -257,7 +358,10 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('client.chronicIllnesses')" label-for="chronic-illnesses">
+        <b-form-group
+          :label="$t('client.chronicIllnesses')"
+          label-for="chronic-illnesses"
+        >
           <b-form-checkbox-group
             id="chronic-illnesses"
             v-model="form.chronic_illnesses"
@@ -268,11 +372,23 @@
         </b-form-group>
 
         <div class="text-right">
-          <b-button variant="secondary" class="mr-1" @click="modalShow = false">
+          <b-button
+            variant="secondary"
+            class="mr-1"
+            @click="modalShow = false"
+          >
             {{ $t('actions.cancel') }}
           </b-button>
-          <b-button type="submit" variant="primary" :disabled="saving">
-            <b-spinner v-if="saving" small class="mr-1" />
+          <b-button
+            type="submit"
+            variant="primary"
+            :disabled="saving"
+          >
+            <b-spinner
+              v-if="saving"
+              small
+              class="mr-1"
+            />
             {{ $t('actions.save') }}
           </b-button>
         </div>
@@ -288,7 +404,10 @@
     >
       <div v-if="selectedClient">
         <b-row>
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <p><strong>{{ $t('client.clientId') }}:</strong> #{{ selectedClient.id }}</p>
             <p><strong>{{ $t('client.name') }}:</strong> {{ selectedClient.name }}</p>
             <p><strong>{{ $t('clinic.email') }}:</strong> {{ selectedClient.email }}</p>
@@ -296,7 +415,10 @@
             <p><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedClient.whatsapp_number || $t('reservation.na') }}</p>
             <p><strong>{{ $t('client.bloodType') }}:</strong> {{ selectedClient.blood_type || $t('reservation.na') }}</p>
           </b-col>
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <p><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedClient.date_of_birth || $t('reservation.na') }}</p>
             <p><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(selectedClient.date_of_birth) }}</p>
             <p><strong>{{ $t('client.job') }}:</strong> {{ selectedClient.job || $t('reservation.na') }}</p>
@@ -362,29 +484,6 @@ export default {
     ResponsiveTableActions,
     vSelect,
   },
-  computed: {
-    chronicIllnessOptions() {
-      return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
-    },
-    computedFields() {
-      return [
-        { key: 'id', label: this.$t('client.clientId'), sortable: true, formatter: value => `#${value}` },
-        { key: 'name', label: this.$t('client.name'), sortable: true },
-        { key: 'email', label: this.$t('clinic.email'), sortable: true },
-        { key: 'phone', label: this.$t('client.phone') },
-        { key: 'blood_type', label: this.$t('client.bloodType') },
-        { key: 'age', label: this.$t('client.age'), formatter: (value, key, item) => this.calculateAge(item.date_of_birth) },
-        { key: 'created_at', label: this.$t('reservation.created'), formatter: this.formatDate },
-        { key: 'actions', label: this.$t('actions.actions') },
-      ]
-    },
-    countryOptions() {
-      return countryList
-    },
-    countrySelectOptions() {
-      return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(c => ({ value: c.value, text: c.label })))
-    },
-  },
   data() {
     return {
       clients: [],
@@ -423,8 +522,33 @@ export default {
         medical_history: '',
         chronic_illnesses: [],
       },
-      
+
     }
+  },
+  computed: {
+    chronicIllnessOptions() {
+      return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
+    },
+    computedFields() {
+      return [
+        {
+          key: 'id', label: this.$t('client.clientId'), sortable: true, formatter: value => `#${value}`,
+        },
+        { key: 'name', label: this.$t('client.name'), sortable: true },
+        { key: 'email', label: this.$t('clinic.email'), sortable: true },
+        { key: 'phone', label: this.$t('client.phone') },
+        { key: 'blood_type', label: this.$t('client.bloodType') },
+        { key: 'age', label: this.$t('client.age'), formatter: (value, key, item) => this.calculateAge(item.date_of_birth) },
+        { key: 'created_at', label: this.$t('reservation.created'), formatter: this.formatDate },
+        { key: 'actions', label: this.$t('actions.actions') },
+      ]
+    },
+    countryOptions() {
+      return countryList
+    },
+    countrySelectOptions() {
+      return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(c => ({ value: c.value, text: c.label })))
+    },
   },
   mounted() {
     this.fetchClients()
@@ -790,5 +914,3 @@ export default {
   }
 }
 </style>
-
-

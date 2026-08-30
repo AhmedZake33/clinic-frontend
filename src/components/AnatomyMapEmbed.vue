@@ -1,7 +1,13 @@
 <template>
   <div class="anatomy-map-embed">
-    <div v-if="loading" class="anatomy-map-loading">
-      <b-spinner small variant="primary" />
+    <div
+      v-if="loading"
+      class="anatomy-map-loading"
+    >
+      <b-spinner
+        small
+        variant="primary"
+      />
       <span>{{ isArabic ? 'جاري تحميل خريطة الجسم...' : 'Loading anatomical map...' }}</span>
     </div>
     <iframe

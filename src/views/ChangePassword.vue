@@ -1,13 +1,31 @@
 <template>
   <div>
     <b-card :title="$t('auth.changePassword')">
-      <b-alert v-if="error" variant="danger" show>{{ error }}</b-alert>
-      <b-alert v-if="success" variant="success" show>{{ success }}</b-alert>
+      <b-alert
+        v-if="error"
+        variant="danger"
+        show
+      >
+        {{ error }}
+      </b-alert>
+      <b-alert
+        v-if="success"
+        variant="success"
+        show
+      >
+        {{ success }}
+      </b-alert>
 
       <b-form @submit.prevent="handleSubmit">
         <b-row>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('auth.currentPassword')" label-for="current_password">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('auth.currentPassword')"
+              label-for="current_password"
+            >
               <b-form-input
                 id="current_password"
                 v-model="form.current_password"
@@ -17,7 +35,10 @@
               />
             </b-form-group>
 
-            <b-form-group :label="$t('auth.newPassword')" label-for="new_password">
+            <b-form-group
+              :label="$t('auth.newPassword')"
+              label-for="new_password"
+            >
               <b-form-input
                 id="new_password"
                 v-model="form.password"
@@ -27,7 +48,10 @@
               />
             </b-form-group>
 
-            <b-form-group :label="$t('auth.confirmPassword')" label-for="password_confirmation">
+            <b-form-group
+              :label="$t('auth.confirmPassword')"
+              label-for="password_confirmation"
+            >
               <b-form-input
                 id="password_confirmation"
                 v-model="form.password_confirmation"
@@ -37,8 +61,16 @@
               />
             </b-form-group>
 
-            <b-button type="submit" variant="primary" :disabled="loading">
-              <b-spinner v-if="loading" small class="mr-1" />
+            <b-button
+              type="submit"
+              variant="primary"
+              :disabled="loading"
+            >
+              <b-spinner
+                v-if="loading"
+                small
+                class="mr-1"
+              />
               {{ $t('auth.changePassword') }}
             </b-button>
           </b-col>
@@ -49,8 +81,8 @@
 </template>
 
 <script>
-import authService from '@/services/auth'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import authService from '@/services/auth'
 
 export default {
   data() {

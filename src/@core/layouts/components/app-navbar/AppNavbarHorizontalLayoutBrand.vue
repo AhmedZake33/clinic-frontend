@@ -30,8 +30,8 @@ export default {
     BLink,
     BImg,
   },
-  mounted(){
-    alert();
+  mounted() {
+    alert()
   },
   setup() {
     // App Name
@@ -41,7 +41,7 @@ export default {
       appLogoImage,
     }
   },
-  
+
 }
 </script>
 

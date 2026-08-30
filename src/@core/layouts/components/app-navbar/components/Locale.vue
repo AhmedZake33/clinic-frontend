@@ -1,9 +1,17 @@
 <template>
-  <div id="dropdown-grouped" variant="link" class="dropdown-language" right>
-    <span class="pointer mx-1"
-          v-for="localeObj in locales"
-          v-if="$i18n.locale != localeObj.locale"
-          :key="localeObj.locale" @click="changeLocal(localeObj)">
+  <div
+    id="dropdown-grouped"
+    variant="link"
+    class="dropdown-language"
+    right
+  >
+    <span
+      v-for="localeObj in locales"
+      v-if="$i18n.locale != localeObj.locale"
+      :key="localeObj.locale"
+      class="pointer mx-1"
+      @click="changeLocal(localeObj)"
+    >
       <span class="ml-50">{{ localeObj.name }}</span>
     </span>
   </div>

@@ -202,7 +202,7 @@ const navigationItems = [
     icon: 'HelpCircleIcon',
     permission: 'doctor.view-reservations',
   },
-  
+
   {
     header: 'menu.adminMenu',
     i18n: true,

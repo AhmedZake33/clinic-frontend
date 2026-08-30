@@ -1,5 +1,7 @@
 import { ref, onMounted, onBeforeUnmount } from '@vue/composition-api'
-import { subscribeToDoctorChannel, subscribeToAssistantChannel, leaveChannel, updateEchoAuth } from '@/libs/echo'
+import {
+  subscribeToDoctorChannel, subscribeToAssistantChannel, leaveChannel, updateEchoAuth,
+} from '@/libs/echo'
 import store from '@/store'
 
 /**
@@ -15,7 +17,7 @@ export default function useRealtimeReservations() {
   /**
    * Handle new reservation created
    */
-  const handleReservationCreated = (data) => {
+  const handleReservationCreated = data => {
     console.log('🔔 Reservation Created:', data)
     lastEvent.value = { type: 'created', data, timestamp: new Date() }
     addNotification({
@@ -29,7 +31,7 @@ export default function useRealtimeReservations() {
   /**
    * Handle reservation updated
    */
-  const handleReservationUpdated = (data) => {
+  const handleReservationUpdated = data => {
     console.log('🔔 Reservation Updated:', data)
     lastEvent.value = { type: 'updated', data, timestamp: new Date() }
     addNotification({
@@ -43,7 +45,7 @@ export default function useRealtimeReservations() {
   /**
    * Handle reservation completed
    */
-  const handleReservationCompleted = (data) => {
+  const handleReservationCompleted = data => {
     console.log('🔔 Reservation Completed:', data)
     lastEvent.value = { type: 'completed', data, timestamp: new Date() }
     addNotification({
@@ -57,7 +59,7 @@ export default function useRealtimeReservations() {
   /**
    * Handle reservation deleted
    */
-  const handleReservationDeleted = (data) => {
+  const handleReservationDeleted = data => {
     console.log('🔔 Reservation Deleted:', data)
     lastEvent.value = { type: 'deleted', data, timestamp: new Date() }
     addNotification({
@@ -71,7 +73,7 @@ export default function useRealtimeReservations() {
   /**
    * Add notification to the list
    */
-  const addNotification = (notification) => {
+  const addNotification = notification => {
     notifications.value.unshift({
       ...notification,
       id: Date.now(),

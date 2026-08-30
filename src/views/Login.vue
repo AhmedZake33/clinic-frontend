@@ -3,18 +3,34 @@
     <div class="auth-inner py-2">
       <b-card class="mb-0">
         <b-link class="brand-logo">
-          <h2 class="brand-text text-primary ml-1">{{ $t('clinic.brandText') }}</h2>
+          <h2 class="brand-text text-primary ml-1">
+            {{ $t('clinic.brandText') }}
+          </h2>
         </b-link>
 
-        <b-card-title class="mb-1">{{ $t('clinic.welcome') }} 👋</b-card-title>
-        <b-card-text class="mb-2">{{ $t('clinic.signIn') }}</b-card-text>
+        <b-card-title class="mb-1">
+          {{ $t('clinic.welcome') }} 👋
+        </b-card-title>
+        <b-card-text class="mb-2">
+          {{ $t('clinic.signIn') }}
+        </b-card-text>
 
-        <b-alert v-if="error" variant="danger" show>
+        <b-alert
+          v-if="error"
+          variant="danger"
+          show
+        >
           {{ error }}
         </b-alert>
 
-        <b-form class="auth-login-form mt-2" @submit.prevent="handleLogin">
-          <b-form-group :label="$t('clinic.email')" label-for="login-email">
+        <b-form
+          class="auth-login-form mt-2"
+          @submit.prevent="handleLogin"
+        >
+          <b-form-group
+            :label="$t('clinic.email')"
+            label-for="login-email"
+          >
             <b-form-input
               id="login-email"
               v-model="email"
@@ -24,7 +40,10 @@
             />
           </b-form-group>
 
-          <b-form-group :label="$t('clinic.password')" label-for="login-password">
+          <b-form-group
+            :label="$t('clinic.password')"
+            label-for="login-password"
+          >
             <b-input-group>
               <b-form-input
                 id="login-password"
@@ -47,13 +66,25 @@
           </b-form-group>
 
           <div class="d-flex justify-content-end mb-1">
-            <b-link :to="{ name: 'forgot-password' }" class="small">
+            <b-link
+              :to="{ name: 'forgot-password' }"
+              class="small"
+            >
               {{ $t('auth.forgotPassword') }}
             </b-link>
           </div>
 
-          <b-button type="submit" variant="primary" block :disabled="loading">
-            <b-spinner v-if="loading" small class="mr-1" />
+          <b-button
+            type="submit"
+            variant="primary"
+            block
+            :disabled="loading"
+          >
+            <b-spinner
+              v-if="loading"
+              small
+              class="mr-1"
+            />
             {{ $t('actions.signIn') }}
           </b-button>
         </b-form>
@@ -131,7 +162,7 @@ export default {
         })
 
         // Redirect to role-specific dashboards
-        const role = response.data.user.role
+        const { role } = response.data.user
         let target = '/dashboard'
         if (role === 'doctor') target = '/doctor/dashboard'
         else if (role === 'assistant') target = '/assistant/dashboard'

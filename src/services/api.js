@@ -5,8 +5,8 @@ const apiClient = axios.create({
   baseURL: `${process.env.VUE_APP_BASE_URL}`,
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }
+    Accept: 'application/json',
+  },
 })
 
 // Add auth token and socket ID to requests
@@ -44,7 +44,7 @@ apiClient.interceptors.response.use(
       router.replace({ name: 'subscription-expired' }).catch(() => {})
     }
     return Promise.reject(error)
-  }
+  },
 )
 
 export default apiClient

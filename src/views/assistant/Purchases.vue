@@ -2,52 +2,135 @@
   <div>
     <b-card>
       <b-row class="mb-2">
-        <b-col cols="12" md="4">
+        <b-col
+          cols="12"
+          md="4"
+        >
           <h4>{{ $t('purchases.purchasesList') }}</h4>
         </b-col>
-        <b-col cols="12" md="8" class="text-right">
-          <b-button v-permission="['assistant.create-purchases','doctor.create-purchases']" variant="primary" @click="showAddModalFlag = true" :disabled="loading">
-            <feather-icon icon="PlusIcon" class="mr-50" />
+        <b-col
+          cols="12"
+          md="8"
+          class="text-right"
+        >
+          <b-button
+            v-permission="['assistant.create-purchases','doctor.create-purchases']"
+            variant="primary"
+            :disabled="loading"
+            @click="showAddModalFlag = true"
+          >
+            <feather-icon
+              icon="PlusIcon"
+              class="mr-50"
+            />
             {{ $t('purchases.newPurchase') }}
           </b-button>
         </b-col>
       </b-row>
 
-      <b-form @submit.prevent="applyFilters" class="mb-2">
+      <b-form
+        class="mb-2"
+        @submit.prevent="applyFilters"
+      >
         <b-row>
-        <b-col cols="12" sm="6" md="3" class="mb-1 mb-md-0">
-            <b-form-input type="date" v-model="filters.from" :placeholder="$t('filters.from')"></b-form-input>
+          <b-col
+            cols="12"
+            sm="6"
+            md="3"
+            class="mb-1 mb-md-0"
+          >
+            <b-form-input
+              v-model="filters.from"
+              type="date"
+              :placeholder="$t('filters.from')"
+            />
           </b-col>
-          <b-col cols="12" sm="6" md="3" class="mb-1 mb-md-0">
-            <b-form-input type="date" v-model="filters.to" :placeholder="$t('filters.to')"></b-form-input>
+          <b-col
+            cols="12"
+            sm="6"
+            md="3"
+            class="mb-1 mb-md-0"
+          >
+            <b-form-input
+              v-model="filters.to"
+              type="date"
+              :placeholder="$t('filters.to')"
+            />
           </b-col>
-          <b-col cols="12" sm="6" md="3" class="mb-1 mb-md-0">
-            <b-form-select v-model="filters.category" :options="categoryOptions" />
+          <b-col
+            cols="12"
+            sm="6"
+            md="3"
+            class="mb-1 mb-md-0"
+          >
+            <b-form-select
+              v-model="filters.category"
+              :options="categoryOptions"
+            />
           </b-col>
-          <b-col cols="12" sm="6" md="3" class="purchase-filter-actions text-right">
-            <b-button class="mr-1" type="submit" variant="primary">{{ $t('filters.apply') }}</b-button>
-            <b-button variant="danger" @click="resetFilters">{{ $t('filters.reset') }}</b-button>
+          <b-col
+            cols="12"
+            sm="6"
+            md="3"
+            class="purchase-filter-actions text-right"
+          >
+            <b-button
+              class="mr-1"
+              type="submit"
+              variant="primary"
+            >
+              {{ $t('filters.apply') }}
+            </b-button>
+            <b-button
+              variant="danger"
+              @click="resetFilters"
+            >
+              {{ $t('filters.reset') }}
+            </b-button>
           </b-col>
         </b-row>
       </b-form>
 
-    <!-- Summary: Total purchases for selected period -->
-    <b-row class="mb-2">
-      <b-col cols="12" md="4">
-        <b-card class="text-center border">
-          <b-card-text class="text-muted small mb-0">{{ $t('purchases.periodTotal') }}</b-card-text>
-          <h3 class="mb-0 text-primary">{{ formatCurrency(stats.periodTotal) }}</h3>
-        </b-card>
-      </b-col>
-    </b-row>
+      <!-- Summary: Total purchases for selected period -->
+      <b-row class="mb-2">
+        <b-col
+          cols="12"
+          md="4"
+        >
+          <b-card class="text-center border">
+            <b-card-text class="text-muted small mb-0">
+              {{ $t('purchases.periodTotal') }}
+            </b-card-text>
+            <h3 class="mb-0 text-primary">
+              {{ formatCurrency(stats.periodTotal) }}
+            </h3>
+          </b-card>
+        </b-col>
+      </b-row>
 
-      <b-modal v-model="showAddModalFlag" :title="$t('purchases.newPurchase')" hide-footer size="lg">
-        <purchase-form :modal-mode="true" @saved="onSaved"></purchase-form>
+      <b-modal
+        v-model="showAddModalFlag"
+        :title="$t('purchases.newPurchase')"
+        hide-footer
+        size="lg"
+      >
+        <purchase-form
+          :modal-mode="true"
+          @saved="onSaved"
+        />
       </b-modal>
 
-      <div v-if="loading" class="text-center my-4">
-        <b-spinner label="Loading..." small></b-spinner>
-        <div class="mt-2">{{ $t('messages.loading') }}</div>
+      <div
+        v-if="loading"
+        class="text-center my-4"
+      >
+        <b-spinner
+          label="Loading..."
+          small
+        />
+        <div class="mt-2">
+          {{ $t('messages.loading') }}
+        </div>
       </div>
 
       <b-table
@@ -61,27 +144,38 @@
         show-empty
       >
         <template #empty>
-          <div class="text-center text-muted py-2">{{ $t('purchases.noRecords') }}</div>
+          <div class="text-center text-muted py-2">
+            {{ $t('purchases.noRecords') }}
+          </div>
         </template>
         <template #cell(purchase_date)="data">
           {{ formatDate(data.item.purchase_date) }}
         </template>
         <template #cell(category)="data">
           <div>
-            <div v-if="$i18n.locale == 'en'">{{ (data.item.category_labels && data.item.category_labels.en) || data.item.category }}</div>
-            <div v-else>{{ (data.item.category_labels && data.item.category_labels.ar) || data.item.category }}</div>
+            <div v-if="$i18n.locale == 'en'">
+              {{ (data.item.category_labels && data.item.category_labels.en) || data.item.category }}
+            </div>
+            <div v-else>
+              {{ (data.item.category_labels && data.item.category_labels.ar) || data.item.category }}
+            </div>
           </div>
         </template>
         <template #cell(amount_paid)="data">
           {{ (Number(data.item.amount_paid) || 0).toFixed(2) }}
         </template>
         <template #cell(actions)="data">
-          <router-link :to="{ name: editRouteName, params: { id: data.item.id } }">{{ $t('actions.edit') }}</router-link>
+          <router-link :to="{ name: editRouteName, params: { id: data.item.id } }">
+            {{ $t('actions.edit') }}
+          </router-link>
         </template>
       </b-table>
 
       <div class="d-md-none mt-2">
-        <div v-if="!loading && !(purchases.data || []).length" class="text-center text-muted py-2">
+        <div
+          v-if="!loading && !(purchases.data || []).length"
+          class="text-center text-muted py-2"
+        >
           {{ $t('purchases.noRecords') }}
         </div>
         <b-card
@@ -92,7 +186,9 @@
         >
           <div class="purchase-mobile-card__header">
             <div>
-              <h6 class="mb-25">{{ item.item_name }}</h6>
+              <h6 class="mb-25">
+                {{ item.item_name }}
+              </h6>
               <small class="text-muted">{{ formatDate(item.purchase_date) }}</small>
             </div>
             <strong class="text-primary">{{ formatCurrency(item.amount_paid) }}</strong>
@@ -125,11 +221,14 @@
         v-model="pagination.current_page"
         :total-rows="pagination.total"
         :per-page="pagination.per_page"
-        @change="onPageChange"
         class="mt-2"
         align="center"
+        @change="onPageChange"
       />
-      <div class="text-center text-muted small mt-1" v-if="pagination.total">
+      <div
+        v-if="pagination.total"
+        class="text-center text-muted small mt-1"
+      >
         {{ paginationCountText(pagination) }}
       </div>
     </b-card>
@@ -141,6 +240,9 @@ import purchasesApi from '@/services/purchases'
 import PurchaseForm from './PurchaseForm.vue'
 
 export default {
+  components: {
+    PurchaseForm,
+  },
   data() {
     return {
       purchases: {},
@@ -205,7 +307,9 @@ export default {
         // Handle both paginated responses (res.data is object with .data array)
         // and plain arrays (res.data is an array)
         if (Array.isArray(res.data)) {
-          this.purchases = { data: res.data, total: res.data.length, per_page: res.data.length, current_page: 1 }
+          this.purchases = {
+            data: res.data, total: res.data.length, per_page: res.data.length, current_page: 1,
+          }
         } else {
           this.purchases = res.data
         }
@@ -223,10 +327,10 @@ export default {
         this.loading = false
       }
     },
-      async applyFilters() {
-        await this.load()
-        await this.loadStats()
-      },
+    async applyFilters() {
+      await this.load()
+      await this.loadStats()
+    },
     onSaved(purchase) {
       this.showAddModalFlag = false
       this.load()
@@ -238,12 +342,12 @@ export default {
       if (isNaN(dt)) return d
       return dt.toLocaleDateString()
     },
-    
+
     async loadStats() {
       try {
         const from = this.filters.from || undefined
         const to = this.filters.to || undefined
-        let params = { category: this.filters.category || undefined }
+        const params = { category: this.filters.category || undefined }
         if (from && to) {
           params.from = from
           params.to = to
@@ -287,9 +391,6 @@ export default {
       this.load()
       this.loadStats()
     },
-  },
-  components: {
-    PurchaseForm,
   },
 }
 </script>

@@ -1,62 +1,166 @@
-﻿<template>
+<template>
   <b-card :dir="isArabic ? 'rtl' : 'ltr'">
-    <h4 class="mb-2">{{ t('title') }}</h4>
-    <b-alert v-if="error" show variant="danger">{{ error }}</b-alert>
-    <b-alert v-if="success" show variant="success">{{ success }}</b-alert>
+    <h4 class="mb-2">
+      {{ t('title') }}
+    </h4>
+    <b-alert
+      v-if="error"
+      show
+      variant="danger"
+    >
+      {{ error }}
+    </b-alert>
+    <b-alert
+      v-if="success"
+      show
+      variant="success"
+    >
+      {{ success }}
+    </b-alert>
 
     <b-form @submit.prevent="save">
-      <b-form-group :label="t('uniqueName')" label-for="booking_slug">
-        <b-form-input id="booking_slug" v-model="bookingSlug" :placeholder="t('slugPlaceholder')" required />
+      <b-form-group
+        :label="t('uniqueName')"
+        label-for="booking_slug"
+      >
+        <b-form-input
+          id="booking_slug"
+          v-model="bookingSlug"
+          :placeholder="t('slugPlaceholder')"
+          required
+        />
         <small class="text-muted">{{ t('slugHelp') }}</small>
       </b-form-group>
 
-      <b-form-group :label="t('bookingUrl')" label-for="booking_url">
+      <b-form-group
+        :label="t('bookingUrl')"
+        label-for="booking_url"
+      >
         <b-input-group>
-          <b-form-input id="booking_url" :value="bookingUrl" readonly />
+          <b-form-input
+            id="booking_url"
+            :value="bookingUrl"
+            readonly
+          />
           <b-input-group-append>
-            <b-button variant="outline-primary" type="button" :disabled="!bookingUrl" @click="copyUrl">{{ t('copy') }}</b-button>
+            <b-button
+              variant="outline-primary"
+              type="button"
+              :disabled="!bookingUrl"
+              @click="copyUrl"
+            >
+              {{ t('copy') }}
+            </b-button>
           </b-input-group-append>
         </b-input-group>
       </b-form-group>
 
-      <b-form-group :label="t('clinicName')" label-for="clinic_name">
-        <b-form-input id="clinic_name" v-model="clinicName" :placeholder="t('clinicNamePlaceholder')" />
+      <b-form-group
+        :label="t('clinicName')"
+        label-for="clinic_name"
+      >
+        <b-form-input
+          id="clinic_name"
+          v-model="clinicName"
+          :placeholder="t('clinicNamePlaceholder')"
+        />
       </b-form-group>
 
-      <b-form-group :label="t('clinicHeader')" label-for="clinic_header">
-        <b-form-textarea id="clinic_header" v-model="clinicHeader" rows="3" :placeholder="t('clinicHeaderPlaceholder')" />
+      <b-form-group
+        :label="t('clinicHeader')"
+        label-for="clinic_header"
+      >
+        <b-form-textarea
+          id="clinic_header"
+          v-model="clinicHeader"
+          rows="3"
+          :placeholder="t('clinicHeaderPlaceholder')"
+        />
       </b-form-group>
 
-      <b-form-group :label="t('clinicPhone')" label-for="clinic_phone">
-        <b-form-input id="clinic_phone" v-model="clinicPhone" :placeholder="t('clinicPhonePlaceholder')" />
+      <b-form-group
+        :label="t('clinicPhone')"
+        label-for="clinic_phone"
+      >
+        <b-form-input
+          id="clinic_phone"
+          v-model="clinicPhone"
+          :placeholder="t('clinicPhonePlaceholder')"
+        />
       </b-form-group>
 
-      <b-form-group :label="t('position')" label-for="clinic_position">
-        <b-form-select id="clinic_position" v-model="clinicPosition" :options="positionOptions" />
+      <b-form-group
+        :label="t('position')"
+        label-for="clinic_position"
+      >
+        <b-form-select
+          id="clinic_position"
+          v-model="clinicPosition"
+          :options="positionOptions"
+        />
       </b-form-group>
 
-      <b-form-group :label="t('color')" label-for="clinic_primary_color">
+      <b-form-group
+        :label="t('color')"
+        label-for="clinic_primary_color"
+      >
         <b-input-group>
-          <b-form-input id="clinic_primary_color_picker" v-model="clinicPrimaryColor" type="color" class="online-booking-color-input" />
-          <b-form-input id="clinic_primary_color" v-model="clinicPrimaryColor" maxlength="7" />
+          <b-form-input
+            id="clinic_primary_color_picker"
+            v-model="clinicPrimaryColor"
+            type="color"
+            class="online-booking-color-input"
+          />
+          <b-form-input
+            id="clinic_primary_color"
+            v-model="clinicPrimaryColor"
+            maxlength="7"
+          />
         </b-input-group>
       </b-form-group>
 
       <div class="online-booking-preview mb-2">
-        <div class="text-muted small mb-50">{{ t('preview') }}</div>
+        <div class="text-muted small mb-50">
+          {{ t('preview') }}
+        </div>
         <div
           class="online-booking-preview__card"
           :class="positionClass"
           :style="{ borderColor: safeColor }"
         >
-          <h3 class="mb-50" :style="{ color: safeColor }">{{ previewClinicName }}</h3>
-          <p v-if="clinicHeader" class="mb-0 text-muted white-space-pre-line">{{ clinicHeader }}</p>
-          <p v-if="clinicPhone" class="mb-0 mt-50 online-booking-preview__phone" dir="ltr" :style="{ color: safeColor }">{{ clinicPhone }}</p>
+          <h3
+            class="mb-50"
+            :style="{ color: safeColor }"
+          >
+            {{ previewClinicName }}
+          </h3>
+          <p
+            v-if="clinicHeader"
+            class="mb-0 text-muted white-space-pre-line"
+          >
+            {{ clinicHeader }}
+          </p>
+          <p
+            v-if="clinicPhone"
+            class="mb-0 mt-50 online-booking-preview__phone"
+            dir="ltr"
+            :style="{ color: safeColor }"
+          >
+            {{ clinicPhone }}
+          </p>
         </div>
       </div>
 
-      <b-button type="submit" variant="primary" :disabled="saving">
-        <b-spinner v-if="saving" small class="mr-50" />
+      <b-button
+        type="submit"
+        variant="primary"
+        :disabled="saving"
+      >
+        <b-spinner
+          v-if="saving"
+          small
+          class="mr-50"
+        />
         {{ t('save') }}
       </b-button>
     </b-form>
@@ -140,9 +244,6 @@ export default {
       success: '',
     }
   },
-  mounted() {
-    this.fetchSettings()
-  },
   computed: {
     locale() {
       return this.$i18n && this.$i18n.locale === 'ar' ? 'ar' : 'en'
@@ -170,6 +271,9 @@ export default {
         { value: 'right', text: this.t('positionRight') },
       ]
     },
+  },
+  mounted() {
+    this.fetchSettings()
   },
   methods: {
     t(key) {

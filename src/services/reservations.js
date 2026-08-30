@@ -4,19 +4,19 @@ export default {
   getReservations(params = {}) {
     return apiClient.get('/reservations', { params })
   },
-  
+
   getReservation(id) {
     return apiClient.get(`/reservations/${id}`)
   },
-  
+
   createReservation(reservationData) {
     return apiClient.post('/reservations', reservationData)
   },
-  
+
   updateReservation(id, reservationData) {
     return apiClient.put(`/reservations/${id}`, reservationData)
   },
-  
+
   completeReservation(id, data) {
     const config = data instanceof FormData
       ? { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -40,29 +40,29 @@ export default {
   confirmReservation(id) {
     return apiClient.post(`/reservations/${id}/confirm`)
   },
-  
+
   generatePrescription(id) {
     return apiClient.get(`/reservations/${id}/prescription`, {
-      responseType: 'blob'
+      responseType: 'blob',
     })
   },
 
   generateMedicinesPrescription(id) {
     return apiClient.get(`/reservations/${id}/medicines-prescription`, {
-      responseType: 'blob'
+      responseType: 'blob',
     })
   },
 
   generateReservationDetailsPdf(id) {
     return apiClient.get(`/reservations/${id}/details-pdf`, {
-      responseType: 'blob'
+      responseType: 'blob',
     })
   },
-  
+
   deleteReservation(id) {
     return apiClient.delete(`/reservations/${id}`)
   },
-  
+
   getDoctors() {
     return apiClient.get('/doctors')
   },
@@ -86,5 +86,5 @@ export default {
 
   reorderWaitingQueue(orderedIds = []) {
     return apiClient.post('/waiting-queue/reorder', { ordered_ids: orderedIds })
-  }
+  },
 }

@@ -1,8 +1,12 @@
-﻿<template>
+<template>
   <div>
     <!-- Stats Cards -->
     <b-row class="mb-2">
-      <b-col cols="12" sm="6" lg="3">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
         <statistic-card-vertical
           icon="UsersIcon"
           :statistic="stats.total_doctors"
@@ -10,7 +14,11 @@
           color="primary"
         />
       </b-col>
-      <b-col cols="12" sm="6" lg="3">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
         <statistic-card-vertical
           icon="CheckCircleIcon"
           :statistic="stats.active_subscriptions"
@@ -18,7 +26,11 @@
           color="success"
         />
       </b-col>
-      <b-col cols="12" sm="6" lg="3">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
         <statistic-card-vertical
           icon="XCircleIcon"
           :statistic="stats.expired_subscriptions"
@@ -26,7 +38,11 @@
           color="danger"
         />
       </b-col>
-      <b-col cols="12" sm="6" lg="3">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
         <statistic-card-vertical
           icon="DollarSignIcon"
           :statistic="`$${stats.total_revenue}`"
@@ -40,12 +56,17 @@
     <b-card>
       <b-card-header>
         <div class="d-flex justify-content-between align-items-center">
-          <h4 class="mb-0">{{ $t('admin.doctorsManagement') }}</h4>
+          <h4 class="mb-0">
+            {{ $t('admin.doctorsManagement') }}
+          </h4>
           <b-button
             variant="primary"
             @click="openAddModal()"
           >
-            <feather-icon icon="PlusIcon" class="mr-50" />
+            <feather-icon
+              icon="PlusIcon"
+              class="mr-50"
+            />
             {{ $t('admin.addDoctor') }}
           </b-button>
         </div>
@@ -85,18 +106,27 @@
               />
             </template>
             <b-dropdown-item @click="viewDoctor(data.item)">
-              <feather-icon icon="EyeIcon" class="mr-50" />
+              <feather-icon
+                icon="EyeIcon"
+                class="mr-50"
+              />
               {{ $t('actions.view') }}
             </b-dropdown-item>
             <b-dropdown-item @click="editDoctor(data.item)">
-              <feather-icon icon="EditIcon" class="mr-50" />
+              <feather-icon
+                icon="EditIcon"
+                class="mr-50"
+              />
               {{ $t('actions.edit') }}
             </b-dropdown-item>
             <b-dropdown-item
               variant="danger"
               @click="confirmDelete(data.item)"
             >
-              <feather-icon icon="TrashIcon" class="mr-50" />
+              <feather-icon
+                icon="TrashIcon"
+                class="mr-50"
+              />
               {{ $t('actions.delete') }}
             </b-dropdown-item>
           </b-dropdown>
@@ -113,8 +143,14 @@
     >
       <b-form @submit.prevent="saveDoctor">
         <b-row>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('client.name')" label-for="name">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('client.name')"
+              label-for="name"
+            >
               <b-form-input
                 id="name"
                 v-model="form.name"
@@ -122,8 +158,14 @@
               />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('clinic.email')" label-for="email">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('clinic.email')"
+              label-for="email"
+            >
               <b-form-input
                 id="email"
                 v-model="form.email"
@@ -136,19 +178,30 @@
 
         <b-row>
           <b-col cols="12">
-            <b-form-group :label="$t('client.phone')" label-for="doctor-phone">
-              <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+            <b-form-group
+              :label="$t('client.phone')"
+              label-for="doctor-phone"
+            >
+              <div
+                class="phone-combined-control"
+                :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+              >
                 <div class="country-col">
                   <b-form-select
                     id="doctor-country-code"
-                    class="phone-country-select"
                     v-model="form.phone_country_code"
+                    class="phone-country-select"
                     :options="countrySelectOptions"
                     :required="!!form.phone"
                   />
                 </div>
                 <div class="number-col">
-                  <b-form-input id="doctor-phone" class="phone-number-input" v-model="form.phone" :placeholder="$t('client.phone')" />
+                  <b-form-input
+                    id="doctor-phone"
+                    v-model="form.phone"
+                    class="phone-number-input"
+                    :placeholder="$t('client.phone')"
+                  />
                 </div>
               </div>
             </b-form-group>
@@ -157,22 +210,38 @@
 
         <b-row>
           <b-col cols="12">
-            <b-form-group :label="$t('client.whatsappNumber')" label-for="doctor-whatsapp-number">
-              <b-form-checkbox v-model="form.useSameMobile" class="mb-50" @change="handleUseSameMobileChange">
+            <b-form-group
+              :label="$t('client.whatsappNumber')"
+              label-for="doctor-whatsapp-number"
+            >
+              <b-form-checkbox
+                v-model="form.useSameMobile"
+                class="mb-50"
+                @change="handleUseSameMobileChange"
+              >
                 {{ $t('client.useSameMobile') }}
               </b-form-checkbox>
-              <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+              <div
+                class="phone-combined-control"
+                :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+              >
                 <div class="country-col">
                   <b-form-select
-                    class="phone-country-select"
                     v-model="form.whatsapp_country_code"
+                    class="phone-country-select"
                     :options="countrySelectOptions"
                     :disabled="form.useSameMobile"
                     :required="!!form.whatsapp_number && !form.useSameMobile"
                   />
                 </div>
                 <div class="number-col">
-                  <b-form-input id="doctor-whatsapp-number" class="phone-number-input" v-model="form.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="form.useSameMobile" />
+                  <b-form-input
+                    id="doctor-whatsapp-number"
+                    v-model="form.whatsapp_number"
+                    class="phone-number-input"
+                    :placeholder="$t('client.whatsappPlaceholder')"
+                    :disabled="form.useSameMobile"
+                  />
                 </div>
               </div>
             </b-form-group>
@@ -180,8 +249,14 @@
         </b-row>
 
         <b-row>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('admin.specialization')" label-for="specialization">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('admin.specialization')"
+              label-for="specialization"
+            >
               <b-form-select
                 id="specialization"
                 v-model="form.specialization"
@@ -198,8 +273,14 @@
         </b-row>
 
         <b-row v-if="!isEditing">
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('clinic.password')" label-for="password">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('clinic.password')"
+              label-for="password"
+            >
               <b-form-input
                 id="password"
                 v-model="form.password"
@@ -208,8 +289,14 @@
               />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('validation.confirmPassword')" label-for="password_confirmation">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('validation.confirmPassword')"
+              label-for="password_confirmation"
+            >
               <b-form-input
                 id="password_confirmation"
                 v-model="form.password_confirmation"
@@ -221,8 +308,14 @@
         </b-row>
 
         <b-row>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('admin.subscriptionPlan')" label-for="subscription_plan">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('admin.subscriptionPlan')"
+              label-for="subscription_plan"
+            >
               <b-form-input
                 id="subscription_plan"
                 v-model="form.subscription_plan"
@@ -230,8 +323,14 @@
               />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('admin.subscriptionAmount')" label-for="subscription_amount">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('admin.subscriptionAmount')"
+              label-for="subscription_amount"
+            >
               <b-form-input
                 id="subscription_amount"
                 v-model="form.subscription_amount"
@@ -244,8 +343,14 @@
         </b-row>
 
         <b-row>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('admin.subscriptionStart')" label-for="subscription_start">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('admin.subscriptionStart')"
+              label-for="subscription_start"
+            >
               <b-form-input
                 id="subscription_start"
                 v-model="form.subscription_start"
@@ -253,8 +358,14 @@
               />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('admin.subscriptionEnd')" label-for="subscription_end">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('admin.subscriptionEnd')"
+              label-for="subscription_end"
+            >
               <b-form-input
                 id="subscription_end"
                 v-model="form.subscription_end"
@@ -264,7 +375,10 @@
           </b-col>
         </b-row>
 
-        <b-form-group :label="$t('admin.notes')" label-for="notes">
+        <b-form-group
+          :label="$t('admin.notes')"
+          label-for="notes"
+        >
           <b-form-textarea
             id="notes"
             v-model="form.notes"
@@ -280,8 +394,14 @@
         </b-form-checkbox>
 
         <b-row>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('admin.maxSubDoctors')" label-for="max_sub_doctors">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('admin.maxSubDoctors')"
+              label-for="max_sub_doctors"
+            >
               <b-form-input
                 id="max_sub_doctors"
                 v-model="form.max_sub_doctors"
@@ -297,7 +417,10 @@
       </b-form>
 
       <template #modal-footer>
-        <b-button variant="secondary" @click="closeModal">
+        <b-button
+          variant="secondary"
+          @click="closeModal"
+        >
           {{ $t('actions.cancel') }}
         </b-button>
         <b-button
@@ -305,7 +428,11 @@
           :disabled="saving"
           @click="saveDoctor"
         >
-          <b-spinner v-if="saving" small class="mr-50" />
+          <b-spinner
+            v-if="saving"
+            small
+            class="mr-50"
+          />
           {{ isEditing ? $t('actions.save') : $t('actions.add') }}
         </b-button>
       </template>
@@ -320,55 +447,91 @@
     >
       <div v-if="selectedDoctor">
         <b-row class="mb-2">
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('client.name') }}:</strong> {{ selectedDoctor.name }}
           </b-col>
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('clinic.email') }}:</strong> {{ selectedDoctor.email }}
           </b-col>
         </b-row>
 
         <b-row class="mb-2">
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('client.phone') }}:</strong> {{ selectedDoctor.phone || 'N/A' }}
           </b-col>
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedDoctor.whatsapp_number || 'N/A' }}
           </b-col>
         </b-row>
 
         <b-row class="mb-2">
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('admin.specialization') }}:</strong> {{ specializationLabel(selectedDoctor.specialization) || 'N/A' }}
           </b-col>
         </b-row>
 
         <b-row class="mb-2">
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('admin.subscriptionStatus') }}:</strong>
-            <b-badge :variant="getStatusVariant(selectedDoctor.subscription_status)" class="ml-50">
+            <b-badge
+              :variant="getStatusVariant(selectedDoctor.subscription_status)"
+              class="ml-50"
+            >
               {{ $t(`admin.status.${selectedDoctor.subscription_status}`) }}
             </b-badge>
           </b-col>
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('admin.subscriptionPlan') }}:</strong> {{ selectedDoctor.subscription_plan || 'N/A' }}
           </b-col>
         </b-row>
 
         <b-row class="mb-2">
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('admin.subscriptionStart') }}:</strong> {{ selectedDoctor.subscription_start || 'N/A' }}
           </b-col>
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('admin.subscriptionEnd') }}:</strong> {{ selectedDoctor.subscription_end || 'N/A' }}
           </b-col>
         </b-row>
 
         <b-row class="mb-2">
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('admin.subscriptionAmount') }}:</strong> ${{ selectedDoctor.subscription_amount || 0 }}
           </b-col>
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('admin.isActive') }}:</strong>
             <b-badge :variant="selectedDoctor.is_active ? 'success' : 'danger'">
               {{ selectedDoctor.is_active ? $t('admin.active') : $t('admin.inactive') }}
@@ -376,7 +539,10 @@
           </b-col>
         </b-row>
 
-        <div v-if="selectedDoctor.stats" class="mb-2">
+        <div
+          v-if="selectedDoctor.stats"
+          class="mb-2"
+        >
           <strong>{{ $t('admin.stats') }}:</strong>
           <ul class="mt-50">
             <li>{{ $t('admin.assistantsCount') }}: {{ selectedDoctor.stats.assistants_count }}</li>
@@ -384,7 +550,10 @@
             <li>{{ $t('admin.reservationsCount') }}: {{ selectedDoctor.stats.reservations_count }}</li>
           </ul>
         </div>
-        <div v-else class="mb-2">
+        <div
+          v-else
+          class="mb-2"
+        >
           <strong>{{ $t('admin.stats') }}:</strong>
           <ul class="mt-50">
             <li>{{ $t('admin.assistantsCount') }}: {{ selectedDoctor.assistants_count || 0 }}</li>
@@ -394,12 +563,21 @@
         </div>
 
         <b-row class="mb-2">
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <strong>{{ $t('admin.maxSubDoctors') }}:</strong>
-            <b-badge :variant="(selectedDoctor.max_sub_doctors || 0) > 0 ? 'success' : 'secondary'" class="ml-50">
+            <b-badge
+              :variant="(selectedDoctor.max_sub_doctors || 0) > 0 ? 'success' : 'secondary'"
+              class="ml-50"
+            >
               {{ selectedDoctor.max_sub_doctors || 0 }}
             </b-badge>
-            <span v-if="(selectedDoctor.max_sub_doctors || 0) > 0" class="text-muted small ml-50">
+            <span
+              v-if="(selectedDoctor.max_sub_doctors || 0) > 0"
+              class="text-muted small ml-50"
+            >
               ({{ $t('admin.subDoctorsUsed') }}: {{ selectedDoctor.sub_doctors_count || 0 }} / {{ selectedDoctor.max_sub_doctors }})
             </span>
           </b-col>
@@ -407,7 +585,9 @@
 
         <div v-if="selectedDoctor.notes">
           <strong>{{ $t('admin.notes') }}:</strong>
-          <p class="mt-50">{{ selectedDoctor.notes }}</p>
+          <p class="mt-50">
+            {{ selectedDoctor.notes }}
+          </p>
         </div>
       </div>
     </b-modal>
@@ -421,10 +601,10 @@ import {
   BDropdownItem, BBadge, BSpinner,
 } from 'bootstrap-vue'
 import StatisticCardVertical from '@core/components/statistics-cards/StatisticCardVertical.vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import adminService from '@/services/admin'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   components: {
@@ -492,7 +672,9 @@ export default {
         { key: 'subscription_plan', label: this.$t('admin.subscriptionPlan') },
         { key: 'assistants_count', label: this.$t('admin.assistants'), sortable: true },
         { key: 'clients_count', label: this.$t('admin.clients'), sortable: true },
-        { key: 'created_at', label: this.$t('admin.createdAt'), sortable: true, formatter: this.formatDate },
+        {
+          key: 'created_at', label: this.$t('admin.createdAt'), sortable: true, formatter: this.formatDate,
+        },
         { key: 'actions', label: this.$t('table.actions') },
       ],
     }

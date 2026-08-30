@@ -2,19 +2,39 @@
   <div>
     <b-card>
       <b-row class="mb-2">
-        <b-col cols="12" md="4">
+        <b-col
+          cols="12"
+          md="4"
+        >
           <h4>{{ $t('diagnoses.title') }}</h4>
         </b-col>
-        <b-col cols="12" md="8" class="text-right">
-          <b-button v-if="canManageDiagnoses" variant="primary" @click="openAddModal">
-            <feather-icon icon="PlusIcon" class="mr-50" />
+        <b-col
+          cols="12"
+          md="8"
+          class="text-right"
+        >
+          <b-button
+            v-if="canManageDiagnoses"
+            variant="primary"
+            @click="openAddModal"
+          >
+            <feather-icon
+              icon="PlusIcon"
+              class="mr-50"
+            />
             {{ $t('diagnoses.addDiagnosis') }}
           </b-button>
         </b-col>
       </b-row>
 
-      <b-row v-if="isAssistant" class="mb-2">
-        <b-col cols="12" md="4">
+      <b-row
+        v-if="isAssistant"
+        class="mb-2"
+      >
+        <b-col
+          cols="12"
+          md="4"
+        >
           <b-form-select
             v-model="selectedDoctorId"
             :options="doctorOptions"
@@ -37,7 +57,12 @@
         <template #cell(name)="data">
           <div>
             <strong>{{ data.item.name }}</strong>
-            <div v-if="data.item.name_en" class="text-muted small">{{ data.item.name_en }}</div>
+            <div
+              v-if="data.item.name_en"
+              class="text-muted small"
+            >
+              {{ data.item.name_en }}
+            </div>
           </div>
         </template>
 
@@ -49,10 +74,22 @@
 
         <template #cell(actions)="data">
           <responsive-table-actions>
-            <b-button v-if="canManageDiagnoses" size="sm" variant="flat-primary" class="btn-icon mr-25" @click="editDiagnosis(data.item)">
+            <b-button
+              v-if="canManageDiagnoses"
+              size="sm"
+              variant="flat-primary"
+              class="btn-icon mr-25"
+              @click="editDiagnosis(data.item)"
+            >
               <feather-icon icon="EditIcon" />
             </b-button>
-            <b-button v-if="canManageDiagnoses" size="sm" variant="flat-danger" class="btn-icon" @click="confirmDelete(data.item)">
+            <b-button
+              v-if="canManageDiagnoses"
+              size="sm"
+              variant="flat-danger"
+              class="btn-icon"
+              @click="confirmDelete(data.item)"
+            >
               <feather-icon icon="TrashIcon" />
             </b-button>
           </responsive-table-actions>
@@ -73,27 +110,66 @@
       @hidden="resetForm"
     >
       <b-form @submit.prevent="saveDiagnosis">
-        <b-form-group :label="$t('diagnoses.nameAr')" label-for="diagnosis-name">
-          <b-form-input id="diagnosis-name" v-model="form.name" required :placeholder="$t('diagnoses.nameArPlaceholder')" />
+        <b-form-group
+          :label="$t('diagnoses.nameAr')"
+          label-for="diagnosis-name"
+        >
+          <b-form-input
+            id="diagnosis-name"
+            v-model="form.name"
+            required
+            :placeholder="$t('diagnoses.nameArPlaceholder')"
+          />
         </b-form-group>
 
-        <b-form-group :label="$t('diagnoses.nameEn')" label-for="diagnosis-name-en">
-          <b-form-input id="diagnosis-name-en" v-model="form.name_en" :placeholder="$t('diagnoses.nameEnPlaceholder')" />
+        <b-form-group
+          :label="$t('diagnoses.nameEn')"
+          label-for="diagnosis-name-en"
+        >
+          <b-form-input
+            id="diagnosis-name-en"
+            v-model="form.name_en"
+            :placeholder="$t('diagnoses.nameEnPlaceholder')"
+          />
         </b-form-group>
 
-        <b-form-group :label="$t('diagnoses.description')" label-for="diagnosis-desc">
-          <b-form-textarea id="diagnosis-desc" v-model="form.description" rows="3" :placeholder="$t('diagnoses.descriptionPlaceholder')" />
+        <b-form-group
+          :label="$t('diagnoses.description')"
+          label-for="diagnosis-desc"
+        >
+          <b-form-textarea
+            id="diagnosis-desc"
+            v-model="form.description"
+            rows="3"
+            :placeholder="$t('diagnoses.descriptionPlaceholder')"
+          />
         </b-form-group>
 
-        <b-form-checkbox v-model="form.is_active" class="mt-1">
+        <b-form-checkbox
+          v-model="form.is_active"
+          class="mt-1"
+        >
           {{ $t('diagnoses.isActive') }}
         </b-form-checkbox>
       </b-form>
 
       <template #modal-footer>
-        <b-button variant="secondary" @click="showModal = false">{{ $t('actions.cancel') }}</b-button>
-        <b-button variant="primary" :disabled="saving" @click="saveDiagnosis">
-          <b-spinner v-if="saving" small class="mr-50" />
+        <b-button
+          variant="secondary"
+          @click="showModal = false"
+        >
+          {{ $t('actions.cancel') }}
+        </b-button>
+        <b-button
+          variant="primary"
+          :disabled="saving"
+          @click="saveDiagnosis"
+        >
+          <b-spinner
+            v-if="saving"
+            small
+            class="mr-50"
+          />
           {{ isEditing ? $t('actions.save') : $t('actions.add') }}
         </b-button>
       </template>
@@ -118,9 +194,9 @@ import {
   BSpinner,
   BTable,
 } from 'bootstrap-vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import diagnosesApi from '@/services/doctorDiagnoses'
 import reservationsApi from '@/services/reservations'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 const emptyForm = () => ({

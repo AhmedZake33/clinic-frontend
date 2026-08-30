@@ -1,30 +1,68 @@
-﻿<template>
+<template>
   <div>
     <b-card class="mb-2">
       <b-row>
-        <b-col cols="12" md="8">
-          <h4 class="mb-1">{{ $t('client.clientDetails') }}</h4>
-          <p class="mb-0"><strong>{{ $t('client.name') }}:</strong> {{ client.name }}</p>
-          <p class="mb-0"><strong>{{ $t('clinic.email') }}:</strong> {{ client.email }}</p>
-          <p class="mb-0"><strong>{{ $t('client.phone') }}:</strong> {{ (client.phone_country_code || client.country_code) ? (client.phone_country_code || client.country_code) + ' ' : '' }}{{ client.phone }}</p>
-          <p class="mb-0"><strong>{{ $t('client.whatsappNumber') }}:</strong> {{ (client.whatsapp_country_code || client.country_code) ? (client.whatsapp_country_code || client.country_code) + ' ' : '' }}{{ client.whatsapp_number || $t('reservation.na') }}</p>
-          <p class="mb-0"><strong>{{ $t('client.bloodType') }}:</strong> {{ client.blood_type || $t('reservation.na') }}</p>
-          <p class="mb-0"><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ client.date_of_birth ? formatDate(client.date_of_birth) : $t('reservation.na') }}</p>
-          <p class="mb-0"><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(client.date_of_birth) }}</p>
-          <p class="mb-0"><strong>{{ $t('client.height') }}:</strong> {{ client.height ? client.height + ' cm' : $t('reservation.na') }}</p>
-          <p class="mb-0"><strong>{{ $t('client.weight') }}:</strong> {{ client.weight ? client.weight + ' kg' : $t('reservation.na') }}</p>
-          <p class="mb-0"><strong>{{ $t('client.address') }}:</strong> {{ client.address || $t('reservation.na') }}</p>
-          <p class="mb-0"><strong>{{ $t('client.job') }}:</strong> {{ client.job || $t('reservation.na') }}</p>
-          <p class="mb-0"><strong>{{ $t('client.chronicIllnesses') }}:</strong> {{ formatClientChronicIllnesses(client.chronic_illnesses) }}</p>
-          <p class="mb-0"><strong>{{ $t('client.medicalHistory') }}:</strong> {{ client.medical_history || $t('reservation.na') }}</p>
+        <b-col
+          cols="12"
+          md="8"
+        >
+          <h4 class="mb-1">
+            {{ $t('client.clientDetails') }}
+          </h4>
+          <p class="mb-0">
+            <strong>{{ $t('client.name') }}:</strong> {{ client.name }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('clinic.email') }}:</strong> {{ client.email }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.phone') }}:</strong> {{ (client.phone_country_code || client.country_code) ? (client.phone_country_code || client.country_code) + ' ' : '' }}{{ client.phone }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.whatsappNumber') }}:</strong> {{ (client.whatsapp_country_code || client.country_code) ? (client.whatsapp_country_code || client.country_code) + ' ' : '' }}{{ client.whatsapp_number || $t('reservation.na') }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.bloodType') }}:</strong> {{ client.blood_type || $t('reservation.na') }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.dateOfBirth') }}:</strong> {{ client.date_of_birth ? formatDate(client.date_of_birth) : $t('reservation.na') }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.age') }}:</strong> {{ calculateAge(client.date_of_birth) }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.height') }}:</strong> {{ client.height ? client.height + ' cm' : $t('reservation.na') }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.weight') }}:</strong> {{ client.weight ? client.weight + ' kg' : $t('reservation.na') }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.address') }}:</strong> {{ client.address || $t('reservation.na') }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.job') }}:</strong> {{ client.job || $t('reservation.na') }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.chronicIllnesses') }}:</strong> {{ formatClientChronicIllnesses(client.chronic_illnesses) }}
+          </p>
+          <p class="mb-0">
+            <strong>{{ $t('client.medicalHistory') }}:</strong> {{ client.medical_history || $t('reservation.na') }}
+          </p>
         </b-col>
-        <b-col cols="12" md="4" class="text-right">
+        <b-col
+          cols="12"
+          md="4"
+          class="text-right"
+        >
           <b-button
             variant="warning"
             class="mb-1 d-block ml-auto"
             @click="openEditModal"
           >
-            <feather-icon icon="EditIcon" class="mr-50" />
+            <feather-icon
+              icon="EditIcon"
+              class="mr-50"
+            />
             {{ $t('actions.edit') }}
           </b-button>
           <b-button
@@ -33,11 +71,20 @@
             class="mb-1 d-block ml-auto"
             @click="printPrescription(lastPrescriptionReservation)"
           >
-            <feather-icon icon="PrinterIcon" class="mr-50" />
+            <feather-icon
+              icon="PrinterIcon"
+              class="mr-50"
+            />
             {{ $t('reservation.printLastPrescription') }}
           </b-button>
-          <b-button variant="outline-secondary" @click="$router.push({ name: backRouteName })">
-            <feather-icon icon="ChevronLeftIcon" class="mr-50 icon-directional" />
+          <b-button
+            variant="outline-secondary"
+            @click="$router.push({ name: backRouteName })"
+          >
+            <feather-icon
+              icon="ChevronLeftIcon"
+              class="mr-50 icon-directional"
+            />
             {{ $t('navigation.patients') }}
           </b-button>
         </b-col>
@@ -46,8 +93,13 @@
 
     <b-card>
       <div class="d-flex justify-content-between align-items-center mb-1">
-        <h4 class="mb-0">{{ $t('reservation.medicalHistory') }}</h4>
-        <b-badge variant="primary" pill>
+        <h4 class="mb-0">
+          {{ $t('reservation.medicalHistory') }}
+        </h4>
+        <b-badge
+          variant="primary"
+          pill
+        >
           {{ (client.reservations || []).length }}
         </b-badge>
       </div>
@@ -69,11 +121,18 @@
         </template>
 
         <template #cell(status)="{ item }">
-          <b-badge :variant="getStatusVariant(item.status)">{{ item.status }}</b-badge>
+          <b-badge :variant="getStatusVariant(item.status)">
+            {{ item.status }}
+          </b-badge>
         </template>
 
         <template #cell(actions)="{ item }">
-          <b-button size="sm" variant="info" class="mr-50" @click="viewReservation(item)">
+          <b-button
+            size="sm"
+            variant="info"
+            class="mr-50"
+            @click="viewReservation(item)"
+          >
             <feather-icon icon="EyeIcon" />
           </b-button>
           <b-button
@@ -87,21 +146,33 @@
         </template>
 
         <template #empty>
-          <div class="text-center py-2">{{ $t('messages.noData') }}</div>
+          <div class="text-center py-2">
+            {{ $t('messages.noData') }}
+          </div>
         </template>
       </b-table>
     </b-card>
 
     <!-- Reservation Details Modal -->
-    <b-modal v-model="reservationModal" :title="$t('reservation.reservationDetails')" size="lg">
+    <b-modal
+      v-model="reservationModal"
+      :title="$t('reservation.reservationDetails')"
+      size="lg"
+    >
       <div v-if="selectedReservation">
         <b-row>
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <p><strong>{{ $t('reservation.appointment') }}:</strong> {{ formatDateTime(selectedReservation.appointment_date) }}</p>
             <p><strong>{{ $t('reservation.status') }}:</strong> {{ selectedReservation.status }}</p>
             <p><strong>{{ $t('reservation.notes') }}:</strong> {{ selectedReservation.notes || $t('reservation.na') }}</p>
           </b-col>
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <p><strong>{{ $t('reservation.diagnosis') }}:</strong> {{ selectedReservation.diagnosis || $t('reservation.na') }}</p>
             <p><strong>{{ $t('reservation.treatment') }}:</strong> {{ selectedReservation.treatment || $t('reservation.na') }}</p>
             <p><strong>{{ $t('reservation.completedAt') }}:</strong> {{ formatDateTime(selectedReservation.completed_at) || $t('reservation.na') }}</p>
@@ -115,10 +186,16 @@
           class="mr-1"
           @click="printPrescription(selectedReservation)"
         >
-          <feather-icon icon="PrinterIcon" class="mr-50" />
+          <feather-icon
+            icon="PrinterIcon"
+            class="mr-50"
+          />
           {{ $t('reservation.printPrescription') }}
         </b-button>
-        <b-button variant="secondary" @click="ok()">
+        <b-button
+          variant="secondary"
+          @click="ok()"
+        >
           {{ $t('actions.close') }}
         </b-button>
       </template>
@@ -131,32 +208,60 @@
       size="lg"
     >
       <b-form @submit.prevent="saveClient">
-        <b-form-group :label="$t('client.name')" label-for="profile-client-name">
-          <b-form-input id="profile-client-name" v-model="clientForm.name" required />
+        <b-form-group
+          :label="$t('client.name')"
+          label-for="profile-client-name"
+        >
+          <b-form-input
+            id="profile-client-name"
+            v-model="clientForm.name"
+            required
+          />
         </b-form-group>
 
-        <b-form-group :label="$t('clinic.email')" label-for="profile-client-email">
-          <b-form-input id="profile-client-email" v-model="clientForm.email" type="email" />
+        <b-form-group
+          :label="$t('clinic.email')"
+          label-for="profile-client-email"
+        >
+          <b-form-input
+            id="profile-client-email"
+            v-model="clientForm.email"
+            type="email"
+          />
         </b-form-group>
 
-        <b-form-group :label="$t('client.phone')" label-for="profile-client-phone">
-          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+        <b-form-group
+          :label="$t('client.phone')"
+          label-for="profile-client-phone"
+        >
+          <div
+            class="phone-combined-control"
+            :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+          >
             <div class="country-col">
               <b-form-select
                 id="profile-client-country"
-                class="phone-country-select"
                 v-model="clientForm.phone_country_code"
+                class="phone-country-select"
                 :options="countrySelectOptions"
                 :required="!!clientForm.phone"
               />
             </div>
             <div class="number-col">
-              <b-form-input id="profile-client-phone" class="phone-number-input" v-model="clientForm.phone" required />
+              <b-form-input
+                id="profile-client-phone"
+                v-model="clientForm.phone"
+                class="phone-number-input"
+                required
+              />
             </div>
           </div>
         </b-form-group>
 
-        <b-form-group :label="$t('client.whatsappNumber')" label-for="profile-client-whatsapp-number">
+        <b-form-group
+          :label="$t('client.whatsappNumber')"
+          label-for="profile-client-whatsapp-number"
+        >
           <div class="mb-2">
             <b-form-checkbox
               v-model="clientForm.useSameMobile"
@@ -165,23 +270,35 @@
               {{ $t('client.useSameMobile') }}
             </b-form-checkbox>
           </div>
-          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+          <div
+            class="phone-combined-control"
+            :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+          >
             <div class="country-col">
               <b-form-select
-                class="phone-country-select"
                 v-model="clientForm.whatsapp_country_code"
+                class="phone-country-select"
                 :options="countrySelectOptions"
                 :disabled="clientForm.useSameMobile"
                 :required="!!clientForm.whatsapp_number && !clientForm.useSameMobile"
               />
             </div>
             <div class="number-col">
-              <b-form-input id="profile-client-whatsapp-number" class="phone-number-input" v-model="clientForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="clientForm.useSameMobile" />
+              <b-form-input
+                id="profile-client-whatsapp-number"
+                v-model="clientForm.whatsapp_number"
+                class="phone-number-input"
+                :placeholder="$t('client.whatsappPlaceholder')"
+                :disabled="clientForm.useSameMobile"
+              />
             </div>
           </div>
         </b-form-group>
 
-        <b-form-group :label="$t('client.bloodType')" label-for="profile-client-blood-type">
+        <b-form-group
+          :label="$t('client.bloodType')"
+          label-for="profile-client-blood-type"
+        >
           <b-form-select
             id="profile-client-blood-type"
             v-model="clientForm.blood_type"
@@ -189,36 +306,95 @@
           />
         </b-form-group>
 
-        <b-form-group :label="$t('client.dateOfBirth')" label-for="profile-client-date-of-birth">
-          <b-form-input id="profile-client-date-of-birth" v-model="clientForm.date_of_birth" type="date" />
+        <b-form-group
+          :label="$t('client.dateOfBirth')"
+          label-for="profile-client-date-of-birth"
+        >
+          <b-form-input
+            id="profile-client-date-of-birth"
+            v-model="clientForm.date_of_birth"
+            type="date"
+          />
         </b-form-group>
 
         <b-row>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('client.height')" label-for="profile-client-height">
-              <b-form-input id="profile-client-height" v-model="clientForm.height" type="number" step="0.01" min="0" max="300" :placeholder="$t('client.heightPlaceholder')" />
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('client.height')"
+              label-for="profile-client-height"
+            >
+              <b-form-input
+                id="profile-client-height"
+                v-model="clientForm.height"
+                type="number"
+                step="0.01"
+                min="0"
+                max="300"
+                :placeholder="$t('client.heightPlaceholder')"
+              />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="6">
-            <b-form-group :label="$t('client.weight')" label-for="profile-client-weight">
-              <b-form-input id="profile-client-weight" v-model="clientForm.weight" type="number" step="0.01" min="0" max="500" :placeholder="$t('client.weightPlaceholder')" />
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('client.weight')"
+              label-for="profile-client-weight"
+            >
+              <b-form-input
+                id="profile-client-weight"
+                v-model="clientForm.weight"
+                type="number"
+                step="0.01"
+                min="0"
+                max="500"
+                :placeholder="$t('client.weightPlaceholder')"
+              />
             </b-form-group>
           </b-col>
         </b-row>
 
-        <b-form-group :label="$t('client.address')" label-for="profile-client-address">
-          <b-form-textarea id="profile-client-address" v-model="clientForm.address" rows="2" />
+        <b-form-group
+          :label="$t('client.address')"
+          label-for="profile-client-address"
+        >
+          <b-form-textarea
+            id="profile-client-address"
+            v-model="clientForm.address"
+            rows="2"
+          />
         </b-form-group>
 
-        <b-form-group :label="$t('client.job')" label-for="profile-client-job">
-          <b-form-input id="profile-client-job" v-model="clientForm.job" :placeholder="$t('client.jobPlaceholder')" />
+        <b-form-group
+          :label="$t('client.job')"
+          label-for="profile-client-job"
+        >
+          <b-form-input
+            id="profile-client-job"
+            v-model="clientForm.job"
+            :placeholder="$t('client.jobPlaceholder')"
+          />
         </b-form-group>
 
-        <b-form-group :label="$t('client.medicalHistory')" label-for="profile-client-history">
-          <b-form-textarea id="profile-client-history" v-model="clientForm.medical_history" rows="3" />
+        <b-form-group
+          :label="$t('client.medicalHistory')"
+          label-for="profile-client-history"
+        >
+          <b-form-textarea
+            id="profile-client-history"
+            v-model="clientForm.medical_history"
+            rows="3"
+          />
         </b-form-group>
 
-        <b-form-group :label="$t('client.chronicIllnesses')" label-for="profile-client-chronic-illnesses">
+        <b-form-group
+          :label="$t('client.chronicIllnesses')"
+          label-for="profile-client-chronic-illnesses"
+        >
           <b-form-checkbox-group
             id="profile-client-chronic-illnesses"
             v-model="clientForm.chronic_illnesses"
@@ -229,11 +405,23 @@
         </b-form-group>
 
         <div class="text-right">
-          <b-button variant="secondary" class="mr-1" @click="editModalShow = false">
+          <b-button
+            variant="secondary"
+            class="mr-1"
+            @click="editModalShow = false"
+          >
             {{ $t('actions.close') }}
           </b-button>
-          <b-button type="submit" variant="primary" :disabled="savingClient">
-            <b-spinner v-if="savingClient" small class="mr-1" />
+          <b-button
+            type="submit"
+            variant="primary"
+            :disabled="savingClient"
+          >
+            <b-spinner
+              v-if="savingClient"
+              small
+              class="mr-1"
+            />
             {{ $t('actions.save') }}
           </b-button>
         </div>
@@ -286,24 +474,6 @@ export default {
     BSpinner,
     vSelect,
   },
-  computed: {
-    lastPrescriptionReservation() {
-      const reservations = this.client.reservations || []
-      return reservations.find(r => r.status === 'completed' && r.treatment) || null
-    },
-    backRouteName() {
-      return this.$route.name === 'doctor-client-profile' ? 'doctor-clients' : 'assistant-clients'
-    },
-    chronicIllnessOptions() {
-      return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
-    },
-    countryOptions() {
-      return countryList
-    },
-    countrySelectOptions() {
-      return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(c => ({ value: c.value, text: c.label })))
-    },
-  },
   data() {
     return {
       client: {},
@@ -339,6 +509,24 @@ export default {
       selectedReservation: null,
     }
   },
+  computed: {
+    lastPrescriptionReservation() {
+      const reservations = this.client.reservations || []
+      return reservations.find(r => r.status === 'completed' && r.treatment) || null
+    },
+    backRouteName() {
+      return this.$route.name === 'doctor-client-profile' ? 'doctor-clients' : 'assistant-clients'
+    },
+    chronicIllnessOptions() {
+      return buildChronicIllnessOptions(this.chronicIllnessOptionValues, key => this.$t(key))
+    },
+    countryOptions() {
+      return countryList
+    },
+    countrySelectOptions() {
+      return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(c => ({ value: c.value, text: c.label })))
+    },
+  },
   mounted() {
     this.fetchClient()
     this.fetchClientOptions()
@@ -366,7 +554,7 @@ export default {
       }
     },
     async fetchClient() {
-      const id = this.$route.params.id
+      const { id } = this.$route.params
       try {
         const { data } = await clientsService.getClient(id)
         this.client = data
@@ -662,5 +850,3 @@ export default {
   }
 }
 </style>
-
-

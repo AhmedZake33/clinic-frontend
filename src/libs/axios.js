@@ -22,7 +22,7 @@ api.interceptors.response.use(
     if (err.response && err.response.status === 401) {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
-      router.replace({ name: 'login' }).catch(()=>{})
+      router.replace({ name: 'login' }).catch(() => {})
     } else if (
       err.response
       && err.response.status === 403
@@ -32,7 +32,7 @@ api.interceptors.response.use(
       router.replace({ name: 'subscription-expired' }).catch(() => {})
     }
     return Promise.reject(err)
-  }
+  },
 )
 
 export default api

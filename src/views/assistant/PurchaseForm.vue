@@ -4,12 +4,19 @@
     <form @submit.prevent="submit">
       <div class="form-group">
         <label>{{ $t('purchases.itemName') }}</label>
-        <input v-model="form.item_name" class="form-control" required />
+        <input
+          v-model="form.item_name"
+          class="form-control"
+          required
+        >
       </div>
 
       <div class="form-group">
         <label>{{ $t('purchases.category') }}</label>
-        <select v-model="form.category" class="form-control">
+        <select
+          v-model="form.category"
+          class="form-control"
+        >
           <option>Medical Supplies</option>
           <option>Equipment</option>
           <option>Services</option>
@@ -20,22 +27,38 @@
 
       <div class="form-group">
         <label>{{ $t('purchases.quantity') }}</label>
-        <input type="number" v-model.number="form.quantity" class="form-control" />
+        <input
+          v-model.number="form.quantity"
+          type="number"
+          class="form-control"
+        >
       </div>
 
       <div class="form-group">
         <label>{{ $t('purchases.amountPaid') }}</label>
-        <input type="number" step="0.01" v-model.number="form.amount_paid" class="form-control" required />
+        <input
+          v-model.number="form.amount_paid"
+          type="number"
+          step="0.01"
+          class="form-control"
+          required
+        >
       </div>
 
       <div class="form-group">
         <label>{{ $t('purchases.supplier') }}</label>
-        <input v-model="form.supplier" class="form-control" />
+        <input
+          v-model="form.supplier"
+          class="form-control"
+        >
       </div>
 
       <div class="form-group">
         <label>{{ $t('purchases.paymentMethod') }}</label>
-        <select v-model="form.payment_method" class="form-control">
+        <select
+          v-model="form.payment_method"
+          class="form-control"
+        >
           <option>Cash</option>
           <option>Card</option>
           <option>Bank Transfer</option>
@@ -46,15 +69,28 @@
 
       <div class="form-group">
         <label>{{ $t('purchases.purchaseDate') }}</label>
-        <input type="date" v-model="form.purchase_date" class="form-control" required />
+        <input
+          v-model="form.purchase_date"
+          type="date"
+          class="form-control"
+          required
+        >
       </div>
 
       <div class="form-group">
         <label>{{ $t('purchases.notes') }}</label>
-        <textarea v-model="form.notes" class="form-control"></textarea>
+        <textarea
+          v-model="form.notes"
+          class="form-control"
+        />
       </div>
 
-      <button class="btn btn-primary" type="submit">{{ $t('actions.save') }}</button>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        {{ $t('actions.save') }}
+      </button>
     </form>
   </div>
 </template>

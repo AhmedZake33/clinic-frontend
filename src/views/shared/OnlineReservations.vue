@@ -1,11 +1,28 @@
-﻿<template>
+<template>
   <b-card :dir="isArabic ? 'rtl' : 'ltr'">
     <div class="d-flex justify-content-between align-items-center mb-2">
-      <h4 class="mb-0">{{ t('title') }}</h4>
-      <b-button variant="outline-primary" size="sm" @click="fetchReservations">{{ t('refresh') }}</b-button>
+      <h4 class="mb-0">
+        {{ t('title') }}
+      </h4>
+      <b-button
+        variant="outline-primary"
+        size="sm"
+        @click="fetchReservations"
+      >
+        {{ t('refresh') }}
+      </b-button>
     </div>
 
-    <b-table :items="reservations" :fields="fields" :busy="loading" responsive striped hover show-empty :empty-text="t('empty')">
+    <b-table
+      :items="reservations"
+      :fields="fields"
+      :busy="loading"
+      responsive
+      striped
+      hover
+      show-empty
+      :empty-text="t('empty')"
+    >
       <template #cell(client)="data">
         <div><strong>{{ data.item.client && data.item.client.name }}</strong></div>
         <small class="text-muted">{{ data.item.client && data.item.client.phone }}</small>
@@ -17,7 +34,9 @@
         {{ formatDateTime(data.value) }}
       </template>
       <template #cell(status)="data">
-        <b-badge :variant="statusVariant(data.value)">{{ statusLabel(data.value) }}</b-badge>
+        <b-badge :variant="statusVariant(data.value)">
+          {{ statusLabel(data.value) }}
+        </b-badge>
       </template>
       <template #cell(client_status)="data">
         <b-badge :variant="data.item.online_booking_existing_client ? 'success' : 'primary'">
@@ -26,18 +45,41 @@
       </template>
       <template #cell(actions)="data">
         <responsive-table-actions>
-          <b-button v-if="data.item.status === 'pending'" size="sm" variant="success" class="mr-50" @click="confirmReservation(data.item)">{{ t('confirm') }}</b-button>
-          <b-button v-if="data.item.status !== 'cancelled' && data.item.status !== 'completed'" size="sm" variant="danger" @click="cancelReservation(data.item)">{{ t('cancel') }}</b-button>
+          <b-button
+            v-if="data.item.status === 'pending'"
+            size="sm"
+            variant="success"
+            class="mr-50"
+            @click="confirmReservation(data.item)"
+          >
+            {{ t('confirm') }}
+          </b-button>
+          <b-button
+            v-if="data.item.status !== 'cancelled' && data.item.status !== 'completed'"
+            size="sm"
+            variant="danger"
+            @click="cancelReservation(data.item)"
+          >
+            {{ t('cancel') }}
+          </b-button>
         </responsive-table-actions>
       </template>
     </b-table>
 
-    <b-pagination v-model="pagination.current_page" :total-rows="pagination.total" :per-page="pagination.per_page" align="center" @change="fetchReservations" />
+    <b-pagination
+      v-model="pagination.current_page"
+      :total-rows="pagination.total"
+      :per-page="pagination.per_page"
+      align="center"
+      @change="fetchReservations"
+    />
   </b-card>
 </template>
 
 <script>
-import { BBadge, BButton, BCard, BPagination, BTable } from 'bootstrap-vue'
+import {
+  BBadge, BButton, BCard, BPagination, BTable,
+} from 'bootstrap-vue'
 import onlineBooking from '@/services/onlineBooking'
 import reservationsService from '@/services/reservations'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
@@ -86,7 +128,9 @@ const translations = {
 }
 
 export default {
-  components: { BBadge, BButton, BCard, BPagination, BTable, ResponsiveTableActions },
+  components: {
+    BBadge, BButton, BCard, BPagination, BTable, ResponsiveTableActions,
+  },
   data() {
     return {
       loading: false,
@@ -155,7 +199,9 @@ export default {
       return this.t(status)
     },
     statusVariant(status) {
-      return { pending: 'warning', confirmed: 'info', completed: 'success', cancelled: 'danger' }[status] || 'secondary'
+      return {
+        pending: 'warning', confirmed: 'info', completed: 'success', cancelled: 'danger',
+      }[status] || 'secondary'
     },
   },
 }

@@ -14,8 +14,6 @@
   </div>
 </template>
 
-
-
 <script>
 import ScrollToTop from '@core/components/scroll-to-top/ScrollToTop.vue'
 

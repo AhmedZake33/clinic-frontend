@@ -3,17 +3,41 @@
     <div class="auth-inner py-2">
       <b-card class="mb-0">
         <b-link class="brand-logo">
-          <h2 class="brand-text text-primary ml-1">{{ $t('clinic.brandText') }}</h2>
+          <h2 class="brand-text text-primary ml-1">
+            {{ $t('clinic.brandText') }}
+          </h2>
         </b-link>
 
-        <b-card-title class="mb-1">{{ $t('auth.resetPassword') }}</b-card-title>
-        <b-card-text class="mb-2">{{ $t('auth.resetPasswordDesc') }}</b-card-text>
+        <b-card-title class="mb-1">
+          {{ $t('auth.resetPassword') }}
+        </b-card-title>
+        <b-card-text class="mb-2">
+          {{ $t('auth.resetPasswordDesc') }}
+        </b-card-text>
 
-        <b-alert v-if="error" variant="danger" show>{{ error }}</b-alert>
-        <b-alert v-if="success" variant="success" show>{{ success }}</b-alert>
+        <b-alert
+          v-if="error"
+          variant="danger"
+          show
+        >
+          {{ error }}
+        </b-alert>
+        <b-alert
+          v-if="success"
+          variant="success"
+          show
+        >
+          {{ success }}
+        </b-alert>
 
-        <b-form class="auth-login-form mt-2" @submit.prevent="handleSubmit">
-          <b-form-group :label="$t('clinic.email')" label-for="email">
+        <b-form
+          class="auth-login-form mt-2"
+          @submit.prevent="handleSubmit"
+        >
+          <b-form-group
+            :label="$t('clinic.email')"
+            label-for="email"
+          >
             <b-form-input
               id="email"
               v-model="form.email"
@@ -23,7 +47,10 @@
             />
           </b-form-group>
 
-          <b-form-group :label="$t('auth.newPassword')" label-for="password">
+          <b-form-group
+            :label="$t('auth.newPassword')"
+            label-for="password"
+          >
             <b-form-input
               id="password"
               v-model="form.password"
@@ -33,7 +60,10 @@
             />
           </b-form-group>
 
-          <b-form-group :label="$t('auth.confirmPassword')" label-for="password_confirmation">
+          <b-form-group
+            :label="$t('auth.confirmPassword')"
+            label-for="password_confirmation"
+          >
             <b-form-input
               id="password_confirmation"
               v-model="form.password_confirmation"
@@ -43,8 +73,17 @@
             />
           </b-form-group>
 
-          <b-button type="submit" variant="primary" block :disabled="loading">
-            <b-spinner v-if="loading" small class="mr-1" />
+          <b-button
+            type="submit"
+            variant="primary"
+            block
+            :disabled="loading"
+          >
+            <b-spinner
+              v-if="loading"
+              small
+              class="mr-1"
+            />
             {{ $t('auth.resetPassword') }}
           </b-button>
         </b-form>

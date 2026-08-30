@@ -120,20 +120,18 @@ export default {
     },
     items: {
       type: Array,
-      required: true,   // ✅ must always come from parent
+      required: true, // ✅ must always come from parent
     },
   },
-  data(){
+  data() {
     return {
-      url:null
+      url: null,
     }
   },
   mounted() {
-      // alert();
-      this.url = getHomeRouteForLoggedInUser(this.$store.state.auth?.user?.type?.name)
-
-
-  },      
+    // alert();
+    this.url = getHomeRouteForLoggedInUser(this.$store.state.auth?.user?.type?.name)
+  },
   setup(props) {
     const {
       isMouseHovered,
@@ -153,9 +151,7 @@ export default {
       wheelPropagation: false,
     }
 
-    const collapseTogglerIconFeather = computed(() =>
-      collapseTogglerIcon.value === 'unpinned' ? 'CircleIcon' : 'DiscIcon'
-    )
+    const collapseTogglerIconFeather = computed(() => (collapseTogglerIcon.value === 'unpinned' ? 'CircleIcon' : 'DiscIcon'))
 
     const { appName, appLogoImage } = $themeConfig.app
 

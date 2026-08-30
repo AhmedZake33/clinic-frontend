@@ -5,21 +5,34 @@
       <b-col cols="12">
         <b-card>
           <b-row>
-            <b-col cols="12" md="8">
+            <b-col
+              cols="12"
+              md="8"
+            >
               <h2>{{ $t('dashboard.welcomeBack') }}, {{ user ? user.name : $t('reservation.doctor') }}!</h2>
               <p class="mb-2">
                 {{ $t('dashboard.doctorOverview') }}
               </p>
-              <b-badge v-if="user && user.specialization" variant="light-primary">
+              <b-badge
+                v-if="user && user.specialization"
+                variant="light-primary"
+              >
                 {{ $t('admin.specialization') }}: {{ specializationLabel(user.specialization) }}
               </b-badge>
             </b-col>
-            <b-col cols="12" md="4" class="text-md-right mt-1 mt-md-0">
+            <b-col
+              cols="12"
+              md="4"
+              class="text-md-right mt-1 mt-md-0"
+            >
               <b-button
                 variant="primary"
                 :to="{ name: 'doctor-reservations' }"
               >
-                <feather-icon icon="CalendarIcon" class="mr-50" />
+                <feather-icon
+                  icon="CalendarIcon"
+                  class="mr-50"
+                />
                 {{ $t('actions.viewAllReservations') }}
               </b-button>
             </b-col>
@@ -30,7 +43,11 @@
 
     <!-- Statistics Cards -->
     <b-row class="match-height">
-      <b-col cols="12" sm="6" lg="4">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="4"
+      >
         <b-card class="text-center">
           <b-avatar
             variant="light-info"
@@ -50,7 +67,11 @@
         </b-card>
       </b-col>
 
-      <b-col cols="12" sm="6" lg="4">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="4"
+      >
         <b-card class="text-center">
           <b-avatar
             variant="light-warning"
@@ -70,7 +91,11 @@
         </b-card>
       </b-col>
 
-      <b-col cols="12" sm="6" lg="4">
+      <b-col
+        cols="12"
+        sm="6"
+        lg="4"
+      >
         <b-card class="text-center">
           <b-avatar
             variant="light-success"
@@ -120,7 +145,10 @@
                 size="sm"
                 :to="{ name: 'doctor-reservations' }"
               >
-                <feather-icon icon="CheckIcon" size="14" />
+                <feather-icon
+                  icon="CheckIcon"
+                  size="14"
+                />
               </b-button>
             </template>
 
@@ -169,10 +197,10 @@ import {
   BSpinner,
   VBTooltip,
 } from 'bootstrap-vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import reservationsService from '@/services/reservations'
 import subDoctorsApi from '@/services/subDoctors'
 import authService from '@/services/auth'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   directives: {

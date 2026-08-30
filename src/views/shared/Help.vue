@@ -10,9 +10,14 @@
           <div class="d-flex align-items-center justify-content-between flex-wrap">
             <div>
               <!-- <h4 class="mb-50">{{ pageTitle }}</h4> -->
-              <p class="text-muted mb-0">{{ pageIntro }}</p>
+              <p class="text-muted mb-0">
+                {{ pageIntro }}
+              </p>
             </div>
-            <b-badge variant="light-primary" class="mt-1 mt-md-0">
+            <b-badge
+              variant="light-primary"
+              class="mt-1 mt-md-0"
+            >
               {{ roleLabel }}
             </b-badge>
           </div>
@@ -29,7 +34,10 @@
         xl="4"
         class="mb-2"
       >
-        <b-card no-body class="h-100">
+        <b-card
+          no-body
+          class="h-100"
+        >
           <b-card-body>
             <div class="d-flex align-items-center mb-1">
               <feather-icon
@@ -38,7 +46,9 @@
                 class="text-primary"
                 :class="isRTL ? 'ml-75' : 'mr-75'"
               />
-              <h5 class="mb-0">{{ section.title }}</h5>
+              <h5 class="mb-0">
+                {{ section.title }}
+              </h5>
             </div>
             <ol
               class="help-steps mb-0"
@@ -59,7 +69,9 @@
     </b-row>
 
     <b-card>
-      <h5 class="mb-1">{{ content.quickTips }}</h5>
+      <h5 class="mb-1">
+        {{ content.quickTips }}
+      </h5>
       <b-alert
         v-for="tip in tips"
         :key="tip"

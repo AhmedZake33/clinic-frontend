@@ -1,17 +1,30 @@
-﻿<template>
+<template>
   <div>
     <b-row>
       <!-- Roles List -->
-      <b-col cols="12" lg="5">
+      <b-col
+        cols="12"
+        lg="5"
+      >
         <b-card>
           <b-card-header>
             <div class="d-flex justify-content-between align-items-center">
               <h4 class="mb-0">
-                <feather-icon icon="ShieldIcon" class="mr-50" />
+                <feather-icon
+                  icon="ShieldIcon"
+                  class="mr-50"
+                />
                 {{ $t('roles.rolesManagement') }}
               </h4>
-              <b-button variant="primary" size="sm" @click="openAddRoleModal()">
-                <feather-icon icon="PlusIcon" class="mr-50" />
+              <b-button
+                variant="primary"
+                size="sm"
+                @click="openAddRoleModal()"
+              >
+                <feather-icon
+                  icon="PlusIcon"
+                  class="mr-50"
+                />
                 {{ $t('roles.addRole') }}
               </b-button>
             </div>
@@ -72,20 +85,42 @@
       </b-col>
 
       <!-- Permissions Matrix -->
-      <b-col cols="12" lg="7">
+      <b-col
+        cols="12"
+        lg="7"
+      >
         <b-card v-if="selectedRole">
           <b-card-header>
             <div class="d-flex justify-content-between align-items-center">
               <h4 class="mb-0">
-                <feather-icon icon="KeyIcon" class="mr-50" />
+                <feather-icon
+                  icon="KeyIcon"
+                  class="mr-50"
+                />
                 {{ $t('roles.permissionsFor') }}
-                <b-badge :variant="getRoleVariant(selectedRole.name)" class="ml-50">
+                <b-badge
+                  :variant="getRoleVariant(selectedRole.name)"
+                  class="ml-50"
+                >
                   {{ selectedRole.name }}
                 </b-badge>
               </h4>
-              <b-button variant="success" size="sm" :disabled="saving" @click="savePermissions()">
-                <b-spinner v-if="saving" small class="mr-50" />
-                <feather-icon v-else icon="SaveIcon" class="mr-50" />
+              <b-button
+                variant="success"
+                size="sm"
+                :disabled="saving"
+                @click="savePermissions()"
+              >
+                <b-spinner
+                  v-if="saving"
+                  small
+                  class="mr-50"
+                />
+                <feather-icon
+                  v-else
+                  icon="SaveIcon"
+                  class="mr-50"
+                />
                 {{ $t('actions.save') }}
               </b-button>
             </div>
@@ -104,7 +139,10 @@
                   @change="toggleGroup(group, $event)"
                 >
                   <h6 class="mb-0 text-capitalize">
-                    <feather-icon :icon="getGroupIcon(group)" class="mr-50" />
+                    <feather-icon
+                      :icon="getGroupIcon(group)"
+                      class="mr-50"
+                    />
                     {{ $t(`roles.groups.${group}`) || group }}
                   </h6>
                 </b-form-checkbox>
@@ -127,17 +165,26 @@
                 </b-col>
               </b-row>
 
-              <hr class="my-1" />
+              <hr class="my-1">
             </div>
           </div>
 
           <!-- Select/Deselect All -->
           <div class="d-flex justify-content-between mt-1">
             <div>
-              <b-button variant="outline-primary" size="sm" class="mr-1" @click="selectAllPermissions()">
+              <b-button
+                variant="outline-primary"
+                size="sm"
+                class="mr-1"
+                @click="selectAllPermissions()"
+              >
                 {{ $t('roles.selectAll') }}
               </b-button>
-              <b-button variant="outline-secondary" size="sm" @click="deselectAllPermissions()">
+              <b-button
+                variant="outline-secondary"
+                size="sm"
+                @click="deselectAllPermissions()"
+              >
                 {{ $t('roles.deselectAll') }}
               </b-button>
             </div>
@@ -148,10 +195,21 @@
         </b-card>
 
         <!-- No Role Selected -->
-        <b-card v-else class="text-center py-5">
-          <feather-icon icon="MousePointerIcon" size="48" class="text-muted mb-1" />
-          <h5 class="text-muted">{{ $t('roles.selectRoleToManage') }}</h5>
-          <p class="text-muted">{{ $t('roles.selectRoleDescription') }}</p>
+        <b-card
+          v-else
+          class="text-center py-5"
+        >
+          <feather-icon
+            icon="MousePointerIcon"
+            size="48"
+            class="text-muted mb-1"
+          />
+          <h5 class="text-muted">
+            {{ $t('roles.selectRoleToManage') }}
+          </h5>
+          <p class="text-muted">
+            {{ $t('roles.selectRoleDescription') }}
+          </p>
         </b-card>
       </b-col>
     </b-row>
@@ -160,12 +218,15 @@
     <b-modal
       id="role-modal"
       :title="editingRole ? $t('roles.editRole') : $t('roles.addRole')"
-      @ok="saveRole"
-      @hidden="resetModal"
       :ok-title="$t('actions.save')"
       :cancel-title="$t('actions.cancel')"
+      @ok="saveRole"
+      @hidden="resetModal"
     >
-      <b-form-group :label="$t('roles.roleName')" label-for="role-name">
+      <b-form-group
+        :label="$t('roles.roleName')"
+        label-for="role-name"
+      >
         <b-form-input
           id="role-name"
           v-model="roleForm.name"
@@ -186,8 +247,18 @@ import rolesService from '@/services/roles'
 
 export default {
   components: {
-    BRow, BCol, BCard, BCardHeader, BTable, BButton, BBadge,
-    BFormCheckbox, BFormGroup, BFormInput, BModal, BSpinner,
+    BRow,
+    BCol,
+    BCard,
+    BCardHeader,
+    BTable,
+    BButton,
+    BBadge,
+    BFormCheckbox,
+    BFormGroup,
+    BFormInput,
+    BModal,
+    BSpinner,
   },
   data() {
     return {
@@ -471,4 +542,3 @@ export default {
   padding: 0.75rem;
 }
 </style>
-

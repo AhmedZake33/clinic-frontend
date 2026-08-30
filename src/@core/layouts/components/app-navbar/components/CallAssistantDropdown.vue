@@ -36,7 +36,10 @@
     </li>
 
     <!-- Call Form (doctors only) -->
-    <li v-if="isDoctor" class="px-2 py-75">
+    <li
+      v-if="isDoctor"
+      class="px-2 py-75"
+    >
       <div class="d-flex align-items-center">
         <b-form-select
           v-if="assistantsList.length !== 1"
@@ -60,8 +63,15 @@
           class="text-nowrap"
           @click="callAssistant"
         >
-          <b-spinner v-if="callLoading" small />
-          <feather-icon v-else icon="PhoneCallIcon" size="14" />
+          <b-spinner
+            v-if="callLoading"
+            small
+          />
+          <feather-icon
+            v-else
+            icon="PhoneCallIcon"
+            size="14"
+          />
         </b-button>
       </div>
     </li>
@@ -72,7 +82,10 @@
     </li>
 
     <!-- Active Calls Header -->
-    <li v-if="activeCalls.length > 0" class="px-2 py-50">
+    <li
+      v-if="activeCalls.length > 0"
+      class="px-2 py-50"
+    >
       <small class="text-muted font-weight-bold">{{ $t('assistantCall.activeCalls') }}</small>
     </li>
 
@@ -83,16 +96,25 @@
       class="px-2 py-50"
     >
       <div class="d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center" style="min-width: 0;">
+        <div
+          class="d-flex align-items-center"
+          style="min-width: 0;"
+        >
           <b-avatar
             size="32"
             variant="light-danger"
             :class="isRTL ? 'ml-50' : 'mr-50'"
           >
-            <feather-icon icon="UserIcon" size="14" />
+            <feather-icon
+              icon="UserIcon"
+              size="14"
+            />
           </b-avatar>
           <div style="min-width: 0;">
-            <p class="mb-0 font-weight-bold text-truncate" style="max-width: 120px;">
+            <p
+              class="mb-0 font-weight-bold text-truncate"
+              style="max-width: 120px;"
+            >
               {{ call.assistant ? call.assistant.name : '—' }}
             </p>
             <b-badge
@@ -113,7 +135,10 @@
             :title="$t('assistantCall.accept')"
             @click.stop="acceptCall(call)"
           >
-            <feather-icon icon="UserCheckIcon" size="14" />
+            <feather-icon
+              icon="UserCheckIcon"
+              size="14"
+            />
           </b-button>
 
           <b-button
@@ -124,14 +149,20 @@
             :title="$t('assistantCall.markDone')"
             @click.stop="markCallDone(call)"
           >
-            <feather-icon icon="CheckCircleIcon" size="16" />
+            <feather-icon
+              icon="CheckCircleIcon"
+              size="16"
+            />
           </b-button>
         </div>
       </div>
     </li>
 
     <!-- Empty state -->
-    <li v-if="activeCalls.length === 0" class="px-2 py-75 text-center">
+    <li
+      v-if="activeCalls.length === 0"
+      class="px-2 py-75 text-center"
+    >
       <small class="text-muted">{{ $t('assistantCall.noActiveCalls') }}</small>
     </li>
   </b-nav-item-dropdown>
@@ -147,9 +178,9 @@ import {
   BSpinner,
   BDropdownDivider,
 } from 'bootstrap-vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import assistantsService from '@/services/assistants'
 import { updateEchoAuth } from '@/libs/echo'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 // Small notification sound helper. Respects the assistant sound preference stored in localStorage as 'assistantCallSoundEnabled'.
 function playNotificationSound() {
@@ -294,7 +325,7 @@ export default {
       }
     },
     handleCallEvent(data) {
-      const call = data.call
+      const { call } = data
       if (!call) return
 
       // Let the Vuex store handle call state

@@ -5,9 +5,18 @@
     class="dropdown-user"
     :menu-class="isRTL ? 'dropdown-menu-left' : 'dropdown-menu-right'"
   >
-    <template v-if="userData" #button-content>
-      <div class="d-flex align-items-center" :class="isRTL ? 'flex-row-reverse' : ''">
-        <div class="d-sm-flex d-none user-nav" :class="isRTL ? 'ml-1 text-right' : 'mr-1 text-left'">
+    <template
+      v-if="userData"
+      #button-content
+    >
+      <div
+        class="d-flex align-items-center"
+        :class="isRTL ? 'flex-row-reverse' : ''"
+      >
+        <div
+          class="d-sm-flex d-none user-nav"
+          :class="isRTL ? 'ml-1 text-right' : 'mr-1 text-left'"
+        >
           <p class="user-name font-weight-bolder mb-0">
             {{ userData.name }}
           </p>
@@ -30,7 +39,6 @@
       </div>
     </template>
 
-   
     <b-dropdown-item
       :link-class="['d-flex', 'align-items-center', isRTL ? 'flex-row-reverse' : '']"
       @click="logout"
@@ -48,9 +56,9 @@
 import {
   BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar,
 } from 'bootstrap-vue'
+import { avatarText } from '@core/utils/filter'
 import { initialAbility } from '@/libs/acl/config'
 import useJwt from '@/auth/jwt/useJwt'
-import { avatarText } from '@core/utils/filter'
 
 export default {
   components: {

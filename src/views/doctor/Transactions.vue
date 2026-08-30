@@ -1,38 +1,96 @@
 <template>
   <div>
-    <div v-if="pageLoading" class="text-center py-5">
-      <b-spinner variant="primary" class="mb-1" />
-      <div class="text-muted">{{ $t('messages.loading') }}</div>
+    <div
+      v-if="pageLoading"
+      class="text-center py-5"
+    >
+      <b-spinner
+        variant="primary"
+        class="mb-1"
+      />
+      <div class="text-muted">
+        {{ $t('messages.loading') }}
+      </div>
     </div>
 
     <div v-else>
       <b-card>
         <b-row class="mb-2">
-          <b-col cols="12" md="6">
+          <b-col
+            cols="12"
+            md="6"
+          >
             <h4>{{ $t('transaction.transactions') }}</h4>
           </b-col>
         </b-row>
 
         <!-- Filters -->
-        <b-form @submit.prevent="applyFilters" class="mb-2">
+        <b-form
+          class="mb-2"
+          @submit.prevent="applyFilters"
+        >
           <b-row>
-            <b-col cols="12" md="3" class="mb-1 mb-md-0">
-              <b-form-input v-model="filters.search" :placeholder="$t('transaction.searchByClient')" />
+            <b-col
+              cols="12"
+              md="3"
+              class="mb-1 mb-md-0"
+            >
+              <b-form-input
+                v-model="filters.search"
+                :placeholder="$t('transaction.searchByClient')"
+              />
             </b-col>
-            <b-col cols="6" md="2" class="mb-1 mb-md-0">
-              <b-form-select v-model="filters.payment_method" :options="paymentMethodOptions" />
+            <b-col
+              cols="6"
+              md="2"
+              class="mb-1 mb-md-0"
+            >
+              <b-form-select
+                v-model="filters.payment_method"
+                :options="paymentMethodOptions"
+              />
             </b-col>
-            <b-col cols="6" md="2" class="mb-1 mb-md-0">
-              <b-form-input v-model="filters.date_from" type="date" :placeholder="$t('transaction.dateFrom')" />
+            <b-col
+              cols="6"
+              md="2"
+              class="mb-1 mb-md-0"
+            >
+              <b-form-input
+                v-model="filters.date_from"
+                type="date"
+                :placeholder="$t('transaction.dateFrom')"
+              />
             </b-col>
-            <b-col cols="6" md="2" class="mb-1 mb-md-0">
-              <b-form-input v-model="filters.date_to" type="date" :placeholder="$t('transaction.dateTo')" />
+            <b-col
+              cols="6"
+              md="2"
+              class="mb-1 mb-md-0"
+            >
+              <b-form-input
+                v-model="filters.date_to"
+                type="date"
+                :placeholder="$t('transaction.dateTo')"
+              />
             </b-col>
-            <b-col cols="12" md="3" class="transaction-filter-actions text-right">
-              <b-button type="submit" variant="primary" class="mr-1" :disabled="loading">
+            <b-col
+              cols="12"
+              md="3"
+              class="transaction-filter-actions text-right"
+            >
+              <b-button
+                type="submit"
+                variant="primary"
+                class="mr-1"
+                :disabled="loading"
+              >
                 {{ $t('filters.apply') }}
               </b-button>
-              <b-button variant="outline-secondary" size="sm" @click="resetFilters" :disabled="loading">
+              <b-button
+                variant="outline-secondary"
+                size="sm"
+                :disabled="loading"
+                @click="resetFilters"
+              >
                 {{ $t('filters.reset') }}
               </b-button>
             </b-col>
@@ -76,10 +134,16 @@
         </b-table>
 
         <div class="d-md-none">
-          <div v-if="loading" class="text-center my-2">
+          <div
+            v-if="loading"
+            class="text-center my-2"
+          >
             <b-spinner class="align-middle" />
           </div>
-          <div v-else-if="!transactions.length" class="text-center text-muted py-3">
+          <div
+            v-else-if="!transactions.length"
+            class="text-center text-muted py-3"
+          >
             {{ $t('transaction.noTransactions') }}
           </div>
           <b-card
@@ -107,7 +171,10 @@
                 <small>{{ $t('financial.createdBy') }}</small>
                 <span>{{ transaction.creator ? transaction.creator.name : '-' }}</span>
               </div>
-              <div v-if="transaction.notes" class="transaction-mobile-card__notes">
+              <div
+                v-if="transaction.notes"
+                class="transaction-mobile-card__notes"
+              >
                 <small>{{ $t('reservation.notes') }}</small>
                 <span>{{ transaction.notes }}</span>
               </div>
@@ -119,11 +186,14 @@
           v-model="pagination.current_page"
           :total-rows="pagination.total"
           :per-page="pagination.per_page"
-          @change="onPageChange"
           class="mt-2"
           align="center"
+          @change="onPageChange"
         />
-        <div class="text-center text-muted small mt-1" v-if="pagination.total">
+        <div
+          v-if="pagination.total"
+          class="text-center text-muted small mt-1"
+        >
           {{ paginationCountText(pagination) }}
         </div>
       </b-card>
@@ -180,13 +250,6 @@ export default {
       },
     }
   },
-  async mounted() {
-    try {
-      await this.fetchTransactions()
-    } finally {
-      this.pageLoading = false
-    }
-  },
   computed: {
     fields() {
       return [
@@ -208,6 +271,13 @@ export default {
         { value: 'instapay', text: this.$t('financial.instapay') },
       ]
     },
+  },
+  async mounted() {
+    try {
+      await this.fetchTransactions()
+    } finally {
+      this.pageLoading = false
+    }
   },
   methods: {
     async fetchTransactions() {
@@ -241,7 +311,9 @@ export default {
       this.fetchTransactions()
     },
     resetFilters() {
-      this.filters = { search: '', payment_method: '', date_from: '', date_to: '' }
+      this.filters = {
+        search: '', payment_method: '', date_from: '', date_to: '',
+      }
       this.pagination.current_page = 1
       this.fetchTransactions()
     },

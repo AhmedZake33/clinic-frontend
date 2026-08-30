@@ -1,5 +1,7 @@
-import { subscribeToDoctorChannel, subscribeToAssistantChannel, leaveChannel, updateEchoAuth } from '@/libs/echo'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import {
+  subscribeToDoctorChannel, subscribeToAssistantChannel, leaveChannel, updateEchoAuth,
+} from '@/libs/echo'
 
 /**
  * Vue 2 mixin for real-time reservation updates via Laravel Reverb WebSocket.
@@ -130,7 +132,7 @@ export default {
         'success',
         'BellIcon',
         'New Reservation',
-        `New appointment for ${clientName}` + (appointmentDate ? ` on ${appointmentDate}` : ''),
+        `New appointment for ${clientName}${appointmentDate ? ` on ${appointmentDate}` : ''}`,
       )
       playNotificationSound()
       this.fetchReservations()
@@ -181,7 +183,9 @@ export default {
       if (this.$toast) {
         this.$toast({
           component: ToastificationContent,
-          props: { title, text, variant, icon },
+          props: {
+            title, text, variant, icon,
+          },
         }, {
           timeout: 6000,
         })

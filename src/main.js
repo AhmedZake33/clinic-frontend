@@ -4,8 +4,6 @@ import VueCompositionAPI from '@vue/composition-api'
 
 // BootstrapVue
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-Vue.use(BootstrapVue)
-Vue.use(IconsPlugin)
 
 import i18n from '@/libs/i18n'
 import router from './router'
@@ -17,7 +15,6 @@ import './global-components'
 
 // Register Language Switcher globally
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
-Vue.component('LanguageSwitcher', LanguageSwitcher)
 
 // 3rd party plugins
 import '@axios'
@@ -34,17 +31,21 @@ import '@/libs/echo'
 
 // Global real-time broadcast notifications
 import GlobalBroadcast from '@/plugins/globalBroadcast'
-Vue.use(GlobalBroadcast)
 
 // Global assistant call handling (sound, subscribe, accept/complete helpers)
 import AssistantCalls from '@/plugins/assistantCalls'
-Vue.use(AssistantCalls)
 
 // Permission directive
 import '@/plugins/permission'
 
 // Axios Mock Adapter
 import '@/@fake-db/db'
+
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
+Vue.component('LanguageSwitcher', LanguageSwitcher)
+Vue.use(GlobalBroadcast)
+Vue.use(AssistantCalls)
 
 // BSV Plugin Registration
 Vue.use(ToastPlugin)

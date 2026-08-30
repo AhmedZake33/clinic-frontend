@@ -10,15 +10,32 @@
         class="mb-2"
         icon="user"
       />
-      <h3 class="mb-2">Welcome, {{ userName }}</h3>
+      <h3 class="mb-2">
+        Welcome, {{ userName }}
+      </h3>
 
       <p class="text-muted mb-1">
         Role: <strong>{{ userRole }}</strong>
       </p>
 
-      <b-badge variant="success" v-if="isAdmin">Admin Access</b-badge>
-      <b-badge variant="info" v-else-if="isTeacher">Teacher Access</b-badge>
-      <b-badge variant="secondary" v-else>Student Access</b-badge>
+      <b-badge
+        v-if="isAdmin"
+        variant="success"
+      >
+        Admin Access
+      </b-badge>
+      <b-badge
+        v-else-if="isTeacher"
+        variant="info"
+      >
+        Teacher Access
+      </b-badge>
+      <b-badge
+        v-else
+        variant="secondary"
+      >
+        Student Access
+      </b-badge>
     </b-card>
   </div>
 </template>

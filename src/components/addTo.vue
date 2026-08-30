@@ -1,98 +1,158 @@
 <template>
-    <v-app>
-        <h1  style="text-align:center">إسناد طفل</h1>
+  <v-app>
+    <h1 style="text-align:center">
+      إسناد طفل
+    </h1>
 
-        <div class="main" v-if="!final">
-            <div class="form-container">
-                <v-form>
-                    <v-row>
-                        <v-col cols="12" sm="4">
-                            <h4>اسم الطفل : </h4>
-                        </v-col>
-                        <v-col cols="12" sm="8">
-                            <v-select
-                                :items="[' خالد','احمد ']"
-                                outlined
-                            ></v-select>
-                        </v-col>
-                    </v-row>
-                     <v-row>
-                        <v-col cols="12" sm="4">
-                            <h4>اسم المتخصص : </h4>
-                        </v-col>
-                        <v-col cols="12" sm="8">
-                            <v-select
-                                :items="['عيسي ','زكي ']"
-                                outlined
-                            ></v-select>
-                        </v-col>
-                    </v-row>
-                     <v-row>
-                        <v-col cols="12" sm="4">
-                            <h4>اسم المدرسه : </h4>
-                        </v-col>
-                        <v-col cols="12" sm="8">
-                            <v-select
-                                :items="['مدينه العمال ','طلعت حرب ']"
-                                outlined
-                            ></v-select>
-                        </v-col>
-                    </v-row>
-                     <v-row>
-                        <v-col cols="12" sm="4">
-                            <h4>الصف الدراسي  : </h4>
-                        </v-col>
-                        <v-col cols="12" sm="8">
-                            <v-select
-                                :items="['الصف الاول','الصف التاني']"
-                                outlined
-                            ></v-select>
-                        </v-col>
-                    </v-row>
+    <div
+      v-if="!final"
+      class="main"
+    >
+      <div class="form-container">
+        <v-form>
+          <v-row>
+            <v-col
+              cols="12"
+              sm="4"
+            >
+              <h4>اسم الطفل : </h4>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="8"
+            >
+              <v-select
+                :items="[' خالد','احمد ']"
+                outlined
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+              sm="4"
+            >
+              <h4>اسم المتخصص : </h4>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="8"
+            >
+              <v-select
+                :items="['عيسي ','زكي ']"
+                outlined
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+              sm="4"
+            >
+              <h4>اسم المدرسه : </h4>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="8"
+            >
+              <v-select
+                :items="['مدينه العمال ','طلعت حرب ']"
+                outlined
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+              sm="4"
+            >
+              <h4>الصف الدراسي  : </h4>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="8"
+            >
+              <v-select
+                :items="['الصف الاول','الصف التاني']"
+                outlined
+              />
+            </v-col>
+          </v-row>
 
-                    <v-btn style="color:white;font-weight:bold" color="#10a29b" @click="addChild" block>إسناد طفل </v-btn>
+          <v-btn
+            style="color:white;font-weight:bold"
+            color="#10a29b"
+            block
+            @click="addChild"
+          >
+            إسناد طفل
+          </v-btn>
 
-                     
-                </v-form>
+        </v-form>
 
-            </div>
-        </div>
-        <div class="main">
-        <div class="contentDiv" v-if="final">
-                <h3>تم إسناد الطفل  محمود للمتخصص ابراهيم</h3><br>
-            <v-row>
-                <v-col cols="12" sm="6">
-                    <v-btn @click="showAll" style="color:white" class="showAll" color="#10a29b" block>عرض اطفال المتخصص </v-btn>
-                </v-col>
+      </div>
+    </div>
+    <div class="main">
+      <div
+        v-if="final"
+        class="contentDiv"
+      >
+        <h3>تم إسناد الطفل  محمود للمتخصص ابراهيم</h3><br>
+        <v-row>
+          <v-col
+            cols="12"
+            sm="6"
+          >
+            <v-btn
+              style="color:white"
+              class="showAll"
+              color="#10a29b"
+              block
+              @click="showAll"
+            >
+              عرض اطفال المتخصص
+            </v-btn>
+          </v-col>
 
-                <v-col cols="12" sm="6">
-                    <v-btn @click="addNew" style="border-color:#10a29b;color:#10a29b" class="addNew" outlined block> إسناد طفل جديد  </v-btn>
-                </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+          >
+            <v-btn
+              style="border-color:#10a29b;color:#10a29b"
+              class="addNew"
+              outlined
+              block
+              @click="addNew"
+            >
+              إسناد طفل جديد
+            </v-btn>
+          </v-col>
         </v-row>
-        </div>
-        </div>
+      </div>
+    </div>
 
-    </v-app>
+  </v-app>
 </template>
 
 <script>
 export default {
-    data(){
-        return {
-            final:false
-        }
-    },
-    methods:{
-        showAll(){
-            this.$router.push('/mainComponent/'+5);
-        },
-        addNew(){
-            this.$router.go();
-        },
-        addChild(){
-            this.final = true
-        }
+  data() {
+    return {
+      final: false,
     }
+  },
+  methods: {
+    showAll() {
+      this.$router.push(`/mainComponent/${5}`)
+    },
+    addNew() {
+      this.$router.go()
+    },
+    addChild() {
+      this.final = true
+    },
+  },
 }
 </script>
 

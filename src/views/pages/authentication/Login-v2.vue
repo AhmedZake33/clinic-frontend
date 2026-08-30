@@ -216,14 +216,13 @@ import VuexyLogo from '@core/layouts/components/Logo.vue'
 import {
   BRow, BCol, BLink, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup, BFormCheckbox, BCardText, BCardTitle, BImg, BForm, BButton, BAlert, VBTooltip,
 } from 'bootstrap-vue'
-import useJwt from '@/auth/jwt/useJwt'
 import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import useJwt from '@/auth/jwt/useJwt'
 import store from '@/store/index'
 import { getHomeRouteForLoggedInUser } from '@/auth/utils'
-import api from "@/libs/axios";
-
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import api from '@/libs/axios'
 
 export default {
   directives: {
@@ -276,26 +275,24 @@ export default {
   },
   methods: {
     async login() {
-  try {
-    const res = await api.post("/login", {
-      email: this.userEmail,
-      password: this.password,
-    });
+      try {
+        const res = await api.post('/login', {
+          email: this.userEmail,
+          password: this.password,
+        })
 
-    // save token + user
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
-    this.$router.replace(getHomeRouteForLoggedInUser(res.data.user.type.name))
-
-
-  } catch (err) {
-    this.$bvToast.toast("Invalid credentials", {
-      title: "Error",
-      variant: "danger",
-      solid: true,
-    });
-  }
-}
+        // save token + user
+        localStorage.setItem('token', res.data.token)
+        localStorage.setItem('user', JSON.stringify(res.data.user))
+        this.$router.replace(getHomeRouteForLoggedInUser(res.data.user.type.name))
+      } catch (err) {
+        this.$bvToast.toast('Invalid credentials', {
+          title: 'Error',
+          variant: 'danger',
+          solid: true,
+        })
+      }
+    },
   },
 }
 </script>

@@ -14,6 +14,92 @@
     "profile": "Profile",
     "brandText": "Clinic System"
   },
+  "landing": {
+    "nav": {
+      "home": "Home",
+      "features": "Features",
+      "roles": "Roles & Workflows",
+      "contact": "Contact & Support",
+      "modules": "Modules",
+      "about": "About System",
+      "login": "Sign In",
+      "dashboard": "Dashboard"
+    },
+    "hero": {
+      "badge": "Next-Gen Healthcare Management",
+      "title": "Smart, Integrated Medical Clinic System",
+      "subtitle": "An all-in-one digital platform empowering doctors, medical assistants, and healthcare administrators with streamlined patient management, intelligent scheduling, interactive clinical diagnosis, real-time queues, and comprehensive financial tracking.",
+      "ctaLogin": "Access Portal / Sign In",
+      "ctaExplore": "Explore Features",
+      "onlineBookingBadge": "Patient Online Booking Available"
+    },
+    "stats": {
+      "rolesCount": "3 Roles",
+      "rolesLabel": "Tailored Workflows",
+      "realtime": "Real-Time",
+      "realtimeLabel": "Live Queue & Calls",
+      "bilingual": "AR / EN",
+      "bilingualLabel": "Full RTL & LTR Support",
+      "security": "100% Secure",
+      "securityLabel": "Sanctum Protected"
+    },
+    "features": {
+      "title": "Comprehensive Healthcare Solutions",
+      "subtitle": "Engineered to deliver operational excellence, patient satisfaction, and efficient clinical workflows.",
+      "f1Title": "Smart Diagnosis & Anatomy Map",
+      "f1Desc": "Interactive visual anatomy mapping with comprehensive clinical diagnosis notes, prescriptions, and historical medical records.",
+      "f2Title": "Live Waiting Queue & Call Bell",
+      "f2Desc": "Real-time queue tracking with automated sound alerts and assistant call integration powered by WebSocket broadcasting.",
+      "f3Title": "Flexible Appointment Scheduling",
+      "f3Desc": "Internal calendar scheduling plus public online appointment booking pages with custom doctor slots.",
+      "f4Title": "Financials & Cash Transactions",
+      "f4Desc": "Instant transaction logging, invoices, expense & purchase tracking, and detailed revenue analytics.",
+      "f5Title": "Patient Profiles & Medical History",
+      "f5Desc": "Centralized patient directory with chronic illnesses, vital stats (BMI, height, weight), and visit logs.",
+      "f6Title": "Role-Based Access Control",
+      "f6Desc": "Granular permissions for Doctors, Sub-Doctors, Assistants, and Clinic Administrators."
+    },
+    "roles": {
+      "title": "Designed for Every Clinic Role",
+      "subtitle": "Custom interfaces that give each team member exactly what they need.",
+      "doctorTitle": "For Doctors & Specialists",
+      "doctorDesc": "Focus on high-quality patient care with tools built specifically for clinical efficiency.",
+      "doctorPoint1": "Review patient queue and incoming reservations in real-time.",
+      "doctorPoint2": "Record diagnoses, clinical notes, and custom prescription treatments.",
+      "doctorPoint3": "Utilize interactive anatomical body maps for precision charting.",
+      "doctorPoint4": "One-click call assistant with built-in chime notifications.",
+      "assistantTitle": "For Medical Assistants & Reception",
+      "assistantDesc": "Streamline front-desk operations, manage appointments, and maintain smooth clinic flow.",
+      "assistantPoint1": "Quick patient check-in, search, and detailed profile registration.",
+      "assistantPoint2": "Live waiting room management and queue prioritization.",
+      "assistantPoint3": "Book in-clinic reservations and manage doctor calendars.",
+      "assistantPoint4": "Handle cash register, customer transactions, and clinic purchases.",
+      "adminTitle": "For Clinic Owners & Admins",
+      "adminDesc": "Maintain full control over clinic performance, staffing, and revenue growth.",
+      "adminPoint1": "Manage clinic settings, working hours, and public booking slug.",
+      "adminPoint2": "Assign fine-grained roles and permissions for all staff.",
+      "adminPoint3": "Track comprehensive financial statements, revenue, and reports.",
+      "adminPoint4": "Multi-doctor & sub-doctor supervision under a unified clinic account."
+    },
+    "contact": {
+      "title": "Contact & Technical Support",
+      "subtitle": "Need assistance, have questions, or require support? We are always here to help you.",
+      "emailLabel": "Support & Inquiries Email",
+      "email": "info.tafratech@gmail.com",
+      "sendEmail": "Send an Email",
+      "hours": "24/7 Technical Assistance"
+    },
+    "cta": {
+      "title": "Ready to Experience Seamless Clinic Management?",
+      "subtitle": "Log in to your clinic portal now to manage patients, appointments, and daily operations with ease.",
+      "button": "Sign In to Your Account"
+    },
+    "footer": {
+      "rights": "All Rights Reserved. Smart Clinic Management System.",
+      "tagline": "Modern healthcare technology crafted for clinical excellence.",
+      "supportEmail": "Support: info.tafratech@gmail.com"
+    }
+  },
   "navigation": {
     "dashboard": "Dashboard",
     "patients": "Clients",

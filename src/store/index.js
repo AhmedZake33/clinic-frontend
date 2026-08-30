@@ -4,7 +4,6 @@ import auth from './modules/auth'
 import broadcast from './modules/broadcast'
 import assistantCalls from './modules/assistantCalls'
 
-
 // Modules
 import ecommerceStoreModule from '@/views/apps/e-commerce/eCommerceStoreModule'
 import app from './app'

@@ -2,15 +2,31 @@
   <div>
     <b-card>
       <b-row class="mb-2">
-        <b-col cols="12" md="6">
+        <b-col
+          cols="12"
+          md="6"
+        >
           <h4 class="mb-0">
-            <feather-icon icon="UsersIcon" class="mr-50" />
+            <feather-icon
+              icon="UsersIcon"
+              class="mr-50"
+            />
             {{ $t('assistant.title') }}
           </h4>
         </b-col>
-        <b-col cols="12" md="6" class="text-right">
-          <b-button variant="primary" @click="showAddModal">
-            <feather-icon icon="PlusIcon" class="mr-50" />
+        <b-col
+          cols="12"
+          md="6"
+          class="text-right"
+        >
+          <b-button
+            variant="primary"
+            @click="showAddModal"
+          >
+            <feather-icon
+              icon="PlusIcon"
+              class="mr-50"
+            />
             {{ $t('assistant.addAssistant') }}
           </b-button>
         </b-col>
@@ -67,45 +83,114 @@
     <b-modal
       v-model="showAdd"
       :title="$t('assistant.addAssistant')"
-      @ok.prevent="saveAssistant"
       :ok-title="$t('actions.save')"
       :cancel-title="$t('actions.cancel')"
+      @ok.prevent="saveAssistant"
     >
       <b-form @submit.prevent="saveAssistant">
-        <b-form-group :label="$t('assistant.name')" label-for="add-name">
-          <b-form-input id="add-name" v-model="form.name" required />
+        <b-form-group
+          :label="$t('assistant.name')"
+          label-for="add-name"
+        >
+          <b-form-input
+            id="add-name"
+            v-model="form.name"
+            required
+          />
         </b-form-group>
-        <b-form-group :label="$t('assistant.email')" label-for="add-email">
-          <b-form-input id="add-email" v-model="form.email" type="email" required />
+        <b-form-group
+          :label="$t('assistant.email')"
+          label-for="add-email"
+        >
+          <b-form-input
+            id="add-email"
+            v-model="form.email"
+            type="email"
+            required
+          />
         </b-form-group>
-        <b-form-group :label="$t('client.phone')" label-for="add-phone">
-          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+        <b-form-group
+          :label="$t('client.phone')"
+          label-for="add-phone"
+        >
+          <div
+            class="phone-combined-control"
+            :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+          >
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="form.phone_country_code" :options="countrySelectOptions" :required="!!form.phone" />
+              <b-form-select
+                v-model="form.phone_country_code"
+                class="phone-country-select"
+                :options="countrySelectOptions"
+                :required="!!form.phone"
+              />
             </div>
             <div class="number-col">
-              <b-form-input id="add-phone" class="phone-number-input" v-model="form.phone" :placeholder="$t('client.phone')" />
+              <b-form-input
+                id="add-phone"
+                v-model="form.phone"
+                class="phone-number-input"
+                :placeholder="$t('client.phone')"
+              />
             </div>
           </div>
         </b-form-group>
-        <b-form-group :label="$t('client.whatsappNumber')" label-for="add-whatsapp-number">
-          <b-form-checkbox v-model="form.useSameMobile" class="mb-50" @change="handleUseSameMobileChange(form)">
+        <b-form-group
+          :label="$t('client.whatsappNumber')"
+          label-for="add-whatsapp-number"
+        >
+          <b-form-checkbox
+            v-model="form.useSameMobile"
+            class="mb-50"
+            @change="handleUseSameMobileChange(form)"
+          >
             {{ $t('client.useSameMobile') }}
           </b-form-checkbox>
-          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+          <div
+            class="phone-combined-control"
+            :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+          >
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="form.whatsapp_country_code" :options="countrySelectOptions" :disabled="form.useSameMobile" :required="!!form.whatsapp_number && !form.useSameMobile" />
+              <b-form-select
+                v-model="form.whatsapp_country_code"
+                class="phone-country-select"
+                :options="countrySelectOptions"
+                :disabled="form.useSameMobile"
+                :required="!!form.whatsapp_number && !form.useSameMobile"
+              />
             </div>
             <div class="number-col">
-              <b-form-input id="add-whatsapp-number" class="phone-number-input" v-model="form.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="form.useSameMobile" />
+              <b-form-input
+                id="add-whatsapp-number"
+                v-model="form.whatsapp_number"
+                class="phone-number-input"
+                :placeholder="$t('client.whatsappPlaceholder')"
+                :disabled="form.useSameMobile"
+              />
             </div>
           </div>
         </b-form-group>
-        <b-form-group :label="$t('assistant.password')" label-for="add-password">
-          <b-form-input id="add-password" v-model="form.password" type="password" required />
+        <b-form-group
+          :label="$t('assistant.password')"
+          label-for="add-password"
+        >
+          <b-form-input
+            id="add-password"
+            v-model="form.password"
+            type="password"
+            required
+          />
         </b-form-group>
-        <b-form-group :label="$t('assistant.confirmPassword')" label-for="add-password-confirm">
-          <b-form-input id="add-password-confirm" v-model="form.password_confirmation" type="password" required />
+        <b-form-group
+          :label="$t('assistant.confirmPassword')"
+          label-for="add-password-confirm"
+        >
+          <b-form-input
+            id="add-password-confirm"
+            v-model="form.password_confirmation"
+            type="password"
+            required
+          />
         </b-form-group>
       </b-form>
     </b-modal>
@@ -114,45 +199,113 @@
     <b-modal
       v-model="showEdit"
       :title="$t('assistant.editAssistant')"
-      @ok.prevent="updateAssistant"
       :ok-title="$t('actions.save')"
       :cancel-title="$t('actions.cancel')"
+      @ok.prevent="updateAssistant"
     >
       <b-form @submit.prevent="updateAssistant">
-        <b-form-group :label="$t('assistant.name')" label-for="edit-name">
-          <b-form-input id="edit-name" v-model="editForm.name" required />
+        <b-form-group
+          :label="$t('assistant.name')"
+          label-for="edit-name"
+        >
+          <b-form-input
+            id="edit-name"
+            v-model="editForm.name"
+            required
+          />
         </b-form-group>
-        <b-form-group :label="$t('assistant.email')" label-for="edit-email">
-          <b-form-input id="edit-email" v-model="editForm.email" type="email" required />
+        <b-form-group
+          :label="$t('assistant.email')"
+          label-for="edit-email"
+        >
+          <b-form-input
+            id="edit-email"
+            v-model="editForm.email"
+            type="email"
+            required
+          />
         </b-form-group>
-        <b-form-group :label="$t('client.phone')" label-for="edit-phone">
-          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+        <b-form-group
+          :label="$t('client.phone')"
+          label-for="edit-phone"
+        >
+          <div
+            class="phone-combined-control"
+            :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+          >
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="editForm.phone_country_code" :options="countrySelectOptions" :required="!!editForm.phone" />
+              <b-form-select
+                v-model="editForm.phone_country_code"
+                class="phone-country-select"
+                :options="countrySelectOptions"
+                :required="!!editForm.phone"
+              />
             </div>
             <div class="number-col">
-              <b-form-input id="edit-phone" class="phone-number-input" v-model="editForm.phone" :placeholder="$t('client.phone')" />
+              <b-form-input
+                id="edit-phone"
+                v-model="editForm.phone"
+                class="phone-number-input"
+                :placeholder="$t('client.phone')"
+              />
             </div>
           </div>
         </b-form-group>
-        <b-form-group :label="$t('client.whatsappNumber')" label-for="edit-whatsapp-number">
-          <b-form-checkbox v-model="editForm.useSameMobile" class="mb-50" @change="handleUseSameMobileChange(editForm)">
+        <b-form-group
+          :label="$t('client.whatsappNumber')"
+          label-for="edit-whatsapp-number"
+        >
+          <b-form-checkbox
+            v-model="editForm.useSameMobile"
+            class="mb-50"
+            @change="handleUseSameMobileChange(editForm)"
+          >
             {{ $t('client.useSameMobile') }}
           </b-form-checkbox>
-          <div class="phone-combined-control" :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }">
+          <div
+            class="phone-combined-control"
+            :class="{ 'phone-combined-control--rtl': $store.state.appConfig.isRTL }"
+          >
             <div class="country-col">
-              <b-form-select class="phone-country-select" v-model="editForm.whatsapp_country_code" :options="countrySelectOptions" :disabled="editForm.useSameMobile" :required="!!editForm.whatsapp_number && !editForm.useSameMobile" />
+              <b-form-select
+                v-model="editForm.whatsapp_country_code"
+                class="phone-country-select"
+                :options="countrySelectOptions"
+                :disabled="editForm.useSameMobile"
+                :required="!!editForm.whatsapp_number && !editForm.useSameMobile"
+              />
             </div>
             <div class="number-col">
-              <b-form-input id="edit-whatsapp-number" class="phone-number-input" v-model="editForm.whatsapp_number" :placeholder="$t('client.whatsappPlaceholder')" :disabled="editForm.useSameMobile" />
+              <b-form-input
+                id="edit-whatsapp-number"
+                v-model="editForm.whatsapp_number"
+                class="phone-number-input"
+                :placeholder="$t('client.whatsappPlaceholder')"
+                :disabled="editForm.useSameMobile"
+              />
             </div>
           </div>
         </b-form-group>
-        <b-form-group :label="$t('assistant.newPassword')" label-for="edit-password">
-          <b-form-input id="edit-password" v-model="editForm.password" type="password" :placeholder="$t('assistant.leaveBlank')" />
+        <b-form-group
+          :label="$t('assistant.newPassword')"
+          label-for="edit-password"
+        >
+          <b-form-input
+            id="edit-password"
+            v-model="editForm.password"
+            type="password"
+            :placeholder="$t('assistant.leaveBlank')"
+          />
         </b-form-group>
-        <b-form-group :label="$t('assistant.confirmPassword')" label-for="edit-password-confirm">
-          <b-form-input id="edit-password-confirm" v-model="editForm.password_confirmation" type="password" />
+        <b-form-group
+          :label="$t('assistant.confirmPassword')"
+          label-for="edit-password-confirm"
+        >
+          <b-form-input
+            id="edit-password-confirm"
+            v-model="editForm.password_confirmation"
+            type="password"
+          />
         </b-form-group>
       </b-form>
     </b-modal>
@@ -164,16 +317,26 @@ import {
   BCard, BRow, BCol, BButton, BTable, BSpinner,
   BModal, BForm, BFormGroup, BFormInput, BFormSelect, BFormCheckbox,
 } from 'bootstrap-vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import assistantsService from '@/services/assistants'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
   components: {
-    BCard, BRow, BCol, BButton, BTable, BSpinner,
-    BModal, BForm, BFormGroup, BFormInput, BFormSelect, BFormCheckbox,
+    BCard,
+    BRow,
+    BCol,
+    BButton,
+    BTable,
+    BSpinner,
+    BModal,
+    BForm,
+    BFormGroup,
+    BFormInput,
+    BFormSelect,
+    BFormCheckbox,
     ResponsiveTableActions,
   },
   data() {
