@@ -1,5 +1,52 @@
 <template>
   <div>
+    <!-- Onboarding Welcome Banner for Doctors -->
+    <b-row v-if="showOnboardingBanner">
+      <b-col cols="12">
+        <div class="onboarding-welcome-alert p-2 p-md-3 bg-light-primary rounded border border-primary d-flex flex-wrap align-items-center justify-content-between mb-2 shadow-sm">
+          <div class="d-flex align-items-center mb-1 mb-md-0">
+            <div class="bg-primary text-white p-2 rounded mr-2 ml-2 shadow-xs flex-shrink-0">
+              <feather-icon
+                icon="CompassIcon"
+                size="24"
+              />
+            </div>
+            <div>
+              <h5 class="font-weight-bolder text-primary mb-25">
+                {{ $t('onboarding.bannerTitle') }}
+              </h5>
+              <p class="text-muted small mb-0">
+                {{ $t('onboarding.bannerText') }}
+              </p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center flex-wrap">
+            <b-button
+              variant="primary"
+              size="sm"
+              class="font-weight-bold mr-1 ml-1 shadow-sm"
+              @click="showTourModal = true"
+            >
+              <feather-icon
+                icon="PlayIcon"
+                size="14"
+                class="mr-25 ml-25"
+              />
+              <span>{{ $t('onboarding.startTour') }}</span>
+            </b-button>
+            <b-button
+              variant="outline-secondary"
+              size="sm"
+              class="font-weight-bold"
+              @click="dismissOnboardingBanner"
+            >
+              {{ $t('onboarding.dismiss') }}
+            </b-button>
+          </div>
+        </div>
+      </b-col>
+    </b-row>
+
     <!-- Welcome Card -->
     <b-row>
       <b-col cols="12">
@@ -7,7 +54,7 @@
           <b-row>
             <b-col
               cols="12"
-              md="8"
+              md="6"
             >
               <h2>{{ $t('dashboard.welcomeBack') }}, {{ user ? user.name : $t('reservation.doctor') }}!</h2>
               <p class="mb-2">
@@ -22,18 +69,49 @@
             </b-col>
             <b-col
               cols="12"
-              md="4"
-              class="text-md-right mt-1 mt-md-0"
+              md="6"
+              class="text-md-right mt-1 mt-md-0 d-flex align-items-center justify-content-md-end flex-wrap"
             >
+              <!-- Interactive Tour Trigger Button -->
               <b-button
                 variant="primary"
+                size="sm"
+                class="mr-1 ml-1 font-weight-bold mb-1 mb-sm-0 shadow-sm"
+                @click="showTourModal = true"
+              >
+                <feather-icon
+                  icon="CompassIcon"
+                  size="15"
+                  class="mr-50 ml-50"
+                />
+                <span>{{ isRtl ? 'الجولة التفاعلية (7 أقسام)' : 'Interactive Tour (7 Tabs)' }}</span>
+              </b-button>
+
+              <b-button
+                variant="outline-primary"
+                size="sm"
+                class="mr-1 ml-1 font-weight-bold mb-1 mb-sm-0"
+                :to="{ name: 'doctor-help' }"
+              >
+                <feather-icon
+                  icon="HelpCircleIcon"
+                  size="14"
+                  class="mr-50 ml-50"
+                />
+                <span>{{ $t('menu.help') }}</span>
+              </b-button>
+
+              <b-button
+                variant="primary"
+                size="sm"
+                class="font-weight-bold"
                 :to="{ name: 'doctor-reservations' }"
               >
                 <feather-icon
                   icon="CalendarIcon"
-                  class="mr-50"
+                  class="mr-50 ml-50"
                 />
-                {{ $t('actions.viewAllReservations') }}
+                <span>{{ $t('actions.viewAllReservations') }}</span>
               </b-button>
             </b-col>
           </b-row>
@@ -182,6 +260,20 @@
         </b-card>
       </b-col>
     </b-row>
+
+    <!-- Interactive System Tour Modal (Doctor Onboarding Guide) -->
+    <b-modal
+      v-model="showTourModal"
+      size="xl"
+      hide-footer
+      centered
+      body-class="p-2 p-md-3"
+      header-bg-variant="primary"
+      header-text-variant="white"
+      :title="isRtl ? 'الجولة التفاعلية ودليل استخدام النظام (7 أقسام)' : 'Interactive System Tour & Guide (7 Tabs)'"
+    >
+      <doctor-onboarding-guide />
+    </b-modal>
   </div>
 </template>
 
@@ -195,12 +287,13 @@ import {
   BTable,
   BBadge,
   BSpinner,
+  BModal,
   VBTooltip,
 } from 'bootstrap-vue'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import reservationsService from '@/services/reservations'
 import subDoctorsApi from '@/services/subDoctors'
 import authService from '@/services/auth'
+import DoctorOnboardingGuide from '@/views/doctor/DoctorOnboardingGuide.vue'
 
 export default {
   directives: {
@@ -215,11 +308,15 @@ export default {
     BTable,
     BBadge,
     BSpinner,
+    BModal,
+    DoctorOnboardingGuide,
   },
   data() {
     return {
       user: null,
       loading: false,
+      showOnboardingBanner: false,
+      showTourModal: false,
       stats: {
         totalReservations: 0,
         pendingReservations: 0,
@@ -233,8 +330,15 @@ export default {
       completedFields: [],
     }
   },
+  computed: {
+    isRtl() {
+      const activeLocale = this.$store?.state?.language?.currentLocale || this.$i18n?.locale || 'en'
+      return activeLocale === 'ar'
+    },
+  },
   mounted() {
     this.user = JSON.parse(localStorage.getItem('user') || 'null')
+    this.showOnboardingBanner = localStorage.getItem('doctor_onboarding_completed') !== 'true'
     // Set translated table fields
     this.fields = [
       { key: 'client.name', label: this.$t('client.name'), sortable: true },
@@ -261,6 +365,10 @@ export default {
     })
   },
   methods: {
+    dismissOnboardingBanner() {
+      this.showOnboardingBanner = false
+      localStorage.setItem('doctor_onboarding_completed', 'true')
+    },
     async fetchCurrentUser() {
       try {
         const { data } = await authService.getUser()

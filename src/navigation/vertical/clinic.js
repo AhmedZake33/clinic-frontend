@@ -200,7 +200,7 @@ const navigationItems = [
     i18n: true,
     route: 'doctor-help',
     icon: 'HelpCircleIcon',
-    permission: 'doctor.view-reservations',
+    permission: 'doctor.view-dashboard',
   },
 
   {

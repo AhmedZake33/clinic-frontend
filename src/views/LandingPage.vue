@@ -14,12 +14,15 @@
           <div class="brand-icon-wrapper">
             <feather-icon
               icon="ActivityIcon"
-              size="26"
+              size="24"
               class="text-white"
             />
           </div>
-          <div class="brand-text-wrapper ml-1 mr-1">
-            <span class="brand-title font-weight-bolder">{{ $t('clinic.brandText') || 'Clinic System' }}</span>
+          <div
+            class="brand-text-wrapper"
+            :class="isRtl ? 'mr-1' : 'ml-1'"
+          >
+            <span class="brand-title font-weight-bolder text-dark">{{ $t('clinic.brandText') || ($i18n.locale === 'ar' ? 'نظام العيادة' : 'Clinic System') }}</span>
             <span class="brand-badge text-muted small d-none d-sm-inline-block">{{ $t('landing.hero.badge') }}</span>
           </div>
         </router-link>
@@ -30,6 +33,10 @@
             href="#overview"
             class="landing-nav-link"
           >{{ $t('landing.nav.home') }}</a>
+          <a
+            href="#video-guide"
+            class="landing-nav-link"
+          >{{ $t('landing.nav.video') }}</a>
           <a
             href="#features"
             class="landing-nav-link"
@@ -46,17 +53,18 @@
 
         <!-- Right Controls: Language & Login CTA -->
         <div class="landing-nav-actions d-flex align-items-center">
-          <language-switcher class="mr-1 ml-1" />
+          <language-switcher :class="isRtl ? 'ml-1' : 'mr-1'" />
 
           <template v-if="isLoggedIn">
             <b-button
               variant="primary"
-              class="btn-portal font-weight-bold shadow-sm"
+              class="btn-portal font-weight-bold shadow-sm d-inline-flex align-items-center"
               :to="{ name: dashboardRouteName }"
             >
               <feather-icon
                 icon="LayoutIcon"
-                class="mr-50 ml-50"
+                size="16"
+                :class="isRtl ? 'ml-50' : 'mr-50'"
               />
               <span>{{ $t('landing.nav.dashboard') }}</span>
             </b-button>
@@ -64,12 +72,13 @@
           <template v-else>
             <b-button
               variant="primary"
-              class="btn-portal font-weight-bold shadow-sm"
+              class="btn-portal font-weight-bold shadow-sm d-inline-flex align-items-center"
               :to="{ name: 'login' }"
             >
               <feather-icon
                 icon="LogInIcon"
-                class="mr-50 ml-50"
+                size="16"
+                :class="isRtl ? 'ml-50' : 'mr-50'"
               />
               <span>{{ $t('landing.nav.login') }}</span>
             </b-button>
@@ -84,13 +93,12 @@
       class="hero-section position-relative overflow-hidden"
     >
       <div class="hero-bg-glow" />
-      <div class="container py-5 position-relative">
+      <div class="container py-4 py-lg-5 position-relative">
         <b-row class="align-items-center">
           <!-- Hero Text -->
           <b-col
             lg="6"
-            class="text-center text-lg-left mb-4 mb-lg-0"
-            :class="{ 'text-lg-right': isRtl }"
+            class="hero-content-col mb-4 mb-lg-0"
           >
             <div class="hero-badge-pill mb-2 d-inline-flex align-items-center">
               <span class="badge-dot" />
@@ -106,16 +114,18 @@
             </p>
 
             <!-- CTA Buttons -->
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start gap-3 mt-3">
+            <div class="hero-cta-buttons d-flex flex-wrap align-items-center mt-3">
               <b-button
                 variant="primary"
                 size="lg"
-                class="btn-hero-primary font-weight-bold px-3 py-2 mr-2 mb-2"
+                class="btn-hero-primary font-weight-bold px-3 py-2 mb-2 d-inline-flex align-items-center"
+                :class="isRtl ? 'ml-2' : 'mr-2'"
                 :to="{ name: isLoggedIn ? dashboardRouteName : 'login' }"
               >
                 <feather-icon
                   :icon="isLoggedIn ? 'LayoutIcon' : 'LogInIcon'"
-                  class="mr-50 ml-50"
+                  size="18"
+                  :class="isRtl ? 'ml-50' : 'mr-50'"
                 />
                 <span>{{ isLoggedIn ? $t('landing.nav.dashboard') : $t('landing.hero.ctaLogin') }}</span>
               </b-button>
@@ -123,53 +133,68 @@
               <b-button
                 variant="outline-primary"
                 size="lg"
-                href="#features"
-                class="btn-hero-secondary font-weight-bold px-3 py-2 mr-2 mb-2"
+                href="#video-guide"
+                class="btn-hero-secondary font-weight-bold px-3 py-2 mb-2 d-inline-flex align-items-center"
+                :class="isRtl ? 'ml-2' : 'mr-2'"
               >
                 <feather-icon
-                  icon="CompassIcon"
-                  class="mr-50 ml-50"
+                  icon="PlayCircleIcon"
+                  size="18"
+                  :class="isRtl ? 'ml-50' : 'mr-50'"
                 />
-                <span>{{ $t('landing.hero.ctaExplore') }}</span>
+                <span>{{ $t('landing.nav.video') }}</span>
               </b-button>
 
               <b-button
                 variant="outline-secondary"
                 size="lg"
                 href="#contact"
-                class="btn-hero-secondary font-weight-bold px-3 py-2 mb-2"
+                class="btn-hero-secondary font-weight-bold px-3 py-2 mb-2 d-inline-flex align-items-center"
               >
                 <feather-icon
                   icon="MailIcon"
-                  class="mr-50 ml-50"
+                  size="18"
+                  :class="isRtl ? 'ml-50' : 'mr-50'"
                 />
                 <span>{{ $t('landing.nav.contact') }}</span>
               </b-button>
             </div>
 
             <!-- Quick Trust Highlights -->
-            <div class="hero-trust-items d-flex flex-wrap justify-content-center justify-content-lg-start align-items-center mt-3 pt-2">
-              <div class="trust-item d-flex align-items-center mr-3 ml-3 mb-1">
+            <div class="hero-trust-items d-flex flex-wrap align-items-center mt-3 pt-2">
+              <div
+                class="trust-item d-flex align-items-center mb-1"
+                :class="isRtl ? 'ml-3' : 'mr-3'"
+              >
                 <feather-icon
                   icon="CheckCircleIcon"
                   size="18"
-                  class="text-success mr-50 ml-50"
+                  class="text-success"
+                  :class="isRtl ? 'ml-50' : 'mr-50'"
                 />
                 <span class="small font-weight-bold">{{ $t('landing.stats.rolesCount') }}</span>
               </div>
-              <div class="trust-item d-flex align-items-center mr-3 ml-3 mb-1">
+              <div
+                class="trust-item d-flex align-items-center mb-1"
+                :class="isRtl ? 'ml-3' : 'mr-3'"
+              >
                 <feather-icon
                   icon="CheckCircleIcon"
                   size="18"
-                  class="text-success mr-50 ml-50"
+                  class="text-success"
+                  :class="isRtl ? 'ml-50' : 'mr-50'"
                 />
                 <span class="small font-weight-bold">{{ $t('landing.stats.realtime') }}</span>
               </div>
-              <div class="trust-item d-flex align-items-center mr-3 ml-3 mb-1">
+              <div
+                class="trust-item d-flex align-items-center mb-1"
+                :class="isRtl ? 'ml-3' : 'mr-3'"
+              >
                 <feather-icon
                   icon="CheckCircleIcon"
                   size="18"
-                  class="text-success mr-50 ml-50"
+                  class="text-success"
+                  :class="isRtl ? 'ml-50' : 'mr-50'"
                 />
                 <span class="small font-weight-bold">{{ $t('landing.stats.bilingual') }}</span>
               </div>
@@ -189,16 +214,17 @@
                   <feather-icon
                     icon="ShieldIcon"
                     size="14"
-                    class="text-primary mr-50 ml-50"
+                    class="text-primary"
+                    :class="isRtl ? 'ml-50' : 'mr-50'"
                   />
-                  <span>Clinic Cloud Portal</span>
+                  <span>{{ isRtl ? 'بوابة العيادة السحابية' : 'Clinic Cloud Portal' }}</span>
                 </div>
                 <b-badge
                   variant="light-success"
                   pill
                   class="font-weight-bold"
                 >
-                  ● Live System
+                  ● {{ isRtl ? 'نظام مباشر' : 'Live System' }}
                 </b-badge>
               </div>
 
@@ -207,7 +233,10 @@
                 <!-- Mini Metric 1: Live Waiting Queue -->
                 <div class="mockup-metric-card p-2 mb-2 bg-white rounded shadow-xs d-flex align-items-center justify-content-between">
                   <div class="d-flex align-items-center">
-                    <div class="metric-icon-box bg-light-primary text-primary mr-2 ml-2 p-2 rounded">
+                    <div
+                      class="metric-icon-box bg-light-primary text-primary p-2 rounded"
+                      :class="isRtl ? 'ml-2' : 'mr-2'"
+                    >
                       <feather-icon
                         icon="UsersIcon"
                         size="20"
@@ -226,14 +255,17 @@
                     variant="primary"
                     class="p-1 font-weight-bold pulse-badge"
                   >
-                    Active Queue
+                    {{ isRtl ? 'طابور نشط' : 'Active Queue' }}
                   </b-badge>
                 </div>
 
                 <!-- Mini Metric 2: Doctor Clinical Exam -->
                 <div class="mockup-metric-card p-2 mb-2 bg-white rounded shadow-xs d-flex align-items-center justify-content-between">
                   <div class="d-flex align-items-center">
-                    <div class="metric-icon-box bg-light-info text-info mr-2 ml-2 p-2 rounded">
+                    <div
+                      class="metric-icon-box bg-light-info text-info p-2 rounded"
+                      :class="isRtl ? 'ml-2' : 'mr-2'"
+                    >
                       <feather-icon
                         icon="ActivityIcon"
                         size="20"
@@ -244,17 +276,20 @@
                         {{ $t('landing.features.f1Title') }}
                       </div>
                       <div class="small text-muted">
-                        Diagnosis & Anatomy Map
+                        {{ isRtl ? 'فحص سريري وتوثيق الحالات' : 'Diagnosis & Anatomy Map' }}
                       </div>
                     </div>
                   </div>
-                  <span class="text-success font-weight-bolder">✓ Ready</span>
+                  <span class="text-success font-weight-bolder">✓ {{ isRtl ? 'جاهز' : 'Ready' }}</span>
                 </div>
 
                 <!-- Mini Metric 3: Cash & Financials -->
                 <div class="mockup-metric-card p-2 bg-white rounded shadow-xs d-flex align-items-center justify-content-between">
                   <div class="d-flex align-items-center">
-                    <div class="metric-icon-box bg-light-success text-success mr-2 ml-2 p-2 rounded">
+                    <div
+                      class="metric-icon-box bg-light-success text-success p-2 rounded"
+                      :class="isRtl ? 'ml-2' : 'mr-2'"
+                    >
                       <feather-icon
                         icon="DollarSignIcon"
                         size="20"
@@ -265,7 +300,7 @@
                         {{ $t('landing.features.f4Title') }}
                       </div>
                       <div class="small text-muted">
-                        Invoices & Transactions
+                        {{ isRtl ? 'تسجيل الفواتير والمصروفات' : 'Invoices & Transactions' }}
                       </div>
                     </div>
                   </div>
@@ -273,7 +308,7 @@
                     variant="light-success"
                     class="p-1 font-weight-bold"
                   >
-                    Automated
+                    {{ isRtl ? 'آلي' : 'Automated' }}
                   </b-badge>
                 </div>
               </div>
@@ -284,17 +319,20 @@
                   <feather-icon
                     icon="MailIcon"
                     size="22"
-                    class="mr-2 ml-2"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <div>
-                    <div class="font-weight-bold small">
-                      Support: info.tafratech@gmail.com
+                    <div
+                      class="font-weight-bold small text-white"
+                      dir="ltr"
+                    >
+                      info.tafratech@gmail.com
                     </div>
                     <div
                       class="text-light"
                       style="font-size: 0.75rem;"
                     >
-                      Technical assistance & inquiries
+                      {{ isRtl ? 'الدعم الفني والاستفسارات' : 'Technical assistance & inquiries' }}
                     </div>
                   </div>
                 </div>
@@ -345,7 +383,7 @@
             class="border-right-md"
           >
             <div class="stat-number font-weight-bolder text-primary">
-              AR / EN
+              {{ isRtl ? 'عربي / EN' : 'AR / EN' }}
             </div>
             <div class="stat-label text-muted small font-weight-bold">
               {{ $t('landing.stats.bilingualLabel') }}
@@ -366,10 +404,257 @@
       </div>
     </section>
 
+    <!-- Video Demonstration & Walkthrough Section -->
+    <section
+      id="video-guide"
+      class="video-guide-section py-5 position-relative"
+    >
+      <div class="container">
+        <div class="section-header text-center max-w-700 mx-auto mb-4">
+          <b-badge
+            variant="light-primary"
+            pill
+            class="px-2 py-1 mb-2 font-weight-bold"
+          >
+            {{ $t('landing.video.badge') }}
+          </b-badge>
+          <h2 class="section-title font-weight-bolder mb-2 text-dark">
+            {{ $t('landing.video.title') }}
+          </h2>
+          <p class="section-subtitle text-muted lead">
+            {{ $t('landing.video.subtitle') }}
+          </p>
+        </div>
+
+        <!-- Video Player / Interactive Simulator Container -->
+        <b-row class="justify-content-center">
+          <b-col
+            cols="12"
+            lg="11"
+            xl="10"
+          >
+            <system-video-walkthrough />
+          </b-col>
+        </b-row>
+
+        <!-- Video Key Highlights Chapters Grid (The 7 Doctor Modules) -->
+        <div class="video-chapters-container mt-4 pt-2">
+          <h4 class="text-center font-weight-bolder text-dark mb-3">
+            {{ $t('landing.video.tipTitle') }}
+          </h4>
+
+          <b-row class="justify-content-center">
+            <!-- 1. Dashboard -->
+            <b-col
+              cols="12"
+              sm="6"
+              lg="4"
+              xl="3"
+              class="mb-3"
+            >
+              <div class="chapter-card h-100 p-3 bg-white rounded shadow-xs border">
+                <div class="d-flex align-items-center mb-2">
+                  <div
+                    class="chapter-icon-box bg-light-primary text-primary p-2 rounded"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
+                  >
+                    <feather-icon
+                      icon="HomeIcon"
+                      size="20"
+                    />
+                  </div>
+                  <h6 class="mb-0 font-weight-bolder text-dark">
+                    {{ $t('landing.video.ch1Title') }}
+                  </h6>
+                </div>
+                <p class="small text-muted mb-0">
+                  {{ $t('landing.video.ch1Desc') }}
+                </p>
+              </div>
+            </b-col>
+
+            <!-- 2. Clients -->
+            <b-col
+              cols="12"
+              sm="6"
+              lg="4"
+              xl="3"
+              class="mb-3"
+            >
+              <div class="chapter-card h-100 p-3 bg-white rounded shadow-xs border">
+                <div class="d-flex align-items-center mb-2">
+                  <div
+                    class="chapter-icon-box bg-light-info text-info p-2 rounded"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
+                  >
+                    <feather-icon
+                      icon="UsersIcon"
+                      size="20"
+                    />
+                  </div>
+                  <h6 class="mb-0 font-weight-bolder text-dark">
+                    {{ $t('landing.video.ch2Title') }}
+                  </h6>
+                </div>
+                <p class="small text-muted mb-0">
+                  {{ $t('landing.video.ch2Desc') }}
+                </p>
+              </div>
+            </b-col>
+
+            <!-- 3. Reservations -->
+            <b-col
+              cols="12"
+              sm="6"
+              lg="4"
+              xl="3"
+              class="mb-3"
+            >
+              <div class="chapter-card h-100 p-3 bg-white rounded shadow-xs border">
+                <div class="d-flex align-items-center mb-2">
+                  <div
+                    class="chapter-icon-box bg-light-warning text-warning p-2 rounded"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
+                  >
+                    <feather-icon
+                      icon="ClipboardIcon"
+                      size="20"
+                    />
+                  </div>
+                  <h6 class="mb-0 font-weight-bolder text-dark">
+                    {{ $t('landing.video.ch3Title') }}
+                  </h6>
+                </div>
+                <p class="small text-muted mb-0">
+                  {{ $t('landing.video.ch3Desc') }}
+                </p>
+              </div>
+            </b-col>
+
+            <!-- 4. Waiting Queue -->
+            <b-col
+              cols="12"
+              sm="6"
+              lg="4"
+              xl="3"
+              class="mb-3"
+            >
+              <div class="chapter-card h-100 p-3 bg-white rounded shadow-xs border">
+                <div class="d-flex align-items-center mb-2">
+                  <div
+                    class="chapter-icon-box bg-light-danger text-danger p-2 rounded"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
+                  >
+                    <feather-icon
+                      icon="ListIcon"
+                      size="20"
+                    />
+                  </div>
+                  <h6 class="mb-0 font-weight-bolder text-dark">
+                    {{ $t('landing.video.ch4Title') }}
+                  </h6>
+                </div>
+                <p class="small text-muted mb-0">
+                  {{ $t('landing.video.ch4Desc') }}
+                </p>
+              </div>
+            </b-col>
+
+            <!-- 5. Financials -->
+            <b-col
+              cols="12"
+              sm="6"
+              lg="4"
+              xl="4"
+              class="mb-3"
+            >
+              <div class="chapter-card h-100 p-3 bg-white rounded shadow-xs border">
+                <div class="d-flex align-items-center mb-2">
+                  <div
+                    class="chapter-icon-box bg-light-success text-success p-2 rounded"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
+                  >
+                    <feather-icon
+                      icon="DollarSignIcon"
+                      size="20"
+                    />
+                  </div>
+                  <h6 class="mb-0 font-weight-bolder text-dark">
+                    {{ $t('landing.video.ch5Title') }}
+                  </h6>
+                </div>
+                <p class="small text-muted mb-0">
+                  {{ $t('landing.video.ch5Desc') }}
+                </p>
+              </div>
+            </b-col>
+
+            <!-- 6. Transactions -->
+            <b-col
+              cols="12"
+              sm="6"
+              lg="4"
+              xl="4"
+              class="mb-3"
+            >
+              <div class="chapter-card h-100 p-3 bg-white rounded shadow-xs border">
+                <div class="d-flex align-items-center mb-2">
+                  <div
+                    class="chapter-icon-box bg-light-primary text-primary p-2 rounded"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
+                  >
+                    <feather-icon
+                      icon="CreditCardIcon"
+                      size="20"
+                    />
+                  </div>
+                  <h6 class="mb-0 font-weight-bolder text-dark">
+                    {{ $t('landing.video.ch6Title') }}
+                  </h6>
+                </div>
+                <p class="small text-muted mb-0">
+                  {{ $t('landing.video.ch6Desc') }}
+                </p>
+              </div>
+            </b-col>
+
+            <!-- 7. Reports -->
+            <b-col
+              cols="12"
+              sm="6"
+              lg="4"
+              xl="4"
+              class="mb-3"
+            >
+              <div class="chapter-card h-100 p-3 bg-white rounded shadow-xs border">
+                <div class="d-flex align-items-center mb-2">
+                  <div
+                    class="chapter-icon-box bg-light-info text-info p-2 rounded"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
+                  >
+                    <feather-icon
+                      icon="BarChart2Icon"
+                      size="20"
+                    />
+                  </div>
+                  <h6 class="mb-0 font-weight-bolder text-dark">
+                    {{ $t('landing.video.ch7Title') }}
+                  </h6>
+                </div>
+                <p class="small text-muted mb-0">
+                  {{ $t('landing.video.ch7Desc') }}
+                </p>
+              </div>
+            </b-col>
+          </b-row>
+        </div>
+      </div>
+    </section>
+
     <!-- Core Features Grid Section -->
     <section
       id="features"
-      class="features-section py-5"
+      class="features-section py-5 bg-white"
     >
       <div class="container">
         <div class="section-header text-center max-w-700 mx-auto mb-5">
@@ -554,7 +839,10 @@
           >
             <div class="role-card h-100 p-4 bg-white rounded-lg shadow-sm border d-flex flex-column">
               <div class="role-card-header d-flex align-items-center mb-3">
-                <div class="role-icon bg-primary text-white p-3 rounded mr-3 ml-3">
+                <div
+                  class="role-icon bg-primary text-white p-3 rounded"
+                  :class="isRtl ? 'ml-3' : 'mr-3'"
+                >
                   <feather-icon
                     icon="HeartIcon"
                     size="24"
@@ -564,7 +852,7 @@
                   <h4 class="role-title font-weight-bolder mb-0 text-primary">
                     {{ $t('landing.roles.doctorTitle') }}
                   </h4>
-                  <span class="text-muted small">Clinical & Diagnosis</span>
+                  <span class="text-muted small">{{ isRtl ? 'الكشف والتشخيص السريري' : 'Clinical & Diagnosis' }}</span>
                 </div>
               </div>
               <p class="role-desc text-muted mb-3">
@@ -576,7 +864,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.doctorPoint1') }}</span>
                 </li>
@@ -584,7 +873,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.doctorPoint2') }}</span>
                 </li>
@@ -592,7 +882,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.doctorPoint3') }}</span>
                 </li>
@@ -600,7 +891,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.doctorPoint4') }}</span>
                 </li>
@@ -609,10 +901,15 @@
               <b-button
                 variant="outline-primary"
                 block
-                class="font-weight-bold"
+                class="font-weight-bold d-flex align-items-center justify-content-center"
                 :to="{ name: 'login' }"
               >
-                {{ $t('landing.nav.login') }} →
+                <span>{{ $t('landing.nav.login') }}</span>
+                <feather-icon
+                  :icon="isRtl ? 'ArrowLeftIcon' : 'ArrowRightIcon'"
+                  size="16"
+                  :class="isRtl ? 'mr-50' : 'ml-50'"
+                />
               </b-button>
             </div>
           </b-col>
@@ -624,7 +921,10 @@
           >
             <div class="role-card h-100 p-4 bg-white rounded-lg shadow-sm border d-flex flex-column">
               <div class="role-card-header d-flex align-items-center mb-3">
-                <div class="role-icon bg-success text-white p-3 rounded mr-3 ml-3">
+                <div
+                  class="role-icon bg-success text-white p-3 rounded"
+                  :class="isRtl ? 'ml-3' : 'mr-3'"
+                >
                   <feather-icon
                     icon="UserCheckIcon"
                     size="24"
@@ -634,7 +934,7 @@
                   <h4 class="role-title font-weight-bolder mb-0 text-success">
                     {{ $t('landing.roles.assistantTitle') }}
                   </h4>
-                  <span class="text-muted small">Reception & Queue</span>
+                  <span class="text-muted small">{{ isRtl ? 'الاستقبال وإدارة الطابور' : 'Reception & Queue' }}</span>
                 </div>
               </div>
               <p class="role-desc text-muted mb-3">
@@ -646,7 +946,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.assistantPoint1') }}</span>
                 </li>
@@ -654,7 +955,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.assistantPoint2') }}</span>
                 </li>
@@ -662,7 +964,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.assistantPoint3') }}</span>
                 </li>
@@ -670,7 +973,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.assistantPoint4') }}</span>
                 </li>
@@ -679,10 +983,15 @@
               <b-button
                 variant="outline-success"
                 block
-                class="font-weight-bold"
+                class="font-weight-bold d-flex align-items-center justify-content-center"
                 :to="{ name: 'login' }"
               >
-                {{ $t('landing.nav.login') }} →
+                <span>{{ $t('landing.nav.login') }}</span>
+                <feather-icon
+                  :icon="isRtl ? 'ArrowLeftIcon' : 'ArrowRightIcon'"
+                  size="16"
+                  :class="isRtl ? 'mr-50' : 'ml-50'"
+                />
               </b-button>
             </div>
           </b-col>
@@ -694,7 +1003,10 @@
           >
             <div class="role-card h-100 p-4 bg-white rounded-lg shadow-sm border d-flex flex-column">
               <div class="role-card-header d-flex align-items-center mb-3">
-                <div class="role-icon bg-secondary text-white p-3 rounded mr-3 ml-3">
+                <div
+                  class="role-icon bg-secondary text-white p-3 rounded"
+                  :class="isRtl ? 'ml-3' : 'mr-3'"
+                >
                   <feather-icon
                     icon="SlidersIcon"
                     size="24"
@@ -704,7 +1016,7 @@
                   <h4 class="role-title font-weight-bolder mb-0 text-secondary">
                     {{ $t('landing.roles.adminTitle') }}
                   </h4>
-                  <span class="text-muted small">Administration & Growth</span>
+                  <span class="text-muted small">{{ isRtl ? 'الإدارة والتحكم الشامل' : 'Administration & Growth' }}</span>
                 </div>
               </div>
               <p class="role-desc text-muted mb-3">
@@ -716,7 +1028,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.adminPoint1') }}</span>
                 </li>
@@ -724,7 +1037,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.adminPoint2') }}</span>
                 </li>
@@ -732,7 +1046,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.adminPoint3') }}</span>
                 </li>
@@ -740,7 +1055,8 @@
                   <feather-icon
                     icon="CheckIcon"
                     size="18"
-                    class="text-success mr-2 ml-2 mt-25 flex-shrink-0"
+                    class="text-success mt-25 flex-shrink-0"
+                    :class="isRtl ? 'ml-2' : 'mr-2'"
                   />
                   <span class="small font-weight-600">{{ $t('landing.roles.adminPoint4') }}</span>
                 </li>
@@ -749,10 +1065,15 @@
               <b-button
                 variant="outline-secondary"
                 block
-                class="font-weight-bold"
+                class="font-weight-bold d-flex align-items-center justify-content-center"
                 :to="{ name: 'login' }"
               >
-                {{ $t('landing.nav.login') }} →
+                <span>{{ $t('landing.nav.login') }}</span>
+                <feather-icon
+                  :icon="isRtl ? 'ArrowLeftIcon' : 'ArrowRightIcon'"
+                  size="16"
+                  :class="isRtl ? 'mr-50' : 'ml-50'"
+                />
               </b-button>
             </div>
           </b-col>
@@ -806,7 +1127,8 @@
                 <feather-icon
                   icon="SendIcon"
                   size="20"
-                  class="text-primary mr-2 ml-2 flex-shrink-0"
+                  class="text-primary flex-shrink-0"
+                  :class="isRtl ? 'ml-2' : 'mr-2'"
                 />
                 <a
                   href="mailto:info.tafratech@gmail.com"
@@ -821,11 +1143,12 @@
                 variant="primary"
                 size="lg"
                 href="mailto:info.tafratech@gmail.com"
-                class="font-weight-bold px-4 py-2 shadow-sm"
+                class="font-weight-bold px-4 py-2 shadow-sm d-inline-flex align-items-center justify-content-center mx-auto"
               >
                 <feather-icon
                   icon="MailIcon"
-                  class="mr-50 ml-50"
+                  size="18"
+                  :class="isRtl ? 'ml-50' : 'mr-50'"
                 />
                 <span>{{ $t('landing.contact.sendEmail') }}</span>
               </b-button>
@@ -856,13 +1179,13 @@
           <b-button
             variant="light"
             size="lg"
-            class="btn-cta-white font-weight-bolder text-primary px-4 py-2 shadow-lg"
+            class="btn-cta-white font-weight-bolder text-primary px-4 py-2 shadow-lg d-inline-flex align-items-center justify-content-center mx-auto"
             :to="{ name: isLoggedIn ? dashboardRouteName : 'login' }"
           >
             <feather-icon
               :icon="isLoggedIn ? 'LayoutIcon' : 'LogInIcon'"
               size="20"
-              class="mr-50 ml-50"
+              :class="isRtl ? 'ml-50' : 'mr-50'"
             />
             <span>{{ isLoggedIn ? $t('landing.nav.dashboard') : $t('landing.cta.button') }}</span>
           </b-button>
@@ -872,18 +1195,22 @@
 
     <!-- Footer -->
     <footer class="landing-footer py-4 bg-dark text-white border-top border-secondary">
-      <div
-        class="container d-flex flex-column flex-md-row align-items-center justify-content-between text-center text-md-left"
-        :class="{ 'text-md-right': isRtl }"
-      >
-        <div class="mb-3 mb-md-0">
-          <div class="d-flex align-items-center justify-content-center justify-content-md-start mb-1">
+      <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between text-center">
+        <div
+          class="mb-3 mb-md-0"
+          :class="isRtl ? 'text-md-right' : 'text-md-left'"
+        >
+          <div
+            class="d-flex align-items-center justify-content-center mb-1"
+            :class="isRtl ? 'justify-content-md-start' : 'justify-content-md-start'"
+          >
             <feather-icon
               icon="ActivityIcon"
               size="20"
-              class="text-primary mr-1 ml-1"
+              class="text-primary"
+              :class="isRtl ? 'ml-1' : 'mr-1'"
             />
-            <span class="font-weight-bold text-white">{{ $t('clinic.brandText') || 'Clinic System' }}</span>
+            <span class="font-weight-bold text-white">{{ $t('clinic.brandText') || ($i18n.locale === 'ar' ? 'نظام العيادة' : 'Clinic System') }}</span>
           </div>
           <p class="text-muted small mb-1">
             {{ $t('landing.footer.tagline') }}
@@ -892,7 +1219,8 @@
             <feather-icon
               icon="MailIcon"
               size="14"
-              class="mr-50 ml-50 text-primary"
+              class="text-primary"
+              :class="isRtl ? 'ml-50' : 'mr-50'"
             />
             <a
               href="mailto:info.tafratech@gmail.com"
@@ -909,6 +1237,12 @@
           >
             {{ $t('landing.nav.login') }}
           </router-link>
+          <a
+            href="#video-guide"
+            class="text-muted small mx-2 text-decoration-none"
+          >
+            {{ $t('landing.nav.video') }}
+          </a>
           <a
             href="#features"
             class="text-muted small mx-2 text-decoration-none"
@@ -946,6 +1280,7 @@ import {
   BBadge,
 } from 'bootstrap-vue'
 import { mapGetters } from 'vuex'
+import SystemVideoWalkthrough from '@/components/SystemVideoWalkthrough.vue'
 
 export default {
   name: 'LandingPage',
@@ -954,11 +1289,13 @@ export default {
     BCol,
     BButton,
     BBadge,
+    SystemVideoWalkthrough,
   },
   computed: {
     ...mapGetters('language', ['currentLocale']),
     isRtl() {
-      return this.currentLocale === 'ar' || this.$i18n?.locale === 'ar'
+      const activeLocale = this.currentLocale || this.$i18n?.locale || localStorage.getItem('locale') || 'en'
+      return activeLocale === 'ar'
     },
     isLoggedIn() {
       return Boolean(this.$store.getters['auth/isLoggedIn'] || localStorage.getItem('token'))
@@ -978,6 +1315,23 @@ export default {
       return 'dashboard'
     },
   },
+  watch: {
+    isRtl: {
+      immediate: true,
+      handler(val) {
+        if (typeof document !== 'undefined') {
+          document.documentElement.setAttribute('dir', val ? 'rtl' : 'ltr')
+          document.documentElement.setAttribute('lang', val ? 'ar' : 'en')
+        }
+      },
+    },
+  },
+  mounted() {
+    const locale = this.currentLocale || this.$i18n?.locale || localStorage.getItem('locale') || 'en'
+    const isRtl = locale === 'ar'
+    document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr')
+    document.documentElement.setAttribute('lang', locale)
+  },
 }
 </script>
 
@@ -987,6 +1341,64 @@ export default {
   color: #2c3e50;
   background-color: #f8f9fa;
   min-height: 100vh;
+
+  &[dir='rtl'] {
+    direction: rtl;
+    text-align: right;
+
+    .hero-content-col {
+      text-align: right;
+    }
+
+    .hero-cta-buttons,
+    .hero-trust-items {
+      justify-content: flex-start;
+    }
+
+    .feature-card,
+    .role-card,
+    .chapter-card {
+      text-align: right;
+    }
+
+    .hero-title,
+    .section-title,
+    .feature-card-title,
+    .role-title {
+      letter-spacing: normal !important;
+    }
+  }
+
+  &[dir='ltr'] {
+    direction: ltr;
+    text-align: left;
+
+    .hero-content-col {
+      text-align: left;
+    }
+
+    .hero-cta-buttons,
+    .hero-trust-items {
+      justify-content: flex-start;
+    }
+
+    .feature-card,
+    .role-card,
+    .chapter-card {
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 991.98px) {
+    .hero-content-col {
+      text-align: center !important;
+    }
+
+    .hero-cta-buttons,
+    .hero-trust-items {
+      justify-content: center !important;
+    }
+  }
 }
 
 /* Navbar */
@@ -1009,6 +1421,7 @@ export default {
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(115, 103, 240, 0.35);
+  flex-shrink: 0;
 }
 
 .brand-title {
@@ -1077,18 +1490,17 @@ export default {
 }
 
 .hero-title {
-  font-size: 2.3rem;
-  line-height: 1.25;
-  letter-spacing: -0.5px;
+  font-size: 2.2rem;
+  line-height: 1.35;
 
   @media (min-width: 992px) {
-    font-size: 3rem;
+    font-size: 2.75rem;
   }
 }
 
 .hero-subtitle {
-  font-size: 1.1rem;
-  line-height: 1.6;
+  font-size: 1.08rem;
+  line-height: 1.7;
   max-width: 580px;
 }
 
@@ -1152,6 +1564,63 @@ export default {
   }
 }
 
+/* Video Section */
+.video-guide-section {
+  background: linear-gradient(180deg, #f8f9fa 0%, #edf0f5 100%);
+}
+
+.video-showcase-card {
+  border-radius: 16px;
+  border: 1px solid #d8d6de;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.video-card-topbar {
+  background-color: #1e1e2d !important;
+  border-bottom: 1px solid #2d2d3f;
+}
+
+.badge-light-danger {
+  background-color: rgba(234, 84, 85, 0.15);
+  color: #ea5455;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #ea5455;
+    color: #fff;
+  }
+}
+
+.video-frame-wrapper {
+  background-color: #000;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.chapter-card {
+  border: 1px solid #ebe9f1;
+  transition: all 0.25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06) !important;
+  }
+}
+
+.chapter-icon-box {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 /* Features */
 .max-w-700 {
   max-width: 700px;
@@ -1193,6 +1662,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .font-weight-600 {

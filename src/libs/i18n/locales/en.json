@@ -17,6 +17,7 @@
   "landing": {
     "nav": {
       "home": "Home",
+      "video": "Video Guide",
       "features": "Features",
       "roles": "Roles & Workflows",
       "contact": "Contact & Support",
@@ -42,6 +43,27 @@
       "bilingualLabel": "Full RTL & LTR Support",
       "security": "100% Secure",
       "securityLabel": "Sanctum Protected"
+    },
+    "video": {
+      "badge": "In-System Interactive Tour",
+      "title": "See How the Doctor Portal Works in Action",
+      "subtitle": "Explore an interactive live walkthrough showcasing the 7 core modules from the doctor's perspective inside the system.",
+      "playerTitle": "Doctor System Live Interface Tour",
+      "tipTitle": "The 7 Core Modules Covered in the Live Walkthrough",
+      "ch1Title": "1. Doctor Dashboard",
+      "ch1Desc": "Instant appointment metrics, pending waiting room counter, and today schedule.",
+      "ch2Title": "2. Clients & Patients",
+      "ch2Desc": "Digital medical records, quick search, vital signs, and past visit history.",
+      "ch3Title": "3. Reservations",
+      "ch3Desc": "Appointment calendar, status tracking (confirmed/waiting/completed), and follow-ups.",
+      "ch4Title": "4. Waiting Queue",
+      "ch4Desc": "Live waiting room queue board, sequential tokens (#12), and room entry calls.",
+      "ch5Title": "5. Financials",
+      "ch5Desc": "Visit invoice generation (#INV), thermal receipt printing, and daily cash closing.",
+      "ch6Title": "6. Transactions",
+      "ch6Desc": "Detailed payments ledger, receipt audit trail, and payment method filters.",
+      "ch7Title": "7. Reports",
+      "ch7Desc": "In-depth clinic performance summaries, patient volume analytics, and PDF export."
     },
     "features": {
       "title": "Comprehensive Healthcare Solutions",
@@ -1088,5 +1110,107 @@
     "passwordResetSuccess": "Password reset successfully. Redirecting to login...",
     "resetLinkSent": "A password reset link has been sent to your email. If you don't see it, please check your spam or junk folder.",
     "backToLogin": "Back to Login"
+  },
+  "onboarding": {
+    "guideTitle": "Doctor Onboarding & System Guide",
+    "guideSubtitle": "Step-by-step interactive manual covering actual clinic features, workflows, and tools.",
+    "stepOf": "Step {current} of {total}",
+    "progress": "Guide Progress",
+    "previous": "Previous Step",
+    "next": "Next Step",
+    "skip": "Skip Guide",
+    "finish": "Start Using System",
+    "reopenTip": "You can reopen this guide anytime from the sidebar: Help / System Guide.",
+    "dontShowAgain": "Don't show this guide on login automatically",
+    "bannerTitle": "Welcome Doctor! Explore Your New Clinic System",
+    "bannerText": "Take a 3-minute interactive tour to explore patient management, scheduling, live queue, clinical exams, and financials.",
+    "startTour": "Start System Tour",
+    "dismiss": "Dismiss",
+    "steps": {
+      "dashboard": {
+        "title": "Dashboard",
+        "badge": "Live Metrics",
+        "desc": "Your daily command center. Monitor appointments, pending patients in the waiting room, and completed consultations in real time.",
+        "p1": "Key Statistics: Live counters for Total Appointments, Waiting Queue, and Completed Consultations.",
+        "p2": "Today's Schedule: Interactive list of scheduled patients with quick actions to start consultations."
+      },
+      "clients": {
+        "title": "Clients & Patients",
+        "badge": "Patient Records",
+        "desc": "Complete digital database of patients with fast search by name, phone number, or national ID.",
+        "p1": "Patient Profiles: View medical history, vital statistics (weight, height, BMI, blood pressure), and past visits.",
+        "p2": "Add New Client: Register new patients with WhatsApp numbers for automated appointment reminders."
+      },
+      "reservations": {
+        "title": "Reservations",
+        "badge": "Appointments",
+        "desc": "Comprehensive calendar to track daily, weekly, and upcoming bookings with status filters.",
+        "p1": "Status Tracking: Monitor statuses including Pending, Confirmed, Waiting, Completed, and Cancelled.",
+        "p2": "Follow-Up Scheduling: Easily book future follow-up consultations directly from reservation details."
+      },
+      "online_booking": {
+        "title": "Online Booking",
+        "badge": "Web Portal",
+        "desc": "Dedicated public booking URL for patients to reserve available appointment slots online.",
+        "p1": "Custom Link: Personalized clinic booking link that patients can open from mobile or WhatsApp.",
+        "p2": "Automated Sync: Online reservations flow directly into the doctor's appointment calendar."
+      },
+      "waiting_queue": {
+        "title": "Waiting Queue",
+        "badge": "Live Queue",
+        "desc": "Real-time queue board of patients currently present in the clinic waiting area.",
+        "p1": "Turn Tokens: Sequential token numbers (#1, #2, #12) assigned upon front desk check-in.",
+        "p2": "Room Calling: One-click action to call the next patient into the examination room."
+      },
+      "diagnoses": {
+        "title": "Diagnoses & Anatomy",
+        "badge": "Clinical Exam",
+        "desc": "Clinical diagnosis catalog and interactive medical body anatomy mapping.",
+        "p1": "Anatomy Chart: Pinpoint pain spots and examination notes on the interactive body map.",
+        "p2": "Diagnosis Library: Fast selection of pre-saved diagnoses with Arabic/English descriptions."
+      },
+      "services": {
+        "title": "Additional Services",
+        "badge": "Clinic Catalog",
+        "desc": "Manage medical procedures, tests, and additional clinical service charges.",
+        "p1": "Service Pricing: Define custom prices, quantities, and optional invoice linkages.",
+        "p2": "Easy Addition: Add extra procedures to existing reservations during or after consultations."
+      },
+      "financials": {
+        "title": "Financials",
+        "badge": "Invoicing & Revenue",
+        "desc": "Track consultation fees, medical service charges, and daily clinic financial balances.",
+        "p1": "Visit Invoices: Instant invoice creation (#INV) with thermal receipt printing and payment status.",
+        "p2": "Daily Cash Closing: Real-time calculation of total revenue, expenses, and net cash balance."
+      },
+      "transactions": {
+        "title": "Transactions & Payments",
+        "badge": "Payments Log",
+        "desc": "Detailed ledger of all financial transactions, payments, deposits, and payment methods.",
+        "p1": "Payment Methods: Filter transactions by Cash, Credit Card, Bank Transfer, or Insurance.",
+        "p2": "Audit Trail: Complete transaction log linked to client files and specific reservation invoices."
+      },
+      "assistants": {
+        "title": "Assistants",
+        "badge": "Front Desk Staff",
+        "desc": "Manage clinic receptionists and assistants with custom permissions.",
+        "p1": "Staff Accounts: Create accounts for front desk staff to manage check-in and queue.",
+        "p2": "Call Bell Link: Real-time bell chime and notifications sent directly to assistant screens."
+      },
+      "sub_doctors": {
+        "title": "Sub-Doctors",
+        "badge": "Medical Team",
+        "desc": "Add and coordinate partner doctors and specialized clinic sub-physicians.",
+        "p1": "Doctor Delegation: Assign specific reservations, clients, and working schedules.",
+        "p2": "Permission Control: Define individual diagnostic and financial viewing rights."
+      },
+      "reports": {
+        "title": "Reports",
+        "badge": "Analytics & PDF",
+        "desc": "Generate comprehensive analytical reports for clinic revenue, patient volume, and appointment performance.",
+        "p1": "Date Filtering: Filter reports by custom date ranges, monthly periods, or specific services.",
+        "p2": "PDF Export: Export formatted financial summaries and revenue statistics with a single click."
+      }
+    }
   }
 }

@@ -2,86 +2,131 @@
   <div
     class="help-page"
     :dir="pageDirection"
-    :class="isRTL ? 'text-right' : 'text-left'"
   >
-    <b-row>
-      <b-col cols="12">
-        <b-card class="mb-2">
-          <div class="d-flex align-items-center justify-content-between flex-wrap">
-            <div>
-              <!-- <h4 class="mb-50">{{ pageTitle }}</h4> -->
-              <p class="text-muted mb-0">
-                {{ pageIntro }}
-              </p>
-            </div>
-            <b-badge
-              variant="light-primary"
-              class="mt-1 mt-md-0"
-            >
-              {{ roleLabel }}
-            </b-badge>
-          </div>
-        </b-card>
-      </b-col>
-    </b-row>
-
-    <b-row>
-      <b-col
-        v-for="section in sections"
-        :key="section.title"
-        cols="12"
-        md="6"
-        xl="4"
-        class="mb-2"
-      >
-        <b-card
-          no-body
-          class="h-100"
+    <!-- Top View Mode Tabs (Interactive Guide vs Quick Cards) -->
+    <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+      <b-button-group size="sm">
+        <b-button
+          :variant="activeTab === 'guide' ? 'primary' : 'outline-primary'"
+          class="font-weight-bold px-2"
+          @click="activeTab = 'guide'"
         >
-          <b-card-body>
-            <div class="d-flex align-items-center mb-1">
-              <feather-icon
-                :icon="section.icon"
-                size="20"
-                class="text-primary"
-                :class="isRTL ? 'ml-75' : 'mr-75'"
-              />
-              <h5 class="mb-0">
-                {{ section.title }}
-              </h5>
-            </div>
-            <ol
-              class="help-steps mb-0"
-              :class="isRTL ? 'pr-1' : 'pl-1'"
-            >
-              <li
-                v-for="(step, index) in section.steps"
-                :key="step"
-                class="help-step-item mb-50"
-              >
-                <!-- <span class="help-step-number">{{ index + 1 }}.</span> -->
-                <span class="help-step-text">{{ step }}</span>
-              </li>
-            </ol>
-          </b-card-body>
-        </b-card>
-      </b-col>
-    </b-row>
+          <feather-icon
+            icon="CompassIcon"
+            size="14"
+            :class="isRTL ? 'ml-50' : 'mr-50'"
+          />
+          <span>{{ isRTL ? 'دليل وتهيئة الطبيب التفاعلي' : 'Interactive Onboarding Guide' }}</span>
+        </b-button>
+        <b-button
+          :variant="activeTab === 'cards' ? 'primary' : 'outline-primary'"
+          class="font-weight-bold px-2"
+          @click="activeTab = 'cards'"
+        >
+          <feather-icon
+            icon="GridIcon"
+            size="14"
+            :class="isRTL ? 'ml-50' : 'mr-50'"
+          />
+          <span>{{ isRTL ? 'بطاقات المساعدة السريعة' : 'Quick Reference Cards' }}</span>
+        </b-button>
+      </b-button-group>
 
-    <b-card>
-      <h5 class="mb-1">
-        {{ content.quickTips }}
-      </h5>
-      <b-alert
-        v-for="tip in tips"
-        :key="tip"
-        variant="light-info"
-        show
-        class="mb-1"
+      <b-badge
+        variant="light-primary"
+        class="font-weight-bold p-1 mt-1 mt-sm-0"
       >
-        {{ tip }}
-      </b-alert>
-    </b-card>
+        {{ roleLabel }}
+      </b-badge>
+    </div>
+
+    <!-- TAB 1: Interactive Onboarding & System Guide Component -->
+    <div
+      v-if="activeTab === 'guide'"
+      class="onboarding-guide-tab"
+    >
+      <doctor-onboarding-guide />
+    </div>
+
+    <!-- TAB 2: Quick Reference Cards View -->
+    <div
+      v-else
+      class="quick-cards-tab"
+    >
+      <b-row>
+        <b-col cols="12">
+          <b-card class="mb-2 shadow-sm border">
+            <div class="d-flex align-items-center justify-content-between flex-wrap">
+              <div>
+                <h5 class="mb-50 font-weight-bolder text-dark">
+                  {{ pageTitle }}
+                </h5>
+                <p class="text-muted mb-0 small">
+                  {{ pageIntro }}
+                </p>
+              </div>
+            </div>
+          </b-card>
+        </b-col>
+      </b-row>
+
+      <b-row>
+        <b-col
+          v-for="section in sections"
+          :key="section.title"
+          cols="12"
+          md="6"
+          xl="4"
+          class="mb-2"
+        >
+          <b-card
+            no-body
+            class="h-100 shadow-sm border"
+          >
+            <b-card-body>
+              <div class="d-flex align-items-center mb-1">
+                <feather-icon
+                  :icon="section.icon"
+                  size="20"
+                  class="text-primary"
+                  :class="isRTL ? 'ml-75' : 'mr-75'"
+                />
+                <h5 class="mb-0 font-weight-bolder text-dark">
+                  {{ section.title }}
+                </h5>
+              </div>
+              <ol
+                class="help-steps mb-0 extra-small"
+                :class="isRTL ? 'pr-1' : 'pl-1'"
+              >
+                <li
+                  v-for="step in section.steps"
+                  :key="step"
+                  class="help-step-item mb-50"
+                >
+                  <span class="help-step-text">{{ step }}</span>
+                </li>
+              </ol>
+            </b-card-body>
+          </b-card>
+        </b-col>
+      </b-row>
+
+      <b-card class="shadow-sm border">
+        <h5 class="mb-1 font-weight-bolder text-dark">
+          {{ content.quickTips }}
+        </h5>
+        <b-alert
+          v-for="tip in tips"
+          :key="tip"
+          variant="light-info"
+          show
+          class="mb-1 small font-weight-bold"
+        >
+          💡 {{ tip }}
+        </b-alert>
+      </b-card>
+    </div>
   </div>
 </template>
 
@@ -93,7 +138,10 @@ import {
   BCardBody,
   BCol,
   BRow,
+  BButton,
+  BButtonGroup,
 } from 'bootstrap-vue'
+import DoctorOnboardingGuide from '@/views/doctor/DoctorOnboardingGuide.vue'
 
 const helpContent = {
   ar: {
@@ -103,7 +151,7 @@ const helpContent = {
       assistant: 'المساعدة',
       'sub-doctor': 'الدكتور المساعد',
     },
-    titlePrefix: 'مساعدة',
+    titlePrefix: 'دليل مساعدة',
     intros: {
       doctor: 'دليل سريع لإدارة العيادة، الحجوزات، الفريق، والتقارير.',
       assistant: 'دليل سريع للمهام اليومية الخاصة بالمساعدة داخل العيادة.',
@@ -246,7 +294,7 @@ const helpContent = {
       assistant: 'Assistant',
       'sub-doctor': 'Sub Doctor',
     },
-    titlePrefix: 'Help for',
+    titlePrefix: 'Help Guide for',
     intros: {
       doctor: 'A quick guide for managing the clinic, reservations, team, and reports.',
       assistant: 'A quick guide for the assistant daily tasks inside the clinic.',
@@ -392,6 +440,14 @@ export default {
     BCardBody,
     BCol,
     BRow,
+    BButton,
+    BButtonGroup,
+    DoctorOnboardingGuide,
+  },
+  data() {
+    return {
+      activeTab: 'guide',
+    }
   },
   computed: {
     user() {
@@ -421,9 +477,7 @@ export default {
       return this.content.roles[this.roleKey]
     },
     pageTitle() {
-      return this.localeKey === 'ar'
-        ? `${this.content.titlePrefix} ${this.roleLabel}`
-        : `${this.content.titlePrefix} ${this.roleLabel}`
+      return `${this.content.titlePrefix} ${this.roleLabel}`
     },
     pageIntro() {
       return this.content.intros[this.roleKey]
@@ -446,49 +500,21 @@ export default {
 </script>
 
 <style scoped>
+.extra-small {
+  font-size: 0.78rem;
+}
+
 .help-page[dir='rtl'] .help-steps {
-  padding-right: 0;
+  padding-right: 1rem;
   padding-left: 0;
-  list-style: none;
-}
-
-.help-page[dir='rtl'] .help-step-item {
-  direction: ltr;
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-  text-align: right;
-}
-
-.help-page[dir='rtl'] .help-step-number {
-  flex: 0 0 auto;
-  margin-left: 0.5rem;
-}
-
-.help-page[dir='rtl'] .help-step-text {
-  direction: rtl;
-  text-align: right;
 }
 
 .help-page[dir='ltr'] .help-steps {
   padding-left: 1rem;
   padding-right: 0;
-  list-style: none;
 }
 
-.help-page[dir='ltr'] .help-step-item {
-  direction: ltr;
-  display: flex;
-  justify-content: flex-start;
-  text-align: left;
-}
-
-.help-page[dir='ltr'] .help-step-number {
-  flex: 0 0 auto;
-  margin-right: 0.5rem;
-}
-
-.help-step-text {
-  min-width: 0;
+.help-step-item {
+  margin-bottom: 0.4rem;
 }
 </style>
