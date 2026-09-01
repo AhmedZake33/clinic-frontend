@@ -233,7 +233,7 @@ export default {
   data() {
     return {
       bookingSlug: '',
-      bookingUrl: '',
+      serverBaseUrl: '',
       clinicName: '',
       clinicHeader: '',
       clinicPhone: '',
@@ -250,6 +250,21 @@ export default {
     },
     isArabic() {
       return this.locale === 'ar'
+    },
+    baseUrl() {
+      if (this.serverBaseUrl) {
+        return this.serverBaseUrl
+      }
+      if (typeof window !== 'undefined' && window.location) {
+        return `${window.location.origin}/`
+      }
+      return '/'
+    },
+    bookingUrl() {
+      const slug = (this.bookingSlug || '').trim()
+      if (!slug) return ''
+      const base = this.baseUrl.endsWith('/') ? this.baseUrl : `${this.baseUrl}/`
+      return `${base}${slug}`
     },
     previewClinicName() {
       return this.clinicName || this.t('defaultClinicName')
@@ -280,14 +295,26 @@ export default {
       return translations[this.locale]?.[key] || translations.en[key] || key
     },
     async fetchSettings() {
-      const { data } = await onlineBooking.getSettings()
-      this.bookingSlug = data.booking_slug || ''
-      this.bookingUrl = data.booking_url || ''
-      this.clinicName = data.clinic_name || ''
-      this.clinicHeader = data.clinic_header || ''
-      this.clinicPhone = data.clinic_phone || ''
-      this.clinicPrimaryColor = data.clinic_primary_color || '#7367f0'
-      this.clinicPosition = data.clinic_position || 'center'
+      try {
+        const { data } = await onlineBooking.getSettings()
+        this.bookingSlug = data.booking_slug || ''
+        this.clinicName = data.clinic_name || ''
+        this.clinicHeader = data.clinic_header || ''
+        this.clinicPhone = data.clinic_phone || ''
+        this.clinicPrimaryColor = data.clinic_primary_color || '#7367f0'
+        this.clinicPosition = data.clinic_position || 'center'
+
+        if (data.booking_url && data.booking_slug) {
+          const idx = data.booking_url.lastIndexOf(data.booking_slug)
+          if (idx !== -1) {
+            this.serverBaseUrl = data.booking_url.substring(0, idx)
+          }
+        } else if (data.booking_url) {
+          this.serverBaseUrl = data.booking_url.endsWith('/') ? data.booking_url : `${data.booking_url}/`
+        }
+      } catch (err) {
+        console.error('Failed to load online booking settings', err)
+      }
     },
     async save() {
       this.saving = true
@@ -302,13 +329,19 @@ export default {
           clinic_primary_color: this.safeColor,
           clinic_position: this.clinicPosition,
         })
-        this.bookingSlug = data.booking_slug
-        this.bookingUrl = data.booking_url
+        this.bookingSlug = data.booking_slug || this.bookingSlug
         this.clinicName = data.clinic_name || ''
         this.clinicHeader = data.clinic_header || ''
         this.clinicPhone = data.clinic_phone || ''
         this.clinicPrimaryColor = data.clinic_primary_color || '#7367f0'
         this.clinicPosition = data.clinic_position || 'center'
+
+        if (data.booking_url && data.booking_slug) {
+          const idx = data.booking_url.lastIndexOf(data.booking_slug)
+          if (idx !== -1) {
+            this.serverBaseUrl = data.booking_url.substring(0, idx)
+          }
+        }
         this.success = this.t('saved')
       } catch (error) {
         const errors = error.response?.data?.errors
@@ -318,6 +351,7 @@ export default {
       }
     },
     async copyUrl() {
+      if (!this.bookingUrl) return
       await navigator.clipboard.writeText(this.bookingUrl)
       this.success = this.t('copied')
     },
@@ -328,20 +362,14 @@ export default {
 <style lang="scss" scoped>
 .online-booking-preview__card {
   border: 2px solid #7367f0;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  background: #fafafa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: #fff;
 }
 
 .online-booking-color-input {
-  max-width: 64px;
-  padding: 0.25rem;
-}
-
-.online-booking-preview__phone {
-  direction: ltr;
-  unicode-bidi: plaintext;
-  font-weight: 600;
+  max-width: 50px;
+  padding: 2px;
 }
 
 .white-space-pre-line {
