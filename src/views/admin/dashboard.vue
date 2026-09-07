@@ -281,12 +281,77 @@
               :label="$t('clinic.password')"
               label-for="password"
             >
-              <b-form-input
+              <div class="d-flex justify-content-between align-items-center mb-50">
+                <span />
+                <b-button
+                  size="xs"
+                  variant="flat-primary"
+                  class="p-0 font-weight-bold"
+                  type="button"
+                  @click="generateDoctorPassword"
+                >
+                  <feather-icon
+                    icon="KeyIcon"
+                    size="12"
+                    class="mr-25 ml-25"
+                  />
+                  {{ $t('auth.generateStrongPassword') }}
+                </b-button>
+              </div>
+              <app-password-input
                 id="password"
                 v-model="form.password"
-                type="password"
                 required
               />
+              <small class="text-muted d-block mt-50">
+                {{ $t('auth.strongPasswordHelp') }}
+              </small>
+
+              <!-- Real-time Strength Meter -->
+              <div
+                v-if="form.password"
+                class="mt-1 p-1 bg-light rounded"
+              >
+                <div class="d-flex justify-content-between align-items-center mb-50 font-small-2">
+                  <span>{{ $t('auth.passwordStrength') }}:</span>
+                  <span
+                    class="font-weight-bold"
+                    :class="{
+                      'text-danger': passwordStats.strengthLabel === 'weak',
+                      'text-warning': passwordStats.strengthLabel === 'medium',
+                      'text-success': passwordStats.strengthLabel === 'strong'
+                    }"
+                  >
+                    {{ $t(`auth.${passwordStats.strengthLabel}`) }}
+                  </span>
+                </div>
+                <div class="d-flex flex-wrap font-small-2">
+                  <span
+                    class="mr-1 ml-1 mb-25"
+                    :class="passwordStats.hasMinLength ? 'text-success font-weight-bold' : 'text-muted'"
+                  >
+                    {{ passwordStats.hasMinLength ? '✓' : '○' }} 8+ Chars
+                  </span>
+                  <span
+                    class="mr-1 ml-1 mb-25"
+                    :class="(passwordStats.hasUpper && passwordStats.hasLower) ? 'text-success font-weight-bold' : 'text-muted'"
+                  >
+                    {{ (passwordStats.hasUpper && passwordStats.hasLower) ? '✓' : '○' }} A-Z & a-z
+                  </span>
+                  <span
+                    class="mr-1 ml-1 mb-25"
+                    :class="passwordStats.hasNumber ? 'text-success font-weight-bold' : 'text-muted'"
+                  >
+                    {{ passwordStats.hasNumber ? '✓' : '○' }} 0-9
+                  </span>
+                  <span
+                    class="mr-1 ml-1 mb-25"
+                    :class="passwordStats.hasSymbol ? 'text-success font-weight-bold' : 'text-muted'"
+                  >
+                    {{ passwordStats.hasSymbol ? '✓' : '○' }} Special Symbol (@$!%*#?&)
+                  </span>
+                </div>
+              </div>
             </b-form-group>
           </b-col>
           <b-col
@@ -297,12 +362,95 @@
               :label="$t('validation.confirmPassword')"
               label-for="password_confirmation"
             >
-              <b-form-input
+              <app-password-input
                 id="password_confirmation"
                 v-model="form.password_confirmation"
-                type="password"
                 required
               />
+            </b-form-group>
+          </b-col>
+        </b-row>
+
+        <b-row v-if="isEditing">
+          <b-col
+            cols="12"
+            md="6"
+          >
+            <b-form-group
+              :label="$t('assistantMgmt.newPassword')"
+              label-for="edit-password"
+            >
+              <div class="d-flex justify-content-between align-items-center mb-50">
+                <span />
+                <b-button
+                  size="xs"
+                  variant="flat-primary"
+                  class="p-0 font-weight-bold"
+                  type="button"
+                  @click="generateDoctorPassword"
+                >
+                  <feather-icon
+                    icon="KeyIcon"
+                    size="12"
+                    class="mr-25 ml-25"
+                  />
+                  {{ $t('auth.generateStrongPassword') }}
+                </b-button>
+              </div>
+              <app-password-input
+                id="edit-password"
+                v-model="form.password"
+                :placeholder="$t('assistantMgmt.leaveBlank')"
+              />
+              <small class="text-muted d-block mt-50">
+                {{ $t('auth.strongPasswordHelp') }}
+              </small>
+
+              <!-- Real-time Strength Meter -->
+              <div
+                v-if="form.password"
+                class="mt-1 p-1 bg-light rounded"
+              >
+                <div class="d-flex justify-content-between align-items-center mb-50 font-small-2">
+                  <span>{{ $t('auth.passwordStrength') }}:</span>
+                  <span
+                    class="font-weight-bold"
+                    :class="{
+                      'text-danger': passwordStats.strengthLabel === 'weak',
+                      'text-warning': passwordStats.strengthLabel === 'medium',
+                      'text-success': passwordStats.strengthLabel === 'strong'
+                    }"
+                  >
+                    {{ $t(`auth.${passwordStats.strengthLabel}`) }}
+                  </span>
+                </div>
+                <div class="d-flex flex-wrap font-small-2">
+                  <span
+                    class="mr-1 ml-1 mb-25"
+                    :class="passwordStats.hasMinLength ? 'text-success font-weight-bold' : 'text-muted'"
+                  >
+                    {{ passwordStats.hasMinLength ? '✓' : '○' }} 8+ Chars
+                  </span>
+                  <span
+                    class="mr-1 ml-1 mb-25"
+                    :class="(passwordStats.hasUpper && passwordStats.hasLower) ? 'text-success font-weight-bold' : 'text-muted'"
+                  >
+                    {{ (passwordStats.hasUpper && passwordStats.hasLower) ? '✓' : '○' }} A-Z & a-z
+                  </span>
+                  <span
+                    class="mr-1 ml-1 mb-25"
+                    :class="passwordStats.hasNumber ? 'text-success font-weight-bold' : 'text-muted'"
+                  >
+                    {{ passwordStats.hasNumber ? '✓' : '○' }} 0-9
+                  </span>
+                  <span
+                    class="mr-1 ml-1 mb-25"
+                    :class="passwordStats.hasSymbol ? 'text-success font-weight-bold' : 'text-muted'"
+                  >
+                    {{ passwordStats.hasSymbol ? '✓' : '○' }} Special Symbol (@$!%*#?&)
+                  </span>
+                </div>
+              </div>
             </b-form-group>
           </b-col>
         </b-row>
@@ -605,6 +753,7 @@ import ToastificationContent from '@core/components/toastification/Toastificatio
 import adminService from '@/services/admin'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
+import { validatePasswordStrength, generateStrongPassword } from '@/utils/password'
 
 export default {
   components: {
@@ -702,6 +851,9 @@ export default {
           this.isEditing = false
         }
       },
+    },
+    passwordStats() {
+      return validatePasswordStrength(this.form.password)
     },
   },
   async mounted() {
@@ -811,8 +963,36 @@ export default {
       this.showViewModal = true
     },
 
+    generateDoctorPassword() {
+      const generated = generateStrongPassword(14)
+      this.form.password = generated
+      this.form.password_confirmation = generated
+      this.$toast({
+        component: ToastificationContent,
+        props: {
+          title: this.$t('auth.generateStrongPassword'),
+          text: generated,
+          variant: 'info',
+        },
+      })
+    },
+
     async saveDoctor() {
       if (this.hasMissingPhoneCountryCode(this.form)) return
+      if (!this.isEditing || this.form.password) {
+        const stats = validatePasswordStrength(this.form.password)
+        if (!stats.isValid) {
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: this.$t('messages.error'),
+              text: this.$t('auth.strongPasswordHelp'),
+              variant: 'danger',
+            },
+          })
+          return
+        }
+      }
       this.saving = true
       try {
         if (this.isEditing) {

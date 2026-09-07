@@ -167,6 +167,7 @@
                 :placeholder="$t('client.whatsappPlaceholder')"
                 :disabled="form.useSameMobile"
               />
+
             </div>
           </div>
         </b-form-group>
@@ -174,21 +175,85 @@
           :label="$t('assistant.password')"
           label-for="add-password"
         >
-          <b-form-input
+          <div class="d-flex justify-content-between align-items-center mb-50">
+            <span />
+            <b-button
+              size="xs"
+              variant="flat-primary"
+              class="p-0 font-weight-bold"
+              type="button"
+              @click="generateAddPassword"
+            >
+              <feather-icon
+                icon="KeyIcon"
+                size="12"
+                class="mr-25 ml-25"
+              />
+              {{ $t('auth.generateStrongPassword') }}
+            </b-button>
+          </div>
+          <app-password-input
             id="add-password"
             v-model="form.password"
-            type="password"
             required
           />
+          <small class="text-muted d-block mt-50">
+            {{ $t('auth.strongPasswordHelp') }}
+          </small>
+
+          <!-- Real-time Strength Meter -->
+          <div
+            v-if="form.password"
+            class="mt-1 p-1 bg-light rounded"
+          >
+            <div class="d-flex justify-content-between align-items-center mb-50 font-small-2">
+              <span>{{ $t('auth.passwordStrength') }}:</span>
+              <span
+                class="font-weight-bold"
+                :class="{
+                  'text-danger': addPasswordStats.strengthLabel === 'weak',
+                  'text-warning': addPasswordStats.strengthLabel === 'medium',
+                  'text-success': addPasswordStats.strengthLabel === 'strong'
+                }"
+              >
+                {{ $t(`auth.${addPasswordStats.strengthLabel}`) }}
+              </span>
+            </div>
+            <div class="d-flex flex-wrap font-small-2">
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="addPasswordStats.hasMinLength ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ addPasswordStats.hasMinLength ? '✓' : '○' }} 8+ Chars
+              </span>
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="(addPasswordStats.hasUpper && addPasswordStats.hasLower) ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ (addPasswordStats.hasUpper && addPasswordStats.hasLower) ? '✓' : '○' }} A-Z & a-z
+              </span>
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="addPasswordStats.hasNumber ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ addPasswordStats.hasNumber ? '✓' : '○' }} 0-9
+              </span>
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="addPasswordStats.hasSymbol ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ addPasswordStats.hasSymbol ? '✓' : '○' }} Special Symbol (@$!%*#?&)
+              </span>
+            </div>
+          </div>
         </b-form-group>
         <b-form-group
           :label="$t('assistant.confirmPassword')"
           label-for="add-password-confirm"
         >
-          <b-form-input
+          <app-password-input
             id="add-password-confirm"
             v-model="form.password_confirmation"
-            type="password"
             required
           />
         </b-form-group>
@@ -290,21 +355,85 @@
           :label="$t('assistant.newPassword')"
           label-for="edit-password"
         >
-          <b-form-input
+          <div class="d-flex justify-content-between align-items-center mb-50">
+            <span />
+            <b-button
+              size="xs"
+              variant="flat-primary"
+              class="p-0 font-weight-bold"
+              type="button"
+              @click="generateEditPassword"
+            >
+              <feather-icon
+                icon="KeyIcon"
+                size="12"
+                class="mr-25 ml-25"
+              />
+              {{ $t('auth.generateStrongPassword') }}
+            </b-button>
+          </div>
+          <app-password-input
             id="edit-password"
             v-model="editForm.password"
-            type="password"
             :placeholder="$t('assistant.leaveBlank')"
           />
+          <small class="text-muted d-block mt-50">
+            {{ $t('auth.strongPasswordHelp') }}
+          </small>
+
+          <!-- Real-time Strength Meter -->
+          <div
+            v-if="editForm.password"
+            class="mt-1 p-1 bg-light rounded"
+          >
+            <div class="d-flex justify-content-between align-items-center mb-50 font-small-2">
+              <span>{{ $t('auth.passwordStrength') }}:</span>
+              <span
+                class="font-weight-bold"
+                :class="{
+                  'text-danger': editPasswordStats.strengthLabel === 'weak',
+                  'text-warning': editPasswordStats.strengthLabel === 'medium',
+                  'text-success': editPasswordStats.strengthLabel === 'strong'
+                }"
+              >
+                {{ $t(`auth.${editPasswordStats.strengthLabel}`) }}
+              </span>
+            </div>
+            <div class="d-flex flex-wrap font-small-2">
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="editPasswordStats.hasMinLength ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ editPasswordStats.hasMinLength ? '✓' : '○' }} 8+ Chars
+              </span>
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="(editPasswordStats.hasUpper && editPasswordStats.hasLower) ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ (editPasswordStats.hasUpper && editPasswordStats.hasLower) ? '✓' : '○' }} A-Z & a-z
+              </span>
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="editPasswordStats.hasNumber ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ editPasswordStats.hasNumber ? '✓' : '○' }} 0-9
+              </span>
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="editPasswordStats.hasSymbol ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ editPasswordStats.hasSymbol ? '✓' : '○' }} Special Symbol (@$!%*#?&)
+              </span>
+            </div>
+          </div>
         </b-form-group>
         <b-form-group
           :label="$t('assistant.confirmPassword')"
           label-for="edit-password-confirm"
         >
-          <b-form-input
+          <app-password-input
             id="edit-password-confirm"
             v-model="editForm.password_confirmation"
-            type="password"
           />
         </b-form-group>
       </b-form>
@@ -321,6 +450,7 @@ import ToastificationContent from '@core/components/toastification/Toastificatio
 import assistantsService from '@/services/assistants'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
+import { validatePasswordStrength, generateStrongPassword } from '@/utils/password'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
@@ -371,6 +501,12 @@ export default {
     }
   },
   computed: {
+    addPasswordStats() {
+      return validatePasswordStrength(this.form.password)
+    },
+    editPasswordStats() {
+      return validatePasswordStrength(this.editForm.password)
+    },
     countrySelectOptions() {
       return [{ value: '', text: this.$t('client.selectCountryCode') }].concat(countryList.map(country => ({ value: country.value, text: country.label })))
     },
@@ -389,6 +525,34 @@ export default {
     this.fetchAssistants()
   },
   methods: {
+    generateAddPassword() {
+      const generated = generateStrongPassword(14)
+      this.form.password = generated
+      this.form.password_confirmation = generated
+      this.$toast({
+        component: ToastificationContent,
+        props: {
+          title: this.$t('auth.generateStrongPassword'),
+          text: generated,
+          variant: 'info',
+        },
+      })
+    },
+
+    generateEditPassword() {
+      const generated = generateStrongPassword(14)
+      this.editForm.password = generated
+      this.editForm.password_confirmation = generated
+      this.$toast({
+        component: ToastificationContent,
+        props: {
+          title: this.$t('auth.generateStrongPassword'),
+          text: generated,
+          variant: 'info',
+        },
+      })
+    },
+
     async fetchAssistants() {
       this.loading = true
       try {
@@ -408,6 +572,13 @@ export default {
 
     async saveAssistant() {
       if (this.hasMissingPhoneCountryCode(this.form)) return
+      if (!this.addPasswordStats.isValid) {
+        this.$toast({
+          component: ToastificationContent,
+          props: { title: this.$t('auth.strongPasswordHelp'), icon: 'AlertTriangleIcon', variant: 'danger' },
+        })
+        return
+      }
       try {
         await assistantsService.createAssistant(this.form)
         this.showAdd = false
@@ -445,6 +616,13 @@ export default {
 
     async updateAssistant() {
       if (this.hasMissingPhoneCountryCode(this.editForm)) return
+      if (this.editForm.password && !this.editPasswordStats.isValid) {
+        this.$toast({
+          component: ToastificationContent,
+          props: { title: this.$t('auth.strongPasswordHelp'), icon: 'AlertTriangleIcon', variant: 'danger' },
+        })
+        return
+      }
       try {
         const data = {
           name: this.editForm.name,
@@ -526,10 +704,11 @@ export default {
       }
     },
 
-    handleUseSameMobileChange(form) {
-      if (form.useSameMobile) {
-        form.whatsapp_number = form.phone
-        form.whatsapp_country_code = form.phone_country_code
+    handleUseSameMobileChange(targetForm) {
+      if (targetForm.useSameMobile) {
+        const target = targetForm
+        target.whatsapp_number = targetForm.phone
+        target.whatsapp_country_code = targetForm.phone_country_code
       }
     },
 

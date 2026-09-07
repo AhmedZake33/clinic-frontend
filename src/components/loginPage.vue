@@ -13,10 +13,13 @@
           />
 
           <v-text-field
-            type="password"
+            v-model="password"
+            :type="showPassword ? 'text' : 'password'"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             auto-complete="new password"
             solo
             placeholder="كلمه السر"
+            @click:append="showPassword = !showPassword"
           />
           <div>
             <div style="float:right">
@@ -59,6 +62,7 @@ export default {
     return {
       email: null,
       password: null,
+      showPassword: false,
       checkbox: null,
       loggedIn: false,
     }

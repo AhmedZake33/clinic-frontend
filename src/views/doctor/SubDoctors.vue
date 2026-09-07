@@ -180,11 +180,76 @@
           </b-form-select>
         </b-form-group>
         <b-form-group :label="$t('subDoctors.password')">
-          <b-form-input
+          <div class="d-flex justify-content-between align-items-center mb-50">
+            <span />
+            <b-button
+              size="xs"
+              variant="flat-primary"
+              class="p-0 font-weight-bold"
+              type="button"
+              @click="generateSubDoctorPassword"
+            >
+              <feather-icon
+                icon="KeyIcon"
+                size="12"
+                class="mr-25 ml-25"
+              />
+              {{ $t('auth.generateStrongPassword') }}
+            </b-button>
+          </div>
+          <app-password-input
             v-model="form.password"
-            type="password"
-            :required="!isEditing"
+            :placeholder="isEditing ? $t('assistant.leaveBlank') : ''"
           />
+          <small class="text-muted d-block mt-50">
+            {{ $t('auth.strongPasswordHelp') }}
+          </small>
+
+          <!-- Real-time Strength Meter -->
+          <div
+            v-if="form.password"
+            class="mt-1 p-1 bg-light rounded"
+          >
+            <div class="d-flex justify-content-between align-items-center mb-50 font-small-2">
+              <span>{{ $t('auth.passwordStrength') }}:</span>
+              <span
+                class="font-weight-bold"
+                :class="{
+                  'text-danger': passwordStats.strengthLabel === 'weak',
+                  'text-warning': passwordStats.strengthLabel === 'medium',
+                  'text-success': passwordStats.strengthLabel === 'strong'
+                }"
+              >
+                {{ $t(`auth.${passwordStats.strengthLabel}`) }}
+              </span>
+            </div>
+            <div class="d-flex flex-wrap font-small-2">
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="passwordStats.hasMinLength ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ passwordStats.hasMinLength ? '✓' : '○' }} 8+ Chars
+              </span>
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="(passwordStats.hasUpper && passwordStats.hasLower) ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ (passwordStats.hasUpper && passwordStats.hasLower) ? '✓' : '○' }} A-Z & a-z
+              </span>
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="passwordStats.hasNumber ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ passwordStats.hasNumber ? '✓' : '○' }} 0-9
+              </span>
+              <span
+                class="mr-1 ml-1 mb-25"
+                :class="passwordStats.hasSymbol ? 'text-success font-weight-bold' : 'text-muted'"
+              >
+                {{ passwordStats.hasSymbol ? '✓' : '○' }} Special Symbol (@$!%*#?&)
+              </span>
+            </div>
+          </div>
         </b-form-group>
       </b-form>
 
@@ -211,6 +276,7 @@ import ToastificationContent from '@core/components/toastification/Toastificatio
 import subDoctorsApi from '@/services/subDoctors'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
+import { validatePasswordStrength, generateStrongPassword } from '@/utils/password'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
@@ -262,12 +328,27 @@ export default {
         { key: 'actions', label: this.$t('table.actions') },
       ]
     },
+    passwordStats() {
+      return validatePasswordStrength(this.form.password)
+    },
   },
   mounted() {
     this.fetch()
     this.fetchSpecializations()
   },
   methods: {
+    generateSubDoctorPassword() {
+      const generated = generateStrongPassword(14)
+      this.form.password = generated
+      this.$toast({
+        component: ToastificationContent,
+        props: {
+          title: this.$t('auth.generateStrongPassword'),
+          text: generated,
+          variant: 'info',
+        },
+      })
+    },
     async fetchSpecializations() {
       try {
         const { data } = await subDoctorsApi.getSpecializations()
@@ -314,6 +395,20 @@ export default {
     },
     async save() {
       if (this.hasMissingPhoneCountryCode(this.form)) return
+      if (this.form.password) {
+        const stats = validatePasswordStrength(this.form.password)
+        if (!stats.isValid) {
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: this.$t('messages.error'),
+              text: this.$t('auth.strongPasswordHelp'),
+              variant: 'danger',
+            },
+          })
+          return
+        }
+      }
       try {
         if (this.isEditing) {
           await subDoctorsApi.update(this.selected.id, this.form)

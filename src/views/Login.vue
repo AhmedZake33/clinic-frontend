@@ -44,25 +44,12 @@
             :label="$t('clinic.password')"
             label-for="login-password"
           >
-            <b-input-group>
-              <b-form-input
-                id="login-password"
-                v-model="password"
-                :type="passwordFieldType"
-                :placeholder="$t('clinic.password')"
-                required
-              />
-              <b-input-group-append>
-                <b-button
-                  variant="outline-secondary"
-                  type="button"
-                  class="btn-icon"
-                  @click="togglePasswordVisibility"
-                >
-                  <feather-icon :icon="passwordToggleIcon" />
-                </b-button>
-              </b-input-group-append>
-            </b-input-group>
+            <app-password-input
+              id="login-password"
+              v-model="password"
+              :placeholder="$t('clinic.password')"
+              required
+            />
           </b-form-group>
 
           <div class="d-flex justify-content-end mb-1">
@@ -101,8 +88,6 @@ import {
   BForm,
   BFormGroup,
   BFormInput,
-  BInputGroup,
-  BInputGroupAppend,
   BButton,
   BLink,
   BAlert,
@@ -118,8 +103,6 @@ export default {
     BForm,
     BFormGroup,
     BFormInput,
-    BInputGroup,
-    BInputGroupAppend,
     BButton,
     BLink,
     BAlert,
@@ -129,20 +112,11 @@ export default {
     return {
       email: '',
       password: '',
-      passwordFieldType: 'password',
       error: '',
       loading: false,
     }
   },
-  computed: {
-    passwordToggleIcon() {
-      return this.passwordFieldType === 'password' ? 'EyeIcon' : 'EyeOffIcon'
-    },
-  },
   methods: {
-    togglePasswordVisibility() {
-      this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
-    },
     async handleLogin() {
       this.loading = true
       this.error = ''
