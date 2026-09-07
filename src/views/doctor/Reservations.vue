@@ -1769,7 +1769,7 @@ import clientsService from '@/services/clients'
 import doctorServicesApi from '@/services/doctorServices'
 import doctorDiagnosesApi from '@/services/doctorDiagnoses'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
-import { formatAgeFromBirthDate } from '@/utils/clientAge'
+import { formatAgeFromBirthDate, formatBirthDate } from '@/utils/clientAge'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode, splitPhoneNumber } from '@/utils/phoneNumbers'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
@@ -2023,8 +2023,7 @@ export default {
   },
   methods: {
     formatDate(value) {
-      if (!value) return null
-      return new Date(value).toLocaleDateString()
+      return formatBirthDate(value, this.$i18n.locale, this.$t('reservation.na'))
     },
     getTodayDate() {
       const d = new Date()
@@ -2558,13 +2557,6 @@ export default {
     },
     calculateAge(value) {
       return formatAgeFromBirthDate(value, key => this.$t(key), this.$t('reservation.na'))
-    },
-    getTodayDate() {
-      const d = new Date()
-      const year = d.getFullYear()
-      const month = String(d.getMonth() + 1).padStart(2, '0')
-      const day = String(d.getDate()).padStart(2, '0')
-      return `${year}-${month}-${day}`
     },
     paginationCountText(paginationState) {
       if (!paginationState?.total) return '0 / 0'

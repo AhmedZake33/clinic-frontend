@@ -452,7 +452,7 @@ import ToastificationContent from '@core/components/toastification/Toastificatio
 import clientsService, { splitPhoneNumber } from '@/services/clients'
 import reservationsService from '@/services/reservations'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
-import { formatAgeFromBirthDate } from '@/utils/clientAge'
+import { formatAgeFromBirthDate, formatBirthDate } from '@/utils/clientAge'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode } from '@/utils/phoneNumbers'
 
@@ -634,8 +634,7 @@ export default {
       return formatChronicIllnesses(values, key => this.$t(key), this.$t('reservation.na'))
     },
     formatDate(value) {
-      if (!value) return null
-      return new Date(value).toLocaleDateString()
+      return formatBirthDate(value, this.$i18n.locale, this.$t('reservation.na'))
     },
     calculateAge(value) {
       return formatAgeFromBirthDate(value, key => this.$t(key), this.$t('reservation.na'))

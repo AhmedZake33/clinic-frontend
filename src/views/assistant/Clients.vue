@@ -419,7 +419,7 @@
             cols="12"
             md="6"
           >
-            <p><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedClient.date_of_birth || $t('reservation.na') }}</p>
+            <p><strong>{{ $t('client.dateOfBirth') }}:</strong> {{ formatDate(selectedClient.date_of_birth) }}</p>
             <p><strong>{{ $t('client.age') }}:</strong> {{ calculateAge(selectedClient.date_of_birth) }}</p>
             <p><strong>{{ $t('client.job') }}:</strong> {{ selectedClient.job || $t('reservation.na') }}</p>
             <p><strong>{{ $t('client.height') }}:</strong> {{ selectedClient.height ? selectedClient.height + ' cm' : $t('reservation.na') }}</p>
@@ -460,7 +460,7 @@ import vSelect from 'vue-select'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import clientsService, { splitPhoneNumber } from '@/services/clients'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
-import { formatAgeFromBirthDate } from '@/utils/clientAge'
+import { formatAgeFromBirthDate, formatBirthDate } from '@/utils/clientAge'
 import countryList from '@/utils/countries'
 import { hasMissingPhoneCountryCode } from '@/utils/phoneNumbers'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
@@ -733,8 +733,7 @@ export default {
       }
     },
     formatDate(value) {
-      if (!value) return 'N/A'
-      return new Date(value).toLocaleDateString()
+      return formatBirthDate(value, this.$i18n.locale, this.$t('reservation.na'))
     },
     calculateAge(value) {
       return formatAgeFromBirthDate(value, key => this.$t(key), 'N/A')

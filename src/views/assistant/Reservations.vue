@@ -745,7 +745,7 @@
                   <strong>{{ $t('client.whatsappNumber') }}:</strong> {{ selectedReservation.client.whatsapp_number || $t('reservation.na') }}
                 </p>
                 <p class="mb-50">
-                  <strong>{{ $t('client.dateOfBirth') }}:</strong> {{ selectedReservation.client.date_of_birth || $t('reservation.na') }}
+                  <strong>{{ $t('client.dateOfBirth') }}:</strong> {{ formatDate(selectedReservation.client.date_of_birth) }}
                 </p>
                 <p class="mb-50">
                   <strong>{{ $t('client.age') }}:</strong> {{ calculateAge(selectedReservation.client.date_of_birth) }}
@@ -1262,7 +1262,7 @@ import clientsService from '@/services/clients'
 import scheduleService from '@/services/schedule'
 import doctorServicesApi from '@/services/doctorServices'
 import { formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
-import { formatAgeFromBirthDate } from '@/utils/clientAge'
+import { formatAgeFromBirthDate, formatBirthDate } from '@/utils/clientAge'
 import ResponsiveTableActions from '@/components/ResponsiveTableActions.vue'
 
 export default {
@@ -1656,13 +1656,6 @@ export default {
       } finally {
         this.availabilityLoading = false
       }
-    },
-    getTodayDate() {
-      const d = new Date()
-      const year = d.getFullYear()
-      const month = String(d.getMonth() + 1).padStart(2, '0')
-      const day = String(d.getDate()).padStart(2, '0')
-      return `${year}-${month}-${day}`
     },
     showAddModal() {
       this.form = {
@@ -2238,6 +2231,9 @@ export default {
     },
     calculateAge(value) {
       return formatAgeFromBirthDate(value, key => this.$t(key), this.$t('reservation.na'))
+    },
+    formatDate(value) {
+      return formatBirthDate(value, this.$i18n.locale, this.$t('reservation.na'))
     },
     formatDateTime(value) {
       if (!value) return 'N/A'
