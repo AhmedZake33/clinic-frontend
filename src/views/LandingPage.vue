@@ -83,8 +83,97 @@
               <span>{{ $t('landing.nav.login') }}</span>
             </b-button>
           </template>
+
+          <!-- Mobile Hamburger Menu Button -->
+          <b-button
+            variant="outline-secondary"
+            size="sm"
+            class="d-lg-none ml-1 mr-1 p-50 d-inline-flex align-items-center justify-content-center btn-mobile-nav-toggle"
+            :aria-label="isRtl ? 'القائمة' : 'Menu'"
+            @click="mobileNavOpen = !mobileNavOpen"
+          >
+            <feather-icon
+              :icon="mobileNavOpen ? 'XIcon' : 'MenuIcon'"
+              size="20"
+            />
+          </b-button>
         </div>
       </div>
+
+      <!-- Mobile Navigation Menu -->
+      <b-collapse
+        v-model="mobileNavOpen"
+        class="landing-mobile-menu d-lg-none border-top bg-white px-2 py-2 shadow-sm"
+      >
+        <div class="d-flex flex-column">
+          <a
+            href="#overview"
+            class="landing-mobile-nav-link py-1 d-flex align-items-center"
+            @click="mobileNavOpen = false"
+          >
+            <feather-icon
+              icon="HomeIcon"
+              size="18"
+              class="mr-1 ml-1 text-primary"
+            />
+            <span>{{ $t('landing.nav.home') }}</span>
+          </a>
+          <a
+            href="#video-guide"
+            class="landing-mobile-nav-link py-1 d-flex align-items-center highlight-video-link"
+            @click="mobileNavOpen = false"
+          >
+            <feather-icon
+              icon="PlayCircleIcon"
+              size="18"
+              class="mr-1 ml-1 text-danger"
+            />
+            <span class="font-weight-bold text-primary">{{ $t('landing.nav.video') }}</span>
+            <b-badge
+              variant="light-danger"
+              class="ml-auto mr-auto px-1 py-25 small"
+            >
+              {{ isRtl ? 'شرح حي' : 'Live Tour' }}
+            </b-badge>
+          </a>
+          <a
+            href="#features"
+            class="landing-mobile-nav-link py-1 d-flex align-items-center"
+            @click="mobileNavOpen = false"
+          >
+            <feather-icon
+              icon="StarIcon"
+              size="18"
+              class="mr-1 ml-1 text-warning"
+            />
+            <span>{{ $t('landing.nav.features') }}</span>
+          </a>
+          <a
+            href="#roles"
+            class="landing-mobile-nav-link py-1 d-flex align-items-center"
+            @click="mobileNavOpen = false"
+          >
+            <feather-icon
+              icon="UsersIcon"
+              size="18"
+              class="mr-1 ml-1 text-info"
+            />
+            <span>{{ $t('landing.nav.roles') }}</span>
+          </a>
+          <a
+            href="#contact"
+            class="landing-mobile-nav-link py-1 d-flex align-items-center"
+            @click="mobileNavOpen = false"
+          >
+            <feather-icon
+              icon="MailIcon"
+              size="18"
+              class="mr-1 ml-1 text-secondary"
+            />
+            <span>{{ $t('landing.nav.contact') }}</span>
+          </a>
+        </div>
+      </b-collapse>
     </header>
 
     <!-- Hero Section -->
@@ -1278,6 +1367,7 @@ import {
   BCol,
   BButton,
   BBadge,
+  BCollapse,
 } from 'bootstrap-vue'
 import { mapGetters } from 'vuex'
 import SystemVideoWalkthrough from '@/components/SystemVideoWalkthrough.vue'
@@ -1289,7 +1379,13 @@ export default {
     BCol,
     BButton,
     BBadge,
+    BCollapse,
     SystemVideoWalkthrough,
+  },
+  data() {
+    return {
+      mobileNavOpen: false,
+    }
   },
   computed: {
     ...mapGetters('language', ['currentLocale']),
@@ -1565,8 +1661,37 @@ export default {
 }
 
 /* Video Section */
+#video-guide {
+  scroll-margin-top: 80px;
+}
+
 .video-guide-section {
   background: linear-gradient(180deg, #f8f9fa 0%, #edf0f5 100%);
+}
+
+.landing-mobile-menu {
+  transition: all 0.3s ease;
+}
+
+.landing-mobile-nav-link {
+  color: #5e5873;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f8f8f8;
+    color: #7367f0;
+  }
+
+  &.highlight-video-link {
+    background-color: rgba(234, 84, 85, 0.06);
+    border: 1px solid rgba(234, 84, 85, 0.2);
+    margin: 0.25rem 0;
+  }
 }
 
 .video-showcase-card {

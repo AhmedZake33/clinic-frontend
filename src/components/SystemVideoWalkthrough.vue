@@ -9,28 +9,29 @@
       :class="{ 'is-fullscreen': isFullscreen }"
     >
       <!-- Theater Top Bar / Browser Shell Header -->
-      <div class="theater-topbar p-2 p-md-3 bg-dark d-flex align-items-center justify-content-between text-white border-bottom border-secondary">
-        <div class="d-flex align-items-center">
-          <div class="window-dots d-flex align-items-center mr-2 ml-2">
+      <div class="theater-topbar p-2 p-md-3 bg-dark d-flex align-items-center justify-content-between text-white border-bottom border-secondary flex-wrap">
+        <div class="d-flex align-items-center overflow-hidden mr-1 ml-1">
+          <div class="window-dots d-none d-sm-flex align-items-center mr-2 ml-2 flex-shrink-0">
             <span class="window-dot dot-red" />
             <span class="window-dot dot-yellow mx-1" />
             <span class="window-dot dot-green" />
           </div>
-          <div class="player-title small font-weight-bold text-light d-inline-flex align-items-center">
+          <div class="player-title small font-weight-bold text-light d-inline-flex align-items-center text-truncate">
             <feather-icon
               icon="MonitorIcon"
               size="15"
-              class="text-primary"
+              class="text-primary flex-shrink-0"
               :class="isRtl ? 'ml-50' : 'mr-50'"
             />
-            <span>{{ isRtl ? 'جولة تفاعلية شاملة من داخل أقسام الطبيب في النظام (١٢ قسماً)' : 'Interactive In-System Doctor Walkthrough (12 Modules)' }}</span>
+            <span class="d-none d-md-inline">{{ isRtl ? 'جولة تفاعلية شاملة من داخل أقسام الطبيب في النظام (١٢ قسماً)' : 'Interactive In-System Doctor Walkthrough (12 Modules)' }}</span>
+            <span class="d-inline d-md-none text-truncate">{{ isRtl ? 'جولة نظام الطبيب (١٢ قسماً)' : 'Doctor Portal Tour (12 Modules)' }}</span>
           </div>
         </div>
 
-        <div class="d-flex align-items-center">
-          <span class="badge badge-light-success font-weight-bold d-inline-flex align-items-center">
-            <span class="live-dot mr-50 ml-50" />
-            {{ isRtl ? 'معاينة حية من حساب الطبيب' : 'Doctor Portal Live Preview' }}
+        <div class="d-flex align-items-center flex-shrink-0">
+          <span class="badge badge-light-success font-weight-bold d-inline-flex align-items-center extra-small py-25 px-50">
+            <span class="live-dot mr-25 ml-25" />
+            {{ isRtl ? 'معاينة حية' : 'Live Preview' }}
           </span>
         </div>
       </div>
@@ -136,39 +137,39 @@
             <!-- Main App Body (Top Navbar + Simulated Pages) -->
             <div class="sim-main-content flex-grow-1 d-flex flex-column bg-light">
               <!-- Top Header Navbar -->
-              <div class="sim-top-navbar bg-white p-2 px-3 shadow-xs d-flex align-items-center justify-content-between border-bottom">
-                <div class="d-flex align-items-center">
+              <div class="sim-top-navbar bg-white p-2 px-2 px-md-3 shadow-xs d-flex align-items-center justify-content-between border-bottom">
+                <div class="d-flex align-items-center overflow-hidden">
                   <feather-icon
                     icon="MenuIcon"
                     size="18"
-                    class="text-muted mr-2 ml-2 d-md-none"
+                    class="text-muted mr-1 ml-1 d-md-none flex-shrink-0"
                   />
-                  <div class="page-breadcrumb font-weight-bold small text-dark d-flex align-items-center">
-                    <span class="text-primary">{{ isRtl ? 'شاشة الطبيب' : 'Doctor Portal' }}</span>
+                  <div class="page-breadcrumb font-weight-bold small text-dark d-flex align-items-center text-truncate">
+                    <span class="text-primary d-none d-sm-inline flex-shrink-0">{{ isRtl ? 'شاشة الطبيب' : 'Doctor Portal' }}</span>
                     <feather-icon
                       :icon="isRtl ? 'ChevronLeftIcon' : 'ChevronRightIcon'"
                       size="14"
-                      class="text-muted mx-1"
+                      class="text-muted mx-50 d-none d-sm-inline flex-shrink-0"
                     />
-                    <span class="badge badge-primary mr-1 ml-1 px-1">{{ currentSceneIndex + 1 }} / {{ chapters.length }}</span>
-                    <span>{{ currentChapter.title }}</span>
+                    <span class="badge badge-primary mr-50 ml-50 px-50 flex-shrink-0">{{ currentSceneIndex + 1 }}/{{ chapters.length }}</span>
+                    <span class="text-truncate">{{ currentChapter.title }}</span>
                   </div>
                 </div>
 
-                <div class="d-flex align-items-center">
-                  <div class="header-bell-box p-1 px-2 rounded mr-2 ml-2 d-flex align-items-center bg-light text-muted">
+                <div class="d-flex align-items-center flex-shrink-0">
+                  <div class="header-bell-box p-1 px-1 px-sm-2 rounded mr-1 ml-1 d-flex align-items-center bg-light text-muted">
                     <feather-icon
                       icon="BellIcon"
-                      size="15"
-                      class="mr-50 ml-50 text-primary"
+                      size="14"
+                      class="text-primary"
                     />
-                    <span class="extra-small font-weight-bold text-dark d-none d-sm-inline">
+                    <span class="extra-small font-weight-bold text-dark d-none d-sm-inline ml-50 mr-50">
                       {{ isRtl ? 'جرس المساعد' : 'Call Bell' }}
                     </span>
                   </div>
 
                   <span class="badge badge-light-success extra-small font-weight-bold">
-                    {{ isRtl ? 'متصل الآن' : 'Online' }}
+                    {{ isRtl ? 'متصل' : 'Online' }}
                   </span>
                 </div>
               </div>
@@ -304,28 +305,30 @@
                   class="real-page page-reservations animated fadeIn"
                 >
                   <div class="p-2 bg-white rounded border mb-2">
-                    <table class="table table-sm extra-small mb-0">
-                      <thead>
-                        <tr>
-                          <th>{{ isRtl ? 'كود الحجز' : 'Token' }}</th>
-                          <th>{{ isRtl ? 'المريض' : 'Patient' }}</th>
-                          <th>{{ isRtl ? 'النوع' : 'Type' }}</th>
-                          <th>{{ isRtl ? 'المبلغ' : 'Fee' }}</th>
-                          <th>{{ isRtl ? 'الحالة' : 'Status' }}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="font-weight-bold text-primary">
-                            #RES-104
-                          </td>
-                          <td>{{ isRtl ? 'سارة أحمد محمود' : 'Sarah Ahmed' }}</td>
-                          <td>{{ isRtl ? 'كشف جديد' : 'New Exam' }}</td>
-                          <td>350 EGP</td>
-                          <td><span class="badge badge-light-success">{{ isRtl ? 'مؤكد' : 'Confirmed' }}</span></td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div class="table-responsive">
+                      <table class="table table-sm extra-small mb-0 text-nowrap">
+                        <thead>
+                          <tr>
+                            <th>{{ isRtl ? 'كود الحجز' : 'Token' }}</th>
+                            <th>{{ isRtl ? 'المريض' : 'Patient' }}</th>
+                            <th>{{ isRtl ? 'النوع' : 'Type' }}</th>
+                            <th>{{ isRtl ? 'المبلغ' : 'Fee' }}</th>
+                            <th>{{ isRtl ? 'الحالة' : 'Status' }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="font-weight-bold text-primary">
+                              #RES-104
+                            </td>
+                            <td>{{ isRtl ? 'سارة أحمد محمود' : 'Sarah Ahmed' }}</td>
+                            <td>{{ isRtl ? 'كشف جديد' : 'New Exam' }}</td>
+                            <td>350 EGP</td>
+                            <td><span class="badge badge-light-success">{{ isRtl ? 'مؤكد' : 'Confirmed' }}</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
 
@@ -344,15 +347,16 @@
                       </div>
                       <span class="badge badge-light-success">{{ isRtl ? 'مفعّل ومتاح' : 'Active' }}</span>
                     </div>
-                    <div class="p-2 bg-light rounded d-flex justify-content-between align-items-center mb-2">
+                    <div class="p-2 bg-light rounded d-flex justify-content-between align-items-center mb-2 flex-wrap">
                       <code
-                        class="small text-primary font-weight-bold"
+                        class="small text-primary font-weight-bold text-truncate mr-1 ml-1"
                         dir="ltr"
+                        style="max-width: 170px; display: inline-block;"
                       >https://clinic.tafratech.com/book/dr-mohamed</code>
                       <b-button
                         size="xs"
                         variant="primary"
-                        class="font-weight-bold"
+                        class="font-weight-bold flex-shrink-0"
                       >
                         {{ isRtl ? 'نسخ الرابط' : 'Copy URL' }}
                       </b-button>
@@ -433,24 +437,26 @@
                         + {{ isRtl ? 'إضافة خدمة' : 'Add Service' }}
                       </b-button>
                     </div>
-                    <table class="table table-sm extra-small mb-0">
-                      <thead>
-                        <tr>
-                          <th>{{ isRtl ? 'الخدمة' : 'Service' }}</th>
-                          <th>{{ isRtl ? 'السعر' : 'Price' }}</th>
-                          <th>{{ isRtl ? 'النوع' : 'Billing' }}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td><strong>{{ isRtl ? 'رسم قلب وتخطيط (ECG)' : 'ECG Test' }}</strong></td>
-                          <td class="text-success font-weight-bold">
-                            150 EGP
-                          </td>
-                          <td><span class="badge badge-light-success">{{ isRtl ? 'بفاتورة' : 'Invoice' }}</span></td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div class="table-responsive">
+                      <table class="table table-sm extra-small mb-0 text-nowrap">
+                        <thead>
+                          <tr>
+                            <th>{{ isRtl ? 'الخدمة' : 'Service' }}</th>
+                            <th>{{ isRtl ? 'السعر' : 'Price' }}</th>
+                            <th>{{ isRtl ? 'النوع' : 'Billing' }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><strong>{{ isRtl ? 'رسم قلب وتخطيط (ECG)' : 'ECG Test' }}</strong></td>
+                            <td class="text-success font-weight-bold">
+                              150 EGP
+                            </td>
+                            <td><span class="badge badge-light-success">{{ isRtl ? 'بفاتورة' : 'Invoice' }}</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
 
@@ -479,28 +485,30 @@
                   v-else-if="currentSceneIndex === 8"
                   class="real-page page-transactions animated fadeIn"
                 >
-                  <table class="table table-sm extra-small mb-0 bg-white rounded border">
-                    <thead>
-                      <tr>
-                        <th>TRX ID</th>
-                        <th>{{ isRtl ? 'المريض' : 'Patient' }}</th>
-                        <th>{{ isRtl ? 'طريقة الدفع' : 'Method' }}</th>
-                        <th>{{ isRtl ? 'المبلغ' : 'Amount' }}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="font-weight-bold text-primary">
-                          #TRX-8821
-                        </td>
-                        <td>{{ isRtl ? 'سارة أحمد' : 'Sarah Ahmed' }}</td>
-                        <td><span class="badge badge-light-success">{{ isRtl ? 'نقدي (Cash)' : 'Cash' }}</span></td>
-                        <td class="text-success font-weight-bold">
-                          +450 EGP
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div class="table-responsive">
+                    <table class="table table-sm extra-small mb-0 bg-white rounded border text-nowrap">
+                      <thead>
+                        <tr>
+                          <th>TRX ID</th>
+                          <th>{{ isRtl ? 'المريض' : 'Patient' }}</th>
+                          <th>{{ isRtl ? 'طريقة الدفع' : 'Method' }}</th>
+                          <th>{{ isRtl ? 'المبلغ' : 'Amount' }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="font-weight-bold text-primary">
+                            #TRX-8821
+                          </td>
+                          <td>{{ isRtl ? 'سارة أحمد' : 'Sarah Ahmed' }}</td>
+                          <td><span class="badge badge-light-success">{{ isRtl ? 'نقدي (Cash)' : 'Cash' }}</span></td>
+                          <td class="text-success font-weight-bold">
+                            +450 EGP
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
                 <!-- 10. ASSISTANTS -->
@@ -623,7 +631,7 @@
               </div>
 
               <!-- SCREENSHOT CAPTION BAR -->
-              <div class="screen-caption-bar p-2 px-3 bg-dark text-white d-flex align-items-center justify-content-between">
+              <div class="screen-caption-bar p-2 px-3 bg-dark text-white d-none d-md-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                   <feather-icon
                     icon="InfoIcon"
@@ -643,16 +651,16 @@
 
           <!-- Bottom Subtitle / Narration Bar -->
           <div class="subtitles-narration-bar p-2 p-md-3 bg-dark text-white d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-              <span class="badge badge-primary font-weight-bold mr-2 ml-2">
+            <div class="d-flex align-items-center overflow-hidden mr-1 ml-1">
+              <span class="badge badge-primary font-weight-bold mr-1 ml-1 flex-shrink-0 extra-small">
                 {{ isRtl ? 'شرح الشاشة' : 'Narration' }}
               </span>
-              <span class="subtitle-text text-light font-weight-bold small">
+              <span class="subtitle-text text-light font-weight-bold small text-truncate">
                 {{ currentSceneSubtitle }}
               </span>
             </div>
             <div
-              class="time-counter small text-muted d-none d-sm-block"
+              class="time-counter small text-muted d-none d-sm-block flex-shrink-0"
               dir="ltr"
             >
               {{ formattedCurrentTime }} / {{ formattedDuration }}
@@ -681,11 +689,11 @@
         <!-- Controls Action Row -->
         <div class="d-flex flex-wrap align-items-center justify-content-between">
           <!-- Left: Play/Pause & Speed -->
-          <div class="d-flex align-items-center flex-wrap mb-1 mb-md-0">
+          <div class="d-flex align-items-center flex-wrap">
             <b-button
               variant="primary"
               size="sm"
-              class="btn-play-pause font-weight-bold mr-2 ml-2 d-inline-flex align-items-center shadow-sm"
+              class="btn-play-pause font-weight-bold mr-1 ml-1 d-inline-flex align-items-center shadow-sm"
               @click="togglePlay"
             >
               <feather-icon
@@ -693,17 +701,24 @@
                 size="15"
                 class="mr-25 ml-25"
               />
-              <span>{{ isPlaying ? (isRtl ? 'إيقاف مؤقت' : 'Pause') : (isRtl ? 'تشغيل العرض' : 'Play Tour') }}</span>
+              <span>{{ isPlaying ? (isRtl ? 'إيقاف' : 'Pause') : (isRtl ? 'تشغيل' : 'Play') }}</span>
             </b-button>
 
             <b-button
               size="sm"
               variant="outline-light"
-              class="extra-small font-weight-bold mr-1 ml-1 py-25 px-50"
+              class="extra-small font-weight-bold mr-50 ml-50 py-25 px-50"
               @click="cycleSpeed"
             >
               {{ playbackSpeed }}x
             </b-button>
+
+            <span
+              class="extra-small text-muted d-inline-block d-sm-none mr-50 ml-50"
+              dir="ltr"
+            >
+              {{ formattedCurrentTime }} / {{ formattedDuration }}
+            </span>
           </div>
 
           <!-- Right: Fullscreen -->
@@ -1044,6 +1059,17 @@ export default {
       return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
     },
   },
+  watch: {
+    currentSceneIndex() {
+      this.$nextTick(() => {
+        if (!this.$refs.playerWrapper) return
+        const activeTab = this.$refs.playerWrapper.querySelector('.video-inner-tab-pill.active-tab')
+        if (activeTab && activeTab.scrollIntoView) {
+          activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+        }
+      })
+    },
+  },
   mounted() {
     this.startTimer()
     document.addEventListener('fullscreenchange', this.handleFullscreenChange)
@@ -1225,6 +1251,7 @@ export default {
 
 .inner-tabs-scroll {
   scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .theater-stage-container {
@@ -1333,5 +1360,61 @@ export default {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(3px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 767.98px) {
+  .theater-stage-container {
+    min-height: 290px;
+  }
+
+  .system-app-layout {
+    min-height: 270px;
+  }
+
+  .sim-page-viewport {
+    min-height: 240px;
+    padding: 0.65rem !important;
+  }
+
+  .theater-topbar {
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .video-inner-tabs-strip {
+    padding: 0.4rem 0.5rem !important;
+  }
+
+  .video-inner-tab-pill {
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.78rem;
+  }
+
+  .subtitles-narration-bar {
+    min-height: 42px;
+    padding: 0.4rem 0.65rem !important;
+  }
+
+  .video-controls-bar {
+    padding: 0.5rem 0.65rem !important;
+  }
+
+  .btn-play-pause {
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .stat-card {
+    padding: 0.5rem !important;
+
+    h5 {
+      font-size: 1rem;
+    }
+
+    .extra-small {
+      font-size: 0.65rem;
+    }
+  }
 }
 </style>

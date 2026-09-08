@@ -106,41 +106,58 @@
         show-empty
       >
         <template #cell(actions)="data">
-          <responsive-table-actions>
+          <responsive-table-actions v-slot="{ isMobile }">
             <b-button
+              v-b-tooltip.hover
+              :title="$t('actions.view')"
               variant="info"
               size="sm"
-              class="mr-1"
               @click="viewClient(data.item)"
             >
               <feather-icon icon="EyeIcon" />
+              <span
+                v-if="isMobile"
+                class="action-btn-text"
+              >{{ $t('actions.view') }}</span>
             </b-button>
             <b-button
+              v-b-tooltip.hover
+              :title="$t('client.clientDetails')"
               variant="primary"
               size="sm"
-              class="mr-1"
               @click="goToProfile(data.item.id)"
             >
               <feather-icon
                 icon="UserIcon"
-                class="mr-50"
+                :class="{ 'mr-50': !isMobile }"
               />
-              {{ $t('client.clientDetails') }}
+              <span class="action-btn-text">{{ $t('client.clientDetails') }}</span>
             </b-button>
             <b-button
+              v-b-tooltip.hover
+              :title="$t('actions.edit')"
               variant="warning"
               size="sm"
-              class="mr-1"
               @click="editClient(data.item)"
             >
               <feather-icon icon="EditIcon" />
+              <span
+                v-if="isMobile"
+                class="action-btn-text"
+              >{{ $t('actions.edit') }}</span>
             </b-button>
             <b-button
+              v-b-tooltip.hover
+              :title="$t('actions.delete')"
               variant="danger"
               size="sm"
               @click="deleteClient(data.item.id)"
             >
               <feather-icon icon="TrashIcon" />
+              <span
+                v-if="isMobile"
+                class="action-btn-text"
+              >{{ $t('actions.delete') }}</span>
             </b-button>
           </responsive-table-actions>
         </template>
@@ -456,7 +473,6 @@ import {
   BFormTextarea,
   BSpinner,
 } from 'bootstrap-vue'
-import vSelect from 'vue-select'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import clientsService, { splitPhoneNumber } from '@/services/clients'
 import { buildChronicIllnessOptions, formatChronicIllnesses } from '@/utils/clientChronicIllnesses'
@@ -482,7 +498,6 @@ export default {
     BFormTextarea,
     BSpinner,
     ResponsiveTableActions,
-    vSelect,
   },
   data() {
     return {
@@ -540,7 +555,12 @@ export default {
         { key: 'blood_type', label: this.$t('client.bloodType') },
         { key: 'age', label: this.$t('client.age'), formatter: (value, key, item) => this.calculateAge(item.date_of_birth) },
         { key: 'created_at', label: this.$t('reservation.created'), formatter: this.formatDate },
-        { key: 'actions', label: this.$t('actions.actions') },
+        {
+          key: 'actions',
+          label: this.$t('actions.actions'),
+          thClass: 'text-center',
+          tdClass: 'text-center',
+        },
       ]
     },
     countryOptions() {
@@ -708,7 +728,19 @@ export default {
       }
     },
     async deleteClient(id) {
-      if (!confirm(this.$t('messages.deleteConfirm'))) return
+      const result = await this.$swal({
+        title: this.$t('messages.deleteConfirm'),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: this.$t('actions.confirm'),
+        cancelButtonText: this.$t('actions.cancel'),
+        customClass: {
+          confirmButton: 'btn btn-danger',
+          cancelButton: 'btn btn-outline-secondary ml-1',
+        },
+        buttonsStyling: false,
+      })
+      if (!result.isConfirmed) return
 
       try {
         await clientsService.deleteClient(id)

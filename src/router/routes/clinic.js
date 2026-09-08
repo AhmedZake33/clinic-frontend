@@ -563,6 +563,24 @@ export default [
     },
   },
   {
+    path: '/sub-doctor/help',
+    name: 'sub-doctor-help',
+    component: () => import('@/views/shared/Help.vue'),
+    meta: {
+      requiresAuth: true,
+      permissions: ['doctor.view-dashboard', 'doctor.view-reservations'],
+      pageTitle: 'menu.help',
+      pageI18n: true,
+      breadcrumb: [
+        {
+          text: 'menu.help',
+          active: true,
+          i18n: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/assistant/services',
     name: 'assistant-services',
     component: () => import('@/views/doctor/Services.vue'),

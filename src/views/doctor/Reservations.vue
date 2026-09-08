@@ -2012,8 +2012,11 @@ export default {
     },
   },
   mounted() {
-    if (!this.filters.date_from) this.filters.date_from = this.getTodayDate()
-    if (!this.filters.date_to) this.filters.date_to = this.getTodayDate()
+    this.filters.date_from = this.$route.query.date_from || this.$route.query.date || this.getTodayDate()
+    this.filters.date_to = this.$route.query.date_to || this.$route.query.date || this.getTodayDate()
+    if (this.$route.query.search) {
+      this.filters.search = this.$route.query.search
+    }
     this.fetchReservations()
     this.fetchEgyptDrugFilters()
     this.fetchClientOptions()
